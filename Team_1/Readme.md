@@ -1,5 +1,5 @@
-# Team Members ................
-- Nguyen Cao Minh
-- Luu Anh Khang
-- Phan Anh Tu
-- Vu Viet Hoang
+# Team Members
+- Nguyen Cao Minh (...)
+- Luu Anh Khang (anhkhangluu)
+- Phan Anh Tu (kok30)
+- Vu Viet Hoang (itsmehoaq)
