@@ -9,7 +9,7 @@
 #include <linux/spi/spi.h>
 #include <linux/module.h>
 #include <linux/init.h>
-#include "FINAL_PROJECT_HDH_ver1.c"
+#include "mcp2515_driver.c"
 #include <can.h>
 #include <string.h>
 
