@@ -460,7 +460,7 @@ u8 readRegister(struct spi_device *mcp2515_dev, u8 reg){
     u8 val;
     u8 tx_val[2];
 
-    tx_val[0] = INSTRUCTION_WRITE;
+    tx_val[0] = INSTRUCTION_READ;
     tx_val[1] = reg;
 
     spi_write(mcp2515_dev, tx_val, 2);
@@ -473,7 +473,7 @@ u8 readRegister(struct spi_device *mcp2515_dev, u8 reg){
 //This function is used to read multiple registers from MCP2515
 void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 val[], u8 len){
     u8 tx_val[2];
-    tx_val[0] = INSTRUCTION_WRITE;
+    tx_val[0] = INSTRUCTION_READ;
     tx_val[1] = reg;
 
     spi_write(mcp2515_dev, tx_val, 2);
@@ -501,6 +501,24 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, const u8 va
     spi_write(mcp2515_dev, values, len);
 }
 /////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
