@@ -1,4 +1,4 @@
-obj-m := test_module.o
+obj-m := MCP2515_linux_module.o
 KDIR := /lib/modules/$(shell uname -r)/build
 
 all:
