@@ -12,12 +12,6 @@ MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 se
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
-
-struct can_frame {
-    u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-    u8 can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
-    u8 data[8];
-};
 /**
  * @brief This function is called, when the module is loaded into the kernel
  */
@@ -59,7 +53,7 @@ static int __init ModuleInit(void) {
 
 	/* Read Chip ID */
 	reset(mcp2515_dev);
-	setBitrate(mcp2515_dev,CAN_125KBPS);
+	setBitrate(mcp2515_dev,CAN_125KBPS, MCP_16MHZ);
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 	
 	return 0;
