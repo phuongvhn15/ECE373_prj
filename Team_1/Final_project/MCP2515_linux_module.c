@@ -76,7 +76,6 @@ static int __init ModuleInit(void) {
 }
 
 char data_buffer[10];
-mcp2515_read(hd, data_buffer, )
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	
 	struct can_frame CAN_FRAME;
