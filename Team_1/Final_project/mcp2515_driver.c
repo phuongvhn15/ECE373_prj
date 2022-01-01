@@ -954,7 +954,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     frame->can_dlc = dlc;
 
     //Reading data and assigning to frame data
-    readRegisters(mcp2515_dev,rxb->DATA, frame->data, dlc); // <- This function is platform dependent
+    readRegisters(mcp2515_dev,rxb->DATA, frame->can_data, dlc); // <- This function is platform dependent
 
     //Clearing CAN interrupt flag for new data to reside.
     modifyRegister(mcp2515_dev,MCP_CANINTF, rxb->CANINTF_RXnIF, 0); // <- This function is platform dependent
