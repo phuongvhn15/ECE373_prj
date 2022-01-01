@@ -3,13 +3,6 @@
 *It is translated directly from Arduino MCP2515 driver to run on  *
 *Raspberry. 							  *
 ******************************************************************/
-#include <stdint.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 /*

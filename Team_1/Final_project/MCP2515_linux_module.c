@@ -1,17 +1,8 @@
-#include <stdint.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
 #include <linux/init.h>
 #include "mcp2515_driver.c"
-#include <can.h>
-#include <string.h>
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
@@ -27,6 +18,11 @@ static struct file_operations fops = {
 	.release = mcp2515_close,
 	.read = mcp2515_read,
 	.write = mcp2515_write
+};
+struct can_frame {
+    u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+    u8 can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
+    u8 data[8];
 };
 /**
  * @brief This function is called, when the module is loaded into the kernel
