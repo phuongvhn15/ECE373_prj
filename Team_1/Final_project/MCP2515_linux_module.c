@@ -49,7 +49,7 @@ static int __init ModuleInit(void) {
 
 	/* Create new SPI device */
 	mcp2515_dev = spi_new_device(master, &spi_device_info);
-	if(!bmp280_dev) {
+	if(!mcp2515_dev) {
 		printk("Could not create device!\n");
 		return -1;
 	}
@@ -64,9 +64,9 @@ static int __init ModuleInit(void) {
 	}
 
 	/* Read Chip ID */
-	reset();
-	setBitrate(CAN_125KBPS);
-	setMode(CANCTRL_REQOP_NORMAL);
+	reset(mcp2515_dev);
+	setBitrate(mcp2515_dev,CAN_125KBPS);
+	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 	
 	return 0;
 }
@@ -75,7 +75,7 @@ char data_buffer[10];
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	
 	struct can_frame CAN_FRAME;
-	if(readMessage(&CAN_FRAME) < 0){
+	if(readMessage(mcp2515_dev,&CAN_FRAME) < 0){
 		printk("Cant read message");
 	}
 
@@ -89,9 +89,9 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	//Copy can_data to data buffer
 	char data_buffer[can_dlc*2];
 	
-	int count = 0;
+	int count_data = 0;
 	for(int i = 0; i < can_dlc*2, i+=2){
-		sprintf(can_buffer[i], "%x", CAN_FRAME.can_data[count]);
+		sprintf(can_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
 	}
 
 	//Concatenate id, dlc, data into 1 data array
