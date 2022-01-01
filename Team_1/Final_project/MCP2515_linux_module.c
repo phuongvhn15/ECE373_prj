@@ -12,13 +12,7 @@ MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 se
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
-static struct file_operations fops = {
-	.owner = THIS_MODULE,
-	//.open = mcp2515_open,
-	//.release = mcp2515_close,
-	.read = mcp2515_read,
-	//.write = mcp2515_write
-};
+
 struct can_frame {
     u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
     u8 can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
@@ -91,7 +85,7 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	
 	int count_data = 0;
 	int i;
-	for(i = 0; i < can_dlc*2, i+=2){
+	for(i = 0; i < can_dlc*2; i+=2){
 		sprintf(can_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
 	}
 
@@ -118,7 +112,13 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 
 	return delta;
 }
-
+static struct file_operations fops = {
+	.owner = THIS_MODULE,
+	//.open = mcp2515_open,
+	//.release = mcp2515_close,
+	.read = mcp2515_read,
+	//.write = mcp2515_write
+};
 
 /**
  * @brief This function is called, when the module is removed from the kernel
