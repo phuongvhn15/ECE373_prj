@@ -513,7 +513,25 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 values[]
 
 
 
+int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
+{
+    modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
+    int modeMatch = 0;
+    int count = 0;
+    while (count < 1000000) {
+        count++;
+        u8 newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
+        newmode &= CANSTAT_OPMOD;
 
+        if(newmode == mode)
+            modeMatch = 1;
+
+        if (modeMatch) {
+            break;
+        }
+    }
+    return modeMatch;
+}
 
 
 void prepareId(u8 *buffer, const int ext, const u32 id)
@@ -553,7 +571,7 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
         case RXF4: reg = MCP_RXF4SIDH; break;
         case RXF5: reg = MCP_RXF5SIDH; break;
         default:
-            return -1;
+            return 0;
     }
 
     u8 tbufdata[4];
@@ -563,9 +581,9 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
     return 0;
 }
 
-int setFilterMask(enum MASK mask, int ext, const uint32_t ulData)
+int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const uint32_t ulData)
 {
-    int res = setMode(CANCTRL_REQOP_CONFIG);
+    int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (res != 0) {
         return res;
     }
@@ -573,17 +591,17 @@ int setFilterMask(enum MASK mask, int ext, const uint32_t ulData)
     uint8_t tbufdata[4];
     prepareId(tbufdata, ext, ulData);
 
-    REGISTER reg;
+    enum REGISTER reg;
     switch (mask) {
         case MASK0: reg = MCP_RXM0SIDH; break;
         case MASK1: reg = MCP_RXM1SIDH; break;
         default:
-            return ERROR_FAIL;
+            return 0;
     }
 
-    setRegisters(reg, tbufdata, 4);
+    setRegisters(mcp2515_dev,reg, tbufdata, 4);
     
-    return ERROR_OK;
+    return 1;
 }
 
 
@@ -875,25 +893,7 @@ int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_
     }
 }
 
-int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
-{
-    modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
-    int modeMatch = 0;
-    int count = 0;
-    while (count < 1000000) {
-        count++;
-        u8 newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
-        newmode &= CANSTAT_OPMOD;
 
-        if(newmode == mode)
-            modeMatch = 1;
-
-        if (modeMatch) {
-            break;
-        }
-    }
-    return modeMatch;
-}
 
 
 
@@ -938,7 +938,7 @@ int readMessagefromHardwware(struct spi_device *mcp2515_dev, enum RXBn rxbn, str
     //DLC has 4 bit in length
     u8 dlc = (tbufdata[MCP_DLC] & DLC_MASK);
     if (dlc > 8) {
-        return -1;
+        return 0;
     }
 
     //Read value of CTRL register
@@ -983,7 +983,7 @@ int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
     } else
     {
         //Quit function
-        rc = -1;
+        rc = 0;
     }
     return rc;
 }
@@ -1033,10 +1033,10 @@ int reset(struct spi_device *mcp2515_dev)
     enum MASK masks[] = {MASK0, MASK1};
     for (int i=0; i<2; i++) {
         int result = setFilterMask(masks[i], 1, 0);
-        if (result != 0) {
-            return -1;
+        if (result != 1) {
+            return result;
         }
     }
-    return 0;
+    return 1;
 }
 
