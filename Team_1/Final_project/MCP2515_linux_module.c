@@ -14,10 +14,10 @@ MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 se
 static struct spi_device *mcp2515_dev;
 static struct file_operations fops = {
 	.owner = THIS_MODULE,
-	.open = mcp2515_open,
-	.release = mcp2515_close,
+	//.open = mcp2515_open,
+	//.release = mcp2515_close,
 	.read = mcp2515_read,
-	.write = mcp2515_write
+	//.write = mcp2515_write
 };
 struct can_frame {
     u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */

@@ -607,7 +607,7 @@ int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const 
 
 int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
 {
-    int error = setMode(CANCTRL_REQOP_CONFIG);
+    int error = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (error != 1) {
         return error;
     }
