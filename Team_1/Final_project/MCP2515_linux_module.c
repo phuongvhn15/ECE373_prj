@@ -80,7 +80,7 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	int count_data = 0;
 	int i;
 	for(i = 0; i < can_dlc*2; i+=2){
-		sprintf(can_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
+		sprintf(data_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
 	}
 
 	//Concatenate id, dlc, data into 1 data array

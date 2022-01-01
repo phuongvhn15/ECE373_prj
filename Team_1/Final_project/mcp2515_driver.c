@@ -372,7 +372,7 @@ struct RXBn_REGS RXB[2] = {
 struct can_frame {
     u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
     u8 can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
-    u8 data[8];
+    u8 can_data[8];
 };
 
 static const u8 MCP_SIDH = 0;
