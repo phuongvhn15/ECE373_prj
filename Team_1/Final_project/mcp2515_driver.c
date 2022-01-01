@@ -343,6 +343,11 @@ enum MASK {
     MASK1
 };
 
+enum RXBn {
+    RXB0 = 0,
+    RXB1 = 1
+};
+
 enum CAN_CLOCK {
     MCP_20MHZ,
     MCP_16MHZ,
@@ -479,7 +484,7 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 value)
     spi_write(mcp2515_dev, tx_val, 3);
 }
 
-void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, const u8 values[], const u8 len)
+void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 values[], u8 len)
 {
     u8 tx_val[2];
     tx_val[0] = INSTRUCTION_WRITE;
@@ -531,7 +536,7 @@ void prepareId(u8 *buffer, const int ext, const u32 id)
     }
 }
 
-int setFilter(enum RXF num, int ext, u32 ulData)
+int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
 {
     int res = setMode(CANCTRL_REQOP_CONFIG);
     if (res != 0) {
@@ -553,12 +558,36 @@ int setFilter(enum RXF num, int ext, u32 ulData)
 
     u8 tbufdata[4];
     prepareId(tbufdata, ext, ulData);
-    setRegisters(reg, tbufdata, 4);
+    setRegisters(mcp2515_dev,reg, tbufdata, 4);
 
     return 0;
 }
 
-int setBitrate(enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
+int setFilterMask(enum MASK mask, int ext, const uint32_t ulData)
+{
+    int res = setMode(CANCTRL_REQOP_CONFIG);
+    if (res != 0) {
+        return res;
+    }
+    
+    uint8_t tbufdata[4];
+    prepareId(tbufdata, ext, ulData);
+
+    REGISTER reg;
+    switch (mask) {
+        case MASK0: reg = MCP_RXM0SIDH; break;
+        case MASK1: reg = MCP_RXM1SIDH; break;
+        default:
+            return ERROR_FAIL;
+    }
+
+    setRegisters(reg, tbufdata, 4);
+    
+    return ERROR_OK;
+}
+
+
+int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
 {
     int error = setMode(CANCTRL_REQOP_CONFIG);
     if (error != 1) {
@@ -836,33 +865,34 @@ int setBitrate(enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
     }
 
     if (set) {
-        setRegister(MCP_CNF1, cfg1);
-        setRegister(MCP_CNF2, cfg2);
-        setRegister(MCP_CNF3, cfg3);
-        return 0;
+        setRegister(mcp2515_dev,MCP_CNF1, cfg1);
+        setRegister(mcp2515_dev,MCP_CNF2, cfg2);
+        setRegister(mcp2515_dev,MCP_CNF3, cfg3);
+        return 1;
     }
     else {
-        return -1;
+        return 0;
     }
 }
 
-int setMode(enum CANCTRL_REQOP_MODE mode)
+int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 {
-    modifyRegister(MCP_CANCTRL, CANCTRL_REQOP, mode);
-
+    modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
+    int modeMatch = 0;
     int count = 0;
     while (count < 1000000) {
         count++;
-        u8 newmode = readRegister(MCP_CANSTAT);
+        u8 newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
         newmode &= CANSTAT_OPMOD;
 
-        modeMatch = newmode == mode;
+        if(newmode == mode)
+            modeMatch = 1;
 
         if (modeMatch) {
             break;
         }
     }
-    return modeMatch ? ERROR_OK : ERROR_FAIL;
+    return modeMatch;
 }
 
 
@@ -871,7 +901,7 @@ int setMode(enum CANCTRL_REQOP_MODE mode)
 //These functions are used to Read CAN message from MCP2515.
 //
 //This function is called indirectly to read message out of RXBn buffers.
-int readMessagefromHardwware(const RXBn rxbn, struct can_frame *frame)
+int readMessagefromHardwware(struct spi_device *mcp2515_dev, enum RXBn rxbn, struct can_frame *frame)
 {
     const struct RXBn_REGS *rxb = &RXB[rxbn];
 
@@ -879,7 +909,7 @@ int readMessagefromHardwware(const RXBn rxbn, struct can_frame *frame)
     // Five bytes are used to store Standard and Extend Identifiers
     // Reading 5 bytes of Identifier to tbufdata
     u8 tbufdata[5];
-    readRegisters(rxb->SIDH, tbufdata, 5); // <- This function is platform dependent
+    readRegisters(mcp2515_dev,rxb->SIDH, tbufdata, 5); // <- This function is platform dependent
     //
 
     //Bit manipulation to obtain ID field in the message
@@ -913,7 +943,7 @@ int readMessagefromHardwware(const RXBn rxbn, struct can_frame *frame)
 
     //Read value of CTRL register
     //CTRL register has 8 bits, including RTR bit, IDE bit, Reserved bit, Data filtering bits. 
-    u8 ctrl = readRegister(rxb->CTRL); // <- This function is platform dependent.
+    u8 ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
     if (ctrl & RXBnCTRL_RTR) // <- If RTR bit of CTRL register is 1 then 
     {
         id |= CAN_RTR_FLAG; // <- Switch the corresponding RTR bit in the id to 1
@@ -924,16 +954,16 @@ int readMessagefromHardwware(const RXBn rxbn, struct can_frame *frame)
     frame->can_dlc = dlc;
 
     //Reading data and assigning to frame data
-    readRegisters(rxb->DATA, frame->data, dlc); // <- This function is platform dependent
+    readRegisters(mcp2515_dev,rxb->DATA, frame->data, dlc); // <- This function is platform dependent
 
     //Clearing CAN interrupt flag for new data to reside.
-    modifyRegister(MCP_CANINTF, rxb->CANINTF_RXnIF, 0); // <- This function is platform dependent
+    modifyRegister(mcp2515_dev,MCP_CANINTF, rxb->CANINTF_RXnIF, 0); // <- This function is platform dependent
 
     return 0;
 }
 
 //This function will be called directly to get data frame
-int readMessage(struct can_frame *frame)
+int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 {
     int rc;
     u8 stat = getStatus();
@@ -945,11 +975,11 @@ int readMessage(struct can_frame *frame)
     //Else, buffer is empty, quit the process.
     if ( stat & STAT_RX0IF ) {
         //Read CAN message from RXB0
-        rc = readMessagefromHardware(0, frame);
+        rc = readMessagefromHardware(mcp2515_dev,RXB0, frame);
     } 
     else if ( stat & STAT_RX1IF) {
         //Read CAN message from RXB1
-        rc = readMessagefromHardware(1, frame);
+        rc = readMessagefromHardware(mcp2515_dev,RXB1, frame);
     } else
     {
         //Quit function
@@ -960,7 +990,7 @@ int readMessage(struct can_frame *frame)
 //////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////
-int reset((struct spi_device *mcp2515_dev)
+int reset(struct spi_device *mcp2515_dev)
 {
     u8 tx_val;
     tx_val = INSTRUCTION_RESET;
@@ -994,7 +1024,7 @@ int reset((struct spi_device *mcp2515_dev)
     enum RXF filters[] = {RXF0, RXF1, RXF2, RXF3, RXF4, RXF5};
     for (int i=0; i<6; i++) {
         int ext = (i == 1);
-        int result = setFilter(filters[i], ext, 0);
+        int result = setFilter(mcp2515_dev,filters[i], ext, 0);
         if (result != 1) {
             return result;
         }
