@@ -556,7 +556,7 @@ void prepareId(u8 *buffer, const int ext, const u32 id)
 
 int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
 {
-    int res = setMode(CANCTRL_REQOP_CONFIG);
+    int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (res != 0) {
         return res;
     }
@@ -901,7 +901,7 @@ int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_
 //These functions are used to Read CAN message from MCP2515.
 //
 //This function is called indirectly to read message out of RXBn buffers.
-int readMessagefromHardwware(struct spi_device *mcp2515_dev, enum RXBn rxbn, struct can_frame *frame)
+int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, struct can_frame *frame)
 {
     const struct RXBn_REGS *rxb = &RXB[rxbn];
 
@@ -966,7 +966,7 @@ int readMessagefromHardwware(struct spi_device *mcp2515_dev, enum RXBn rxbn, str
 int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 {
     int rc;
-    u8 stat = getStatus();
+    u8 stat = getStatus(mcp2515_dev);
 
     //If RX0IF is 1,there is data inside RXB0 buffer.Then read RBX0
     //
@@ -1022,7 +1022,8 @@ int reset(struct spi_device *mcp2515_dev)
     // do not filter any standard frames for RXF0 used by RXB0
     // do not filter any extended frames for RXF1 used by RXB1
     enum RXF filters[] = {RXF0, RXF1, RXF2, RXF3, RXF4, RXF5};
-    for (int i=0; i<6; i++) {
+    int i;
+    for (i=0; i<6; i++) {
         int ext = (i == 1);
         int result = setFilter(mcp2515_dev,filters[i], ext, 0);
         if (result != 1) {
@@ -1031,8 +1032,8 @@ int reset(struct spi_device *mcp2515_dev)
     }
 
     enum MASK masks[] = {MASK0, MASK1};
-    for (int i=0; i<2; i++) {
-        int result = setFilterMask(masks[i], 1, 0);
+    for (i=0; i<2; i++) {
+        int result = setFilterMask(mcp2515_dev,masks[i], 1, 0);
         if (result != 1) {
             return result;
         }
