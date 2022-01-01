@@ -47,7 +47,7 @@ static int __init ModuleInit(void) {
 	/* Setup the bus for device's parameters */
 	if(spi_setup(mcp2515_dev) != 0){
 		printk("Could not change bus setup!\n");
-		spi_unregister_device(bmp280_dev);
+		spi_unregister_device(mcp2515_dev);
 		return -1;
 	}
 
@@ -95,6 +95,9 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 		can_buffer[i] = data_buffer[i-4];
 	}
 
+	int to_copy = 0;
+	int not_copied = 0;
+	int delta = 0;
 	/* Get amount of data to copy */
 	to_copy = min(count, sizeof(can_buffer));
 
