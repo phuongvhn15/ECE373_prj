@@ -3,13 +3,6 @@
 *It is translated directly from Arduino MCP2515 driver to run on  *
 *Raspberry. 							  *
 ******************************************************************/
-#include <stdint.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 /*
@@ -365,10 +358,10 @@ enum CANCTRL_REQOP_MODE {
     CANCTRL_REQOP_POWERUP    = 0xE0
 };
 
-const struct RXBn_REGS RXB[2] = {
+struct RXBn_REGS RXB[2] = {
     {MCP_RXB0CTRL, MCP_RXB0SIDH, MCP_RXB0DATA, CANINTF_RX0IF},
     {MCP_RXB1CTRL, MCP_RXB1SIDH, MCP_RXB1DATA, CANINTF_RX1IF}
-}
+};
 
 //This struct handles CAN data frame.
 struct can_frame {
@@ -383,10 +376,6 @@ static const u8 MCP_EID8 = 2;
 static const u8 MCP_EID0 = 3;
 static const u8 MCP_DLC  = 4;
 static const u8 MCP_DATA = 5;
-
-static const u8 TXB_EXIDE_MASK = 0x08;
-static const u8 DLC_MASK       = 0x0F;
-static const u8 RTR_MASK       = 0x40;
 
 static const u8 CANSTAT_OPMOD = 0xE0;
 static const u8 CANSTAT_ICOD = 0x0E;
@@ -432,10 +421,9 @@ static const u8 CANCTRL_CLKPRE = 0x03;
 u8 getStatus(struct spi_device *mcp2515_dev){
     u8 ret_val;
     u8 tx_val;
-    tx_val = INSTRUCTION_WRITE;
+    tx_val = INSTRUCTION_READ_STATUS;
 
-    spi_write(mcp2515_dev, tx_val, 1);
-
+    spi_write(mcp2515_dev, &tx_val, 1);
     spi_read(mcp2515_dev, &ret_val, 1);
     return ret_val;
 }
@@ -450,7 +438,7 @@ void modifyRegister(struct spi_device *mcp2515_dev,enum REGISTER reg, u8 mask, c
     tx_val[1] = reg;
     tx_val[2] = mask;
     tx_val[3] = data;
-    spi_write(mcp2515_dev, tx_val, 2);
+    spi_write(mcp2515_dev, tx_val, 3);
 }
 //
 
@@ -491,7 +479,7 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 value)
     spi_write(mcp2515_dev, tx_val, 3);
 }
 
-void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, const u8 values[], const u8 n)
+void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, const u8 values[], const u8 len)
 {
     u8 tx_val[2];
     tx_val[0] = INSTRUCTION_WRITE;
@@ -545,7 +533,7 @@ void prepareId(u8 *buffer, const int ext, const u32 id)
 
 int setFilter(enum RXF num, int ext, u32 ulData)
 {
-    int res = setConfigMode();
+    int res = setMode(CANCTRL_REQOP_CONFIG);
     if (res != 0) {
         return res;
     }
@@ -572,7 +560,7 @@ int setFilter(enum RXF num, int ext, u32 ulData)
 
 int setBitrate(enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
 {
-    int error = setConfigMode();
+    int error = setMode(CANCTRL_REQOP_CONFIG);
     if (error != 1) {
         return error;
     }
@@ -862,19 +850,19 @@ int setMode(enum CANCTRL_REQOP_MODE mode)
 {
     modifyRegister(MCP_CANCTRL, CANCTRL_REQOP, mode);
 
-    // unsigned long endTime = millis() + 10;
-    // int modeMatch = 0;
-    // while (millis() < endTime) {
-    //     u8 newmode = readRegister(MCP_CANSTAT);
-    //     newmode &= CANSTAT_OPMOD;
+    int count = 0;
+    while (count < 1000000) {
+        count++;
+        u8 newmode = readRegister(MCP_CANSTAT);
+        newmode &= CANSTAT_OPMOD;
 
-    //     modeMatch = newmode == mode;
+        modeMatch = newmode == mode;
 
-    //     if (modeMatch) {
-    //         break;
-    //     }
-    // }
-    // return modeMatch ? ERROR_OK : ERROR_FAIL;
+        if (modeMatch) {
+            break;
+        }
+    }
+    return modeMatch ? ERROR_OK : ERROR_FAIL;
 }
 
 
@@ -976,7 +964,7 @@ int reset((struct spi_device *mcp2515_dev)
 {
     u8 tx_val;
     tx_val = INSTRUCTION_RESET;
-    spi_write(mcp2515_dev, tx_val, 2);
+    spi_write(mcp2515_dev, tx_val, 1);
 
 
     u8 zeros[14];
