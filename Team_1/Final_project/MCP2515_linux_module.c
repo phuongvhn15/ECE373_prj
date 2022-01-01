@@ -91,18 +91,18 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	
 	int count_data = 0;
 	int i;
-	for(int i = 0; i < can_dlc*2, i+=2){
+	for(i = 0; i < can_dlc*2, i+=2){
 		sprintf(can_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
 	}
 
 	//Concatenate id, dlc, data into 1 data array
 	char can_buffer[4 + can_dlc*2];
 
-	for(int i = 0; i < 4; i++){
+	for(i = 0; i < 4; i++){
 		can_buffer[i] = id_dlc_buffer[i];
 	}
 
-	for (int i = 4; i < (can_dlc*2+4); i++)
+	for (i = 4; i < (can_dlc*2+4); i++)
 	{
 		can_buffer[i] = data_buffer[i-4];
 	}
