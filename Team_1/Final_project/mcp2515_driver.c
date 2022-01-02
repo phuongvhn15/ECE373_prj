@@ -515,9 +515,9 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val
 
 int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 {
-    modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
     int modeMatch = 0;
     int count = 0;
+    modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
     while (count < 1000000) {
         count++;
         uint8_t newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
@@ -556,12 +556,14 @@ void prepareId(uint8_t *buffer, const int ext, const uint32_t id)
 
 int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulData)
 {
+    enum REGISTER reg;
+    uint8_t tbufdata[4];
     int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (res != 0) {
         return res;
     }
 
-    enum REGISTER reg;
+   
 
     switch (num) {
         case RXF0: reg = MCP_RXF0SIDH; break;
@@ -573,8 +575,6 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulD
         default:
             return 0;
     }
-
-    uint8_t tbufdata[4];
     prepareId(tbufdata, ext, ulData);
     setRegisters(mcp2515_dev,reg, tbufdata, 4);
 
@@ -583,15 +583,15 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulD
 
 int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const uint32_t ulData)
 {
+    uint8_t tbufdata[4];
+    enum REGISTER reg;
     int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (res != 0) {
         return res;
     }
     
-    uint8_t tbufdata[4];
+    
     prepareId(tbufdata, ext, ulData);
-
-    enum REGISTER reg;
     switch (mask) {
         case MASK0: reg = MCP_RXM0SIDH; break;
         case MASK1: reg = MCP_RXM1SIDH; break;
@@ -607,12 +607,12 @@ int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const 
 
 int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_CLOCK canClock)
 {
+    uint8_t set, cfg1, cfg2, cfg3;
     int error = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (error != 1) {
         return error;
     }
 
-    uint8_t set, cfg1, cfg2, cfg3;
     set = 1;
     switch (canClock)
     {
@@ -904,7 +904,7 @@ int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_
 int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, struct can_frame *frame)
 {
     const struct RXBn_REGS *rxb = &RXB[rxbn];
-
+    uint32_t id;
 
     // Five bytes are used to store Standard and Extend Identifiers
     // Reading 5 bytes of Identifier to tbufdata
@@ -920,7 +920,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     //      + [3] EIDL
     //      + [4] DLC
     //ID has 11 bits in length
-    uint32_t id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
+    id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
 
     //If extended standard id is used then modify id
     //In final project, we dont use extended id so this code can be removed with no effect. 
@@ -993,12 +993,11 @@ int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 int reset(struct spi_device *mcp2515_dev)
 {
     uint8_t tx_val;
-    tx_val = INSTRUCTION_RESET;
-    spi_write(mcp2515_dev, tx_val, 1);
-
-
     uint8_t zeros[14];
+    tx_val = INSTRUCTION_RESET;
+    enum RXF filters[] = {RXF0, RXF1, RXF2, RXF3, RXF4, RXF5};
 
+    spi_write(mcp2515_dev, tx_val, 1);
     memset(zeros, 0, sizeof(zeros));
     setRegisters(mcp2515_dev,MCP_TXB0CTRL, zeros, 14);
     setRegisters(mcp2515_dev,MCP_TXB1CTRL, zeros, 14);
@@ -1021,7 +1020,7 @@ int reset(struct spi_device *mcp2515_dev)
     // clear filters and masks
     // do not filter any standard frames for RXF0 used by RXB0
     // do not filter any extended frames for RXF1 used by RXB1
-    enum RXF filters[] = {RXF0, RXF1, RXF2, RXF3, RXF4, RXF5};
+    
     int i;
     for (i=0; i<6; i++) {
         int ext = (i == 1);
