@@ -370,43 +370,43 @@ struct RXBn_REGS RXB[2] = {
 
 //This struct handles CAN data frame.
 struct can_frame {
-    u32 can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-    u8 can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
-    u8 can_data[8];
+    uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+    uint8_t can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
+    uint8_t can_data[8];
 };
 
-static const u8 MCP_SIDH = 0;
-static const u8 MCP_SIDL = 1;
-static const u8 MCP_EID8 = 2;
-static const u8 MCP_EID0 = 3;
-static const u8 MCP_DLC  = 4;
-static const u8 MCP_DATA = 5;
+static const uint8_t MCP_SIDH = 0;
+static const uint8_t MCP_SIDL = 1;
+static const uint8_t MCP_EID8 = 2;
+static const uint8_t MCP_EID0 = 3;
+static const uint8_t MCP_DLC  = 4;
+static const uint8_t MCP_DATA = 5;
 
-static const u8 CANSTAT_OPMOD = 0xE0;
-static const u8 CANSTAT_ICOD = 0x0E;
+static const uint8_t CANSTAT_OPMOD = 0xE0;
+static const uint8_t CANSTAT_ICOD = 0x0E;
 
-static const u8 CNF3_SOF = 0x80;
+static const uint8_t CNF3_SOF = 0x80;
 
-static const u8 TXB_EXIDE_MASK = 0x08;
-static const u8 DLC_MASK       = 0x0F;
-static const u8 RTR_MASK       = 0x40;
+static const uint8_t TXB_EXIDE_MASK = 0x08;
+static const uint8_t DLC_MASK       = 0x0F;
+static const uint8_t RTR_MASK       = 0x40;
 
-static const u8 RXBnCTRL_RXM_STD    = 0x20;
-static const u8 RXBnCTRL_RXM_EXT    = 0x40;
-static const u8 RXBnCTRL_RXM_STDEXT = 0x00;
-static const u8 RXBnCTRL_RXM_MASK   = 0x60;
-static const u8 RXBnCTRL_RTR        = 0x08;
-static const u8 RXB0CTRL_BUKT       = 0x04;
-static const u8 RXB0CTRL_FILHIT_MASK = 0x03;
-static const u8 RXB1CTRL_FILHIT_MASK = 0x07;
-static const u8 RXB0CTRL_FILHIT = 0x00;
-static const u8 RXB1CTRL_FILHIT = 0x01;
+static const uint8_t RXBnCTRL_RXM_STD    = 0x20;
+static const uint8_t RXBnCTRL_RXM_EXT    = 0x40;
+static const uint8_t RXBnCTRL_RXM_STDEXT = 0x00;
+static const uint8_t RXBnCTRL_RXM_MASK   = 0x60;
+static const uint8_t RXBnCTRL_RTR        = 0x08;
+static const uint8_t RXB0CTRL_BUKT       = 0x04;
+static const uint8_t RXB0CTRL_FILHIT_MASK = 0x03;
+static const uint8_t RXB1CTRL_FILHIT_MASK = 0x07;
+static const uint8_t RXB0CTRL_FILHIT = 0x00;
+static const uint8_t RXB1CTRL_FILHIT = 0x01;
 
-static const u8 CANCTRL_REQOP = 0xE0;
-static const u8 CANCTRL_ABAT = 0x10;
-static const u8 CANCTRL_OSM = 0x08;
-static const u8 CANCTRL_CLKEN = 0x04;
-static const u8 CANCTRL_CLKPRE = 0x03;
+static const uint8_t CANCTRL_REQOP = 0xE0;
+static const uint8_t CANCTRL_ABAT = 0x10;
+static const uint8_t CANCTRL_OSM = 0x08;
+static const uint8_t CANCTRL_CLKEN = 0x04;
+static const uint8_t CANCTRL_CLKPRE = 0x03;
 
 
 
@@ -423,9 +423,9 @@ static const u8 CANCTRL_CLKPRE = 0x03;
 //Following functions are used to manipulate MCP2515 registers.
 //
 //This function is used to read status of RXBn buffer.
-u8 getStatus(struct spi_device *mcp2515_dev){
-    u8 ret_val;
-    u8 tx_val;
+uint8_t getStatus(struct spi_device *mcp2515_dev){
+    uint8_t ret_val;
+    uint8_t tx_val;
     tx_val = INSTRUCTION_READ_STATUS;
 
     spi_write(mcp2515_dev, &tx_val, 1);
@@ -434,10 +434,10 @@ u8 getStatus(struct spi_device *mcp2515_dev){
 }
 
 //This function is used to modify several bits on register without changing old data
-void modifyRegister(struct spi_device *mcp2515_dev,enum REGISTER reg, u8 mask, const u8 data)
+void modifyRegister(struct spi_device *mcp2515_dev,enum REGISTER reg, uint8_t mask, const uint8_t data)
 {
-    u8 val;
-    u8 tx_val[4];
+    uint8_t val;
+    uint8_t tx_val[4];
 
     tx_val[0] = INSTRUCTION_BITMOD;
     tx_val[1] = reg;
@@ -448,10 +448,10 @@ void modifyRegister(struct spi_device *mcp2515_dev,enum REGISTER reg, u8 mask, c
 //
 
 //This function used to read 1 register from MCP2515
-u8 readRegister(struct spi_device *mcp2515_dev, u8 reg){
+uint8_t readRegister(struct spi_device *mcp2515_dev, uint8_t reg){
     
-    u8 val;
-    u8 tx_val[2];
+    uint8_t val;
+    uint8_t tx_val[2];
 
     tx_val[0] = INSTRUCTION_READ;
     tx_val[1] = reg;
@@ -464,8 +464,8 @@ u8 readRegister(struct spi_device *mcp2515_dev, u8 reg){
 //
 
 //This function is used to read multiple registers from MCP2515
-void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 val[], u8 len){
-    u8 tx_val[2];
+void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val[], uint8_t len){
+    uint8_t tx_val[2];
     tx_val[0] = INSTRUCTION_READ;
     tx_val[1] = reg;
 
@@ -474,9 +474,9 @@ void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 val[], 
 }
 
 
-void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 value)
+void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t value)
 {
-    u8 tx_val[3];
+    uint8_t tx_val[3];
     tx_val[0] = INSTRUCTION_WRITE;
     tx_val[1] = reg;
     tx_val[2] = value;
@@ -484,9 +484,9 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 value)
     spi_write(mcp2515_dev, tx_val, 3);
 }
 
-void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, u8 values[], u8 len)
+void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t values[], uint8_t len)
 {
-    u8 tx_val[2];
+    uint8_t tx_val[2];
     tx_val[0] = INSTRUCTION_WRITE;
     tx_val[1] = reg;
     
@@ -520,7 +520,7 @@ int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
     int count = 0;
     while (count < 1000000) {
         count++;
-        u8 newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
+        uint8_t newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
         newmode &= CANSTAT_OPMOD;
 
         if(newmode == mode)
@@ -534,27 +534,27 @@ int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 }
 
 
-void prepareId(u8 *buffer, const int ext, const u32 id)
+void prepareId(uint8_t *buffer, const int ext, const uint32_t id)
 {
     u16 canid = (u16)(id & 0x0FFFF);
 
     if (ext) {
-        buffer[MCP_EID0] = (u8) (canid & 0xFF);
-        buffer[MCP_EID8] = (u8) (canid >> 8);
+        buffer[MCP_EID0] = (uint8_t) (canid & 0xFF);
+        buffer[MCP_EID8] = (uint8_t) (canid >> 8);
         canid = (u16)(id >> 16);
-        buffer[MCP_SIDL] = (u8) (canid & 0x03);
-        buffer[MCP_SIDL] += (u8) ((canid & 0x1C) << 3);
+        buffer[MCP_SIDL] = (uint8_t) (canid & 0x03);
+        buffer[MCP_SIDL] += (uint8_t) ((canid & 0x1C) << 3);
         buffer[MCP_SIDL] |= TXB_EXIDE_MASK;
-        buffer[MCP_SIDH] = (u8) (canid >> 5);
+        buffer[MCP_SIDH] = (uint8_t) (canid >> 5);
     } else {
-        buffer[MCP_SIDH] = (u8) (canid >> 3);
-        buffer[MCP_SIDL] = (u8) ((canid & 0x07 ) << 5);
+        buffer[MCP_SIDH] = (uint8_t) (canid >> 3);
+        buffer[MCP_SIDL] = (uint8_t) ((canid & 0x07 ) << 5);
         buffer[MCP_EID0] = 0;
         buffer[MCP_EID8] = 0;
     }
 }
 
-int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
+int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulData)
 {
     int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (res != 0) {
@@ -574,7 +574,7 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, u32 ulData)
             return 0;
     }
 
-    u8 tbufdata[4];
+    uint8_t tbufdata[4];
     prepareId(tbufdata, ext, ulData);
     setRegisters(mcp2515_dev,reg, tbufdata, 4);
 
@@ -612,7 +612,7 @@ int setBitrate(struct spi_device *mcp2515_dev,enum CAN_SPEED canSpeed, enum CAN_
         return error;
     }
 
-    u8 set, cfg1, cfg2, cfg3;
+    uint8_t set, cfg1, cfg2, cfg3;
     set = 1;
     switch (canClock)
     {
@@ -908,7 +908,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
 
     // Five bytes are used to store Standard and Extend Identifiers
     // Reading 5 bytes of Identifier to tbufdata
-    u8 tbufdata[5];
+    uint8_t tbufdata[5];
     readRegisters(mcp2515_dev,rxb->SIDH, tbufdata, 5); // <- This function is platform dependent
     //
 
@@ -920,7 +920,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     //      + [3] EIDL
     //      + [4] DLC
     //ID has 11 bits in length
-    u32 id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
+    uint32_t id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
 
     //If extended standard id is used then modify id
     //In final project, we dont use extended id so this code can be removed with no effect. 
@@ -936,14 +936,14 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     //If data length is more then 8 then return error.
     //CAN_MAX_DLEN(maximum data length) is 8
     //DLC has 4 bit in length
-    u8 dlc = (tbufdata[MCP_DLC] & DLC_MASK);
+    uint8_t dlc = (tbufdata[MCP_DLC] & DLC_MASK);
     if (dlc > 8) {
         return 0;
     }
 
     //Read value of CTRL register
     //CTRL register has 8 bits, including RTR bit, IDE bit, Reserved bit, Data filtering bits. 
-    u8 ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
+    uint8_t ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
     if (ctrl & RXBnCTRL_RTR) // <- If RTR bit of CTRL register is 1 then 
     {
         id |= CAN_RTR_FLAG; // <- Switch the corresponding RTR bit in the id to 1
@@ -966,7 +966,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
 int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 {
     int rc;
-    u8 stat = getStatus(mcp2515_dev);
+    uint8_t stat = getStatus(mcp2515_dev);
 
     //If RX0IF is 1,there is data inside RXB0 buffer.Then read RBX0
     //
@@ -992,12 +992,12 @@ int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 /////////////////////////////////////////////////////////
 int reset(struct spi_device *mcp2515_dev)
 {
-    u8 tx_val;
+    uint8_t tx_val;
     tx_val = INSTRUCTION_RESET;
     spi_write(mcp2515_dev, tx_val, 1);
 
 
-    u8 zeros[14];
+    uint8_t zeros[14];
 
     memset(zeros, 0, sizeof(zeros));
     setRegisters(mcp2515_dev,MCP_TXB0CTRL, zeros, 14);
