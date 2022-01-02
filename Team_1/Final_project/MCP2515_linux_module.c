@@ -28,6 +28,7 @@ static int __init ModuleInit(void) {
 		.mode = 3,
 	};
 
+	printk("Inside busum_to_master function");
 	/* Get access to spi bus */
 	master = spi_busnum_to_master(MY_BUS_NUM);
 	/* Check if we could get the master */
@@ -36,6 +37,7 @@ static int __init ModuleInit(void) {
 		return -1;
 	}
 
+	printk("Inside spi_new_device function");
 	/* Create new SPI device */
 	mcp2515_dev = spi_new_device(master, &spi_device_info);
 	if(!mcp2515_dev) {
@@ -45,6 +47,7 @@ static int __init ModuleInit(void) {
 
 	mcp2515_dev -> bits_per_word = 8;
 
+	printk("%s","Inside spi_setup function");
 	/* Setup the bus for device's parameters */
 	if(spi_setup(mcp2515_dev) != 0){
 		printk("Could not change bus setup!\n");
@@ -53,9 +56,13 @@ static int __init ModuleInit(void) {
 	}
 
 	/* Read Chip ID */
+	printk("%s","Inside reset function");
 	reset(mcp2515_dev);
+	printk("%s","Inside setBitrate function");
 	setBitrate(mcp2515_dev,CAN_125KBPS, MCP_16MHZ);
+	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+	printk("%s","Inside readRegister function");
 	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
 	printk("%d", reg_val);
 	
