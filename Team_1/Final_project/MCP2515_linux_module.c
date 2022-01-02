@@ -2,6 +2,24 @@
 #include <linux/spi/spi.h>
 #include <linux/module.h>
 #include <linux/init.h>
+#include <linux/kernel.h>
+ 
+#include <linux/kdev_t.h>
+#include <linux/fs.h>   
+#include <linux/cdev.h> 
+#include <asm/uaccess.h>
+
+#include <linux/gpio.h>
+
+#include <linux/interrupt.h>
+
+#include <linux/kobject.h> 
+#include <linux/sysfs.h>
+
+#include <linux/time.h>
+#include <linux/ktime.h>
+#include <asm/delay.h> 
+#include <linux/delay.h>
 #include "mcp2515_driver.c"
 
 /* Meta Information */
@@ -47,7 +65,7 @@ static int __init ModuleInit(void) {
 
 	mcp2515_dev -> bits_per_word = 8;
 
-	printk("%s","Inside spi_setup function");
+	printk("%s","Inside spi_setups function");
 	/* Setup the bus for device's parameters */
 	if(spi_setup(mcp2515_dev) != 0){
 		printk("Could not change bus setup!\n");
