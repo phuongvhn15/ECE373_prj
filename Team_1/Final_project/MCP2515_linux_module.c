@@ -56,6 +56,8 @@ static int __init ModuleInit(void) {
 	reset(mcp2515_dev);
 	setBitrate(mcp2515_dev,CAN_125KBPS, MCP_16MHZ);
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
+	printk("%d", reg_val);
 	
 	return 0;
 }
