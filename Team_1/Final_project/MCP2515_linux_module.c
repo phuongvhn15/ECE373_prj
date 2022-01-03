@@ -83,7 +83,7 @@ static int __init ModuleInit(void) {
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 	printk("%s","Inside readRegister function");
 	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
-	printk("%d", reg_val);
+	printk("CAN state register value :%d", reg_val);
 	
 	return 0;
 }
