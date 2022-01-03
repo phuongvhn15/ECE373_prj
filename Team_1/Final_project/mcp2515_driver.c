@@ -5,6 +5,27 @@
 ******************************************************************/
 #include <linux/types.h>
 #include <linux/spi/spi.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+ 
+#include <linux/kdev_t.h>
+#include <linux/fs.h>   
+#include <linux/cdev.h> 
+#include <asm/uaccess.h>
+
+#include <linux/gpio.h>
+
+#include <linux/interrupt.h>
+
+#include <linux/kobject.h> 
+#include <linux/sysfs.h>
+
+#include <linux/time.h>
+#include <linux/ktime.h>
+#include <asm/delay.h> 
+#include <linux/delay.h>
+#include "mcp2515_driver.c"
 /*
  *  Speed 8M
  */
@@ -375,6 +396,43 @@ struct can_frame {
     uint8_t can_data[8];
 };
 
+struct mcp251x_priv {
+	struct can_priv	   can;
+	struct net_device *net;
+	struct spi_device *spi;
+	enum mcp251x_model model;
+
+	struct mutex mcp_lock; /* SPI device lock */
+
+	u8 *spi_tx_buf;
+	u8 *spi_rx_buf;
+
+	struct sk_buff *tx_skb;
+	int tx_len;
+
+	struct workqueue_struct *wq;
+	struct work_struct tx_work;
+	struct work_struct restart_work;
+
+	int force_quit;
+	int after_suspend;
+
+    #define AFTER_SUSPEND_UP 1
+    #define AFTER_SUSPEND_DOWN 2
+    #define AFTER_SUSPEND_POWER 4
+    #define AFTER_SUSPEND_RESTART 8
+    
+	int restart_tx;
+	struct regulator *power;
+	struct regulator *transceiver;
+	struct clk *clk;
+    #ifdef CONFIG_GPIOLIB
+        struct gpio_chip gpio;
+        u8 reg_bfpctrl;
+    #endif
+};
+
+
 static const uint8_t MCP_SIDH = 0;
 static const uint8_t MCP_SIDL = 1;
 static const uint8_t MCP_EID8 = 2;
@@ -412,7 +470,40 @@ static const uint8_t CANCTRL_CLKPRE = 0x03;
 
 
 
+static int mcp251x_spi_trans(struct spi_device *spi, int len)
+{
+	struct mcp251x_priv *priv = spi_get_drvdata(spi);
+	struct spi_transfer t = {
+		.tx_buf = priv->spi_tx_buf,
+		.rx_buf = priv->spi_rx_buf,
+		.len = len,
+		.cs_change = 0,
+	};
+	struct spi_message m;
+	int ret;
 
+	spi_message_init(&m);
+	spi_message_add_tail(&t, &m);
+
+	ret = spi_sync(spi, &m);
+	if (ret)
+		dev_err(&spi->dev, "spi transfer failed: ret = %d\n", ret);
+	return ret;
+}
+
+static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
+{
+	struct mcp251x_priv *priv = spi_get_drvdata(spi);
+	u8 val = 0;
+
+	priv->spi_tx_buf[0] = INSTRUCTION_READ;
+	priv->spi_tx_buf[1] = reg;
+
+	mcp251x_spi_trans(spi, 3);
+	val = priv->spi_rx_buf[2];
+
+	return val;
+}
 
 
 
@@ -436,14 +527,13 @@ uint8_t getStatus(struct spi_device *mcp2515_dev){
 //This function is used to modify several bits on register without changing old data
 void modifyRegister(struct spi_device *mcp2515_dev,enum REGISTER reg, uint8_t mask, const uint8_t data)
 {
-    uint8_t val;
     uint8_t tx_val[4];
 
     tx_val[0] = INSTRUCTION_BITMOD;
     tx_val[1] = reg;
     tx_val[2] = mask;
     tx_val[3] = data;
-    spi_write(mcp2515_dev, tx_val, 3);
+    spi_write(mcp2515_dev, tx_val, 4);
 }
 //
 
@@ -464,13 +554,32 @@ uint8_t readRegister(struct spi_device *mcp2515_dev, uint8_t reg){
 //
 
 //This function is used to read multiple registers from MCP2515
-void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val[], uint8_t len){
-    uint8_t tx_val[2];
-    tx_val[0] = INSTRUCTION_READ;
-    tx_val[1] = reg;
+void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx_val[], uint8_t len){
+    uint8_t tx_val_first[2];
+    uint8_t tx_val_sec[len];
+    uint8_t rx_val[len];
+    uint8_t i;
 
-    spi_write(mcp2515_dev, tx_val, 2);
-    spi_read(mcp2515_dev, val, len);
+    //2 bytes of tx_val_first.
+    tx_val_first[0] = INSTRUCTION_READ;
+    tx_val_first[1] = reg;
+
+    //Bytes of tx_val_sec will be dummy 0x00 instructions.
+    for(i = 0; i < len; i++){
+        tx_val_sec[i] = 0x00;
+    }
+
+
+    //2 bytes of tx_val_first will be transmitted first.
+    spi_write(mcp2515_dev, tx_val_first, 2);
+
+
+    //MCP2515 has auto-increment of address-pointer.
+    //Write 1 byte of dummny instruction then read 1 byte.
+    for(i = 0; i < len; i++){
+        spi_write(mcp2515_dev, &tx_val_sec[i], 1);
+        spi_read(mcp2515_dev, &rx_val[i], 1);
+    }
 }
 
 
@@ -486,12 +595,22 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t valu
 
 void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t values[], uint8_t len)
 {
-    uint8_t tx_val[2];
-    tx_val[0] = INSTRUCTION_WRITE;
-    tx_val[1] = reg;
-    
-    spi_write(mcp2515_dev, tx_val, 2);
-    spi_write(mcp2515_dev, values, len);
+    uint8_t tx_val_first[2];
+    uint8_t i;
+
+    //2 bytes of tx_val_first.
+    tx_val_first[0] = INSTRUCTION_WRITE;
+    tx_val_first[1] = reg;
+
+    //2 bytes of tx_val_first will be transmitted first.
+    spi_write(mcp2515_dev, tx_val_first, 2);
+
+
+    //MCP2515 has auto-increment of address-pointer.
+    //Write 1 byte of data continuously.
+    for(i = 0; i < len; i++){
+        spi_write(mcp2515_dev, &values[i], 1);
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 
@@ -517,10 +636,11 @@ int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 {
     int modeMatch = 0;
     int count = 0;
+    uint8_t newmode;
     modifyRegister(mcp2515_dev,MCP_CANCTRL, CANCTRL_REQOP, mode);
-    while (count < 1000000) {
+    while (count < 1000) {
         count++;
-        uint8_t newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
+        newmode = readRegister(mcp2515_dev,MCP_CANSTAT);
         newmode &= CANSTAT_OPMOD;
 
         if(newmode == mode)
@@ -905,6 +1025,8 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
 {
     const struct RXBn_REGS *rxb = &RXB[rxbn];
     uint32_t id;
+    uint8_t dlc;
+    uint8_t ctrl;
 
     // Five bytes are used to store Standard and Extend Identifiers
     // Reading 5 bytes of Identifier to tbufdata
@@ -936,14 +1058,14 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     //If data length is more then 8 then return error.
     //CAN_MAX_DLEN(maximum data length) is 8
     //DLC has 4 bit in length
-    uint8_t dlc = (tbufdata[MCP_DLC] & DLC_MASK);
+    dlc = (tbufdata[MCP_DLC] & DLC_MASK);
     if (dlc > 8) {
         return 0;
     }
 
     //Read value of CTRL register
     //CTRL register has 8 bits, including RTR bit, IDE bit, Reserved bit, Data filtering bits. 
-    uint8_t ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
+    ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
     if (ctrl & RXBnCTRL_RTR) // <- If RTR bit of CTRL register is 1 then 
     {
         id |= CAN_RTR_FLAG; // <- Switch the corresponding RTR bit in the id to 1
@@ -992,12 +1114,18 @@ int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 /////////////////////////////////////////////////////////
 int reset(struct spi_device *mcp2515_dev)
 {
+    enum MASK masks[] = {MASK0, MASK1};
     uint8_t tx_val;
     uint8_t zeros[14];
-    tx_val = INSTRUCTION_RESET;
+    int i;
     enum RXF filters[] = {RXF0, RXF1, RXF2, RXF3, RXF4, RXF5};
+    tx_val = INSTRUCTION_RESET;
+   
 
-    spi_write(mcp2515_dev, tx_val, 1);
+    spi_write(mcp2515_dev, &tx_val, 1);
+
+    mdelay(5);
+
     memset(zeros, 0, sizeof(zeros));
     setRegisters(mcp2515_dev,MCP_TXB0CTRL, zeros, 14);
     setRegisters(mcp2515_dev,MCP_TXB1CTRL, zeros, 14);
@@ -1021,7 +1149,7 @@ int reset(struct spi_device *mcp2515_dev)
     // do not filter any standard frames for RXF0 used by RXB0
     // do not filter any extended frames for RXF1 used by RXB1
     
-    int i;
+    
     for (i=0; i<6; i++) {
         int ext = (i == 1);
         int result = setFilter(mcp2515_dev,filters[i], ext, 0);
@@ -1030,13 +1158,17 @@ int reset(struct spi_device *mcp2515_dev)
         }
     }
 
-    enum MASK masks[] = {MASK0, MASK1};
+    
     for (i=0; i<2; i++) {
         int result = setFilterMask(mcp2515_dev,masks[i], 1, 0);
         if (result != 1) {
             return result;
         }
     }
+
+    //Set the MCP2515 to config mode.
+    setMode(mcp2515_dev, CANCTRL_REQOP_CONF);
+
     return 1;
 }
 

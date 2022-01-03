@@ -40,10 +40,10 @@ static int __init ModuleInit(void) {
 	/* Parameters for SPI device */
 	struct spi_board_info spi_device_info = {
 		.modalias = "mcp2515",
-		.max_speed_hz = 1000000,
+		.max_speed_hz = 10000000, //High speed SPI Interface 10Mhz
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
-		.mode = 3,
+		.mode = 0, // SPI mode 0,0 and 0,1
 	};
 
 	printk("Inside busum_to_master function");
@@ -75,9 +75,10 @@ static int __init ModuleInit(void) {
 
 	/* Read Chip ID */
 	printk("%s","Inside reset function");
+	//Reset and enter config mode.
 	reset(mcp2515_dev);
 	printk("%s","Inside setBitrate function");
-	setBitrate(mcp2515_dev,CAN_125KBPS, MCP_16MHZ);
+	setBitrate(mcp2515_dev,CAN_500KBPS, MCP_8MHZ);
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 	printk("%s","Inside readRegister function");
