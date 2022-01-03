@@ -485,7 +485,6 @@ uint8_t readRegister(struct spi_device *mcp2515_dev, uint8_t reg){
 void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx_val[], uint8_t len){
     uint8_t tx_val_first[2];
     uint8_t tx_val_sec[len];
-    uint8_t rx_val[len];
     uint8_t i;
 
     //2 bytes of tx_val_first.
