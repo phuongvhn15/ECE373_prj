@@ -39,7 +39,7 @@ static int __init ModuleInit(void) {
 
 	/* Parameters for SPI device */
 	struct spi_board_info spi_device_info = {
-		.modalias = "mcp2515",
+		.modalias = "mcp2515_dev",
 		.max_speed_hz = 100000000, //High speed SPI Interface 10Mhz
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
