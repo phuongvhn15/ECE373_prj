@@ -470,41 +470,6 @@ static const uint8_t CANCTRL_CLKPRE = 0x03;
 
 
 
-static int mcp251x_spi_trans(struct spi_device *spi, int len)
-{
-	struct mcp251x_priv *priv = spi_get_drvdata(spi);
-	struct spi_transfer t = {
-		.tx_buf = priv->spi_tx_buf,
-		.rx_buf = priv->spi_rx_buf,
-		.len = len,
-		.cs_change = 0,
-	};
-	struct spi_message m;
-	int ret;
-
-	spi_message_init(&m);
-	spi_message_add_tail(&t, &m);
-
-	ret = spi_sync(spi, &m);
-	if (ret)
-		dev_err(&spi->dev, "spi transfer failed: ret = %d\n", ret);
-	return ret;
-}
-
-static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
-{
-	struct mcp251x_priv *priv = spi_get_drvdata(spi);
-	u8 val = 0;
-
-	priv->spi_tx_buf[0] = INSTRUCTION_READ;
-	priv->spi_tx_buf[1] = reg;
-
-	mcp251x_spi_trans(spi, 3);
-	val = priv->spi_rx_buf[2];
-
-	return val;
-}
-
 
 
 
