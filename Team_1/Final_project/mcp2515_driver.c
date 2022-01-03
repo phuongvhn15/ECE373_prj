@@ -396,42 +396,6 @@ struct can_frame {
     uint8_t can_data[8];
 };
 
-struct mcp251x_priv {
-	struct can_priv	   can;
-	struct net_device *net;
-	struct spi_device *spi;
-	enum mcp251x_model model;
-
-	struct mutex mcp_lock; /* SPI device lock */
-
-	u8 *spi_tx_buf;
-	u8 *spi_rx_buf;
-
-	struct sk_buff *tx_skb;
-	int tx_len;
-
-	struct workqueue_struct *wq;
-	struct work_struct tx_work;
-	struct work_struct restart_work;
-
-	int force_quit;
-	int after_suspend;
-
-    #define AFTER_SUSPEND_UP 1
-    #define AFTER_SUSPEND_DOWN 2
-    #define AFTER_SUSPEND_POWER 4
-    #define AFTER_SUSPEND_RESTART 8
-    
-	int restart_tx;
-	struct regulator *power;
-	struct regulator *transceiver;
-	struct clk *clk;
-    #ifdef CONFIG_GPIOLIB
-        struct gpio_chip gpio;
-        u8 reg_bfpctrl;
-    #endif
-};
-
 
 static const uint8_t MCP_SIDH = 0;
 static const uint8_t MCP_SIDL = 1;
