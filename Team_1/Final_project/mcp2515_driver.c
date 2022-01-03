@@ -1094,7 +1094,7 @@ int reset(struct spi_device *mcp2515_dev)
     }
 
     //Set the MCP2515 to config mode.
-    setMode(mcp2515_dev, CANCTRL_REQOP_CONF);
+    setMode(mcp2515_dev, CANCTRL_REQOP_CONFIG);
 
     return 1;
 }
