@@ -25,7 +25,6 @@
 #include <linux/ktime.h>
 #include <asm/delay.h> 
 #include <linux/delay.h>
-#include "mcp2515_driver.c"
 /*
  *  Speed 8M
  */
