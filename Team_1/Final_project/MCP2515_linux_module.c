@@ -84,6 +84,9 @@ static int __init ModuleInit(void) {
 
 	printk("Inside gpio set value");
 	gpio_set_value(24,0);
+
+	printk("Inside set Register value");
+	setRegister(mcp2515_dev, MCP_CANSTAT,10);
 	printk("%s","Inside readRegister function");
 	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
 	printk("CAN state register value :%d", reg_val);
