@@ -42,7 +42,7 @@ static int __init ModuleInit(void) {
 		.modalias = "mcp2515_dev",
 		.max_speed_hz = 100000000, //High speed SPI Interface 10Mhz
 		.bus_num = MY_BUS_NUM,
-		.chip_select = 1,
+		.chip_select = 0,
 		.mode = 0, // SPI mode 0,0 and 0,1
 	};
 
