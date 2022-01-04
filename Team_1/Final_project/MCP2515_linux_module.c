@@ -81,6 +81,9 @@ static int __init ModuleInit(void) {
 	setBitrate(mcp2515_dev,CAN_500KBPS, MCP_8MHZ);
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+
+	printk("Inside gpio set value");
+	gpio_set_value(24,0);
 	printk("%s","Inside readRegister function");
 	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
 	printk("CAN state register value :%d", reg_val);
