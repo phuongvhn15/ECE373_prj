@@ -28,6 +28,8 @@ MODULE_AUTHOR("Johannes 4 GNU/Linux");
 MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 sensor");
 
 char data_buffer[10];
+u8 tx_val[3];
+u8 rx_val;
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
