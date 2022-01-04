@@ -20,7 +20,8 @@
 #include <linux/ktime.h>
 #include <asm/delay.h> 
 #include <linux/delay.h>
-#include "mcp2515_driver.c"
+//#include "mcp2515_driver.c"
+#include "Torval_Linux.c"
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
@@ -90,26 +91,30 @@ static int __init ModuleInit(void) {
 	// printk("%s","Inside readRegister function");
 	// int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
 	// printk("CAN state register value :%d", reg_val);
-	gpio_set_value(24,1);
-	mdelay(2000);
+	// gpio_set_value(24,1);
+	// mdelay(2000);
 
-	printk("a%d" ,1);
-	gpio_set_value(24,0);
-	printk("b%d" ,2);
-	u8 tx_val1[] = {0x2, 0x0E, 0x9};
-	u8 rx_val;
-	spi_write(mcp2515_dev, tx_val1, 3);
-	gpio_set_value(24,1);
-	printk("c%d" ,3);
-
-	gpio_set_value(24,0);
-	printk("d%d" ,4);
-	u8 tx_val2[] = {0x03, 0x0E};
-	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val, 1);
-	printk("%d", rx_val);
-	printk("e%d" ,5);
-	gpio_set_value(24,1);
+	// printk("a%d" ,1);
+	// gpio_set_value(24,0);
+	// printk("b%d" ,2);
+	// u8 tx_val1[] = {0x2, 0x0E, 0x9};
+	// u8 rx_val;
 	
+	// spi_write(mcp2515_dev, tx_val1, 3);
+	// gpio_set_value(24,1);
+	// printk("c%d" ,3);
+
+	// gpio_set_value(24,0);
+	// printk("d%d" ,4);
+	// u8 tx_val2[] = {0x03, 0x0E};
+	// spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val, 1);
+	// printk("%d", rx_val);
+	// printk("e%d" ,5);
+	// gpio_set_value(24,1);
+
+	mcp251x_write_reg(mcp2515_dev, CANSTAT, 10);
+	u8 reg_val = mcp251x_read_reg(mcp2515_dev, CANSTAT);
+	printk("%d", reg_val);
 	return 0;
 }
 
