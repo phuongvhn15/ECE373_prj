@@ -94,7 +94,7 @@ static int __init ModuleInit(void) {
 	// mdelay(2000);
 
 	//gpio_set_value(24,0);
-	u8 tx_val1[] = {0x2, 0x36, 0x31};
+	u8 tx_val1[] = {0x02, 0x36, 0x31};
 	u8 rx_val;
 	printk("a %d", rx_val);
 	
