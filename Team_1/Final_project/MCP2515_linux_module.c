@@ -107,11 +107,11 @@ static int __init ModuleInit(void) {
 	// //gpio_set_value(24,1);
 	// printk("b %x", rx_val);
 
-	u8 rx_val;
-	setRegister(mcp2515_dev, 0x36, 0x13);
-	rx_val = readRegister(mcp2515_dev, 0x36);
+	u8 rx_val[] = {0,0,0};
+	//setRegister(mcp2515_dev, 0x36, 0x13);
+	readRegisters(mcp2515_dev, 0x36, rx_val, 3);
 	//gpio_set_value(24,1);
-	printk("b %x", rx_val);
+	printk("b %d %d %d", rx_val[0], rx_val[1], rx_val[2]);
 
 	// u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
 	// u8 rx_val = 0;
