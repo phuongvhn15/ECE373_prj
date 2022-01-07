@@ -93,29 +93,28 @@ static int __init ModuleInit(void) {
 	// gpio_set_value(24,1);
 	// mdelay(2000);
 
-	//gpio_set_value(24,0);
-	// u8 tx_val1[] = {0x02, 0x36, 0x31};
-	// u8 rx_val = 0;
-	// printk("a %d", rx_val);
-	
-	// spi_write(mcp2515_dev, tx_val1, 3);
-	// //gpio_set_value(24,1);
-
-	// //gpio_set_value(24,0);
-	// u8 tx_val2[] = {0x03, 0x36};
-	// spi_write(mcp2515_dev, tx_val2, 2);
-	// spi_read(mcp2515_dev, &rx_val, 1);
-	// //gpio_set_value(24,1);
-	// printk("b %d", rx_val);
-
-	u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
+	gpio_set_value(24,0);
+	u8 tx_val1[] = {0x02, 0x36, 0x31};
 	u8 rx_val = 0;
 	printk("a %d", rx_val);
 	
-	spi_write(mcp2515_dev, tx_val, 4);
-	rx_val = spi_w8r8(mcp2515_dev, 0x36);
+	spi_write(mcp2515_dev, tx_val1, 3);
+	//gpio_set_value(24,1);
+
+	//gpio_set_value(24,0);
+	u8 tx_val2[] = {0x03, 0x36};
+	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val,1);
 	//gpio_set_value(24,1);
 	printk("b %d", rx_val);
+
+	// u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
+	// u8 rx_val = 0;
+	// printk("a %d", rx_val);
+	
+	// spi_write(mcp2515_dev, tx_val, 4);
+	// rx_val = spi_w8r8(mcp2515_dev, 0x36);
+	// //gpio_set_value(24,1);
+	// printk("b %d", rx_val);
 
 	// mcp251x_write_reg(mcp2515_dev, CANSTAT, 10);
 	// u8 reg_val = mcp251x_read_reg(mcp2515_dev, CANSTAT);
