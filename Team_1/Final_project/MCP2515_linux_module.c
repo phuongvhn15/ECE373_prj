@@ -73,39 +73,39 @@ static int __init ModuleInit(void) {
 		return -1;
 	}
 
-	// /* Read Chip ID */
-	// printk("%s","Inside reset function");
-	// //Reset and enter config mode.
-	// reset(mcp2515_dev);
-	// printk("%s","Inside setBitrate function");
-	// setBitrate(mcp2515_dev,CAN_500KBPS, MCP_8MHZ);
-	// printk("%s","Inside setMode function");
-	// setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+	/* Read Chip ID */
+	printk("%s","Inside reset function");
+	//Reset and enter config mode.
+	reset(mcp2515_dev);
+	printk("%s","Inside setBitrate function");
+	setBitrate(mcp2515_dev,CAN_500KBPS, MCP_8MHZ);
+	printk("%s","Inside setMode function");
+	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 
-	// printk("Inside gpio set value");
-	// gpio_set_value(24,0);
-
-	// printk("Inside set Register value");
-	// setRegister(mcp2515_dev, MCP_CANSTAT,10);
-	// printk("%s","Inside readRegister function");
-	// int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
-	// printk("CAN state register value :%d", reg_val);
-	// gpio_set_value(24,1);
-	// mdelay(2000);
-
+	printk("Inside gpio set value");
 	gpio_set_value(24,0);
-	u8 tx_val1[] = {0x02, 0x36, 0x12};
-	u8 rx_val = 0;
-	printk("a %d", rx_val);
-	
-	spi_write(mcp2515_dev, tx_val1, 3);
-	//gpio_set_value(24,1);
 
-	//gpio_set_value(24,0);
-	u8 tx_val2[] = {0x03, 0x36};
-	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val,1);
-	//gpio_set_value(24,1);
-	printk("b %x", rx_val);
+	printk("Inside set Register value");
+	setRegister(mcp2515_dev, MCP_CANSTAT,10);
+	printk("%s","Inside readRegister function");
+	int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
+	printk("CAN state register value :%d", reg_val);
+	gpio_set_value(24,1);
+	mdelay(2000);
+
+	// gpio_set_value(24,0);
+	// u8 tx_val1[] = {0x02, 0x36, 0x12};
+	// u8 rx_val = 0;
+	// printk("a %d", rx_val);
+	
+	// spi_write(mcp2515_dev, tx_val1, 3);
+	// //gpio_set_value(24,1);
+
+	// //gpio_set_value(24,0);
+	// u8 tx_val2[] = {0x03, 0x36};
+	// spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val,1);
+	// //gpio_set_value(24,1);
+	// printk("b %x", rx_val);
 
 	// u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
 	// u8 rx_val = 0;
