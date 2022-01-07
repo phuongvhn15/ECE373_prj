@@ -17,7 +17,7 @@ static const struct file_operations mcp2515_fops = {
 	.write =	mcp215_write,
 };
 
-uint8_t mcp2515_read(struct spi_device *mcp2515_dev, uint8_t reg){
+uint8_t mcp2515_read(struct spi_device *mcp2515_dev, u8 reg){
 	u8 tx_val[] = {0x03, reg};
 	u8 rx_val = 0x00;
 	spi_write_then_read(mcp2515_dev, tx_val, 2, &rx_val, 1);
@@ -25,9 +25,9 @@ uint8_t mcp2515_read(struct spi_device *mcp2515_dev, uint8_t reg){
     return rx_val;
 }
 
-void mcp2515_write(struct spi_device *mcp2515_dev, uint8_t reg, uint8_t val){
-	u8 tx_val1[] = {0x02, reg, val};
-	spi_write(mcp2515_dev, tx_val1, 3);
+void mcp2515_write(struct spi_device *mcp2515_dev, u8 reg, u8 val){
+	u8 tx_val[] = {0x02, reg, val};
+	spi_write(mcp2515_dev, tx_val, 3);
 	printk("Write value 0x%x to register 0x%x", val, reg);
 }
 
