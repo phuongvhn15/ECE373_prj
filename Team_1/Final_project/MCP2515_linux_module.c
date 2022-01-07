@@ -43,7 +43,7 @@ static int __init ModuleInit(void) {
 		.max_speed_hz = 12000000, //High speed SPI Interface 12Mhz
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
-		.mode = 1, // SPI mode 0,0 and 0,1
+		.mode = 4, // SPI mode 0,0 and 0,1
 	};
 
 	printk("Inside busum_to_master function");
