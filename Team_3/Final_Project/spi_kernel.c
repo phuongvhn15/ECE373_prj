@@ -19,16 +19,14 @@ static const struct file_operations mcp2515_fops = {
 static int __init ModuleInit(void)
 {
 	struct spi_master *master;
-	val[] = {0x0F, 0x10};
-	u8 control;
 	
 	//SPI device information
 	struct spi_board_info spi_device_info = {
-		.modalias = "mcp2515",
+		.modalias = "mcp2515_dev",
 		.max_speed_hz = 12000000,
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
-		.mode = 1,
+		.mode = 4,
 	};
 	
 	//Access to SPI bus
@@ -54,9 +52,14 @@ static int __init ModuleInit(void)
 	}
 	
 	printk("Hello kernel!\n");
-	spi_write(mcp2515_dev, val, sizeof(8));
-    control = spiw8r8(mcp2515_dev, 0x0F);
-    printk("MCP2515 control mode: 0x%x\n", control);
+	u8 tx_val1[] = [0x02, 0x036, 0x09];
+	u8 tx_val2[] = [0x03, 0x036];
+	u8 rx_val = 0x00;
+	
+	spi_write(mcp2515_dev, tx_val1, 3);
+	spi_write(mcp2515_dev, tx_val2, 1);
+	spi_read(mcp2515_dev, &rx_val, 1);
+	printk("0x%x", rx_val);
 	return 0;
 }
 
