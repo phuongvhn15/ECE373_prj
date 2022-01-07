@@ -94,7 +94,7 @@ static int __init ModuleInit(void) {
 	// mdelay(2000);
 
 	gpio_set_value(24,0);
-	u8 tx_val1[] = {0x02, 0x36, 0x31};
+	u8 tx_val1[] = {0x02, 0x36, 0x12};
 	u8 rx_val = 0;
 	printk("a %d", rx_val);
 	
@@ -105,7 +105,7 @@ static int __init ModuleInit(void) {
 	u8 tx_val2[] = {0x03, 0x36};
 	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val,1);
 	//gpio_set_value(24,1);
-	printk("b %d", rx_val);
+	printk("b %x", rx_val);
 
 	// u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
 	// u8 rx_val = 0;
