@@ -95,7 +95,7 @@ static int __init ModuleInit(void) {
 
 	//gpio_set_value(24,0);
 	u8 tx_val1[] = {0x02, 0x36, 0x31};
-	u8 rx_val;
+	u8 rx_val = 0;
 	printk("a %d", rx_val);
 	
 	spi_write(mcp2515_dev, tx_val1, 3);
