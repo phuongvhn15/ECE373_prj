@@ -489,6 +489,9 @@ void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx
     tx_val_first[0] = INSTRUCTION_READ;
     tx_val_first[1] = reg;
 
+    tx_val_first_test[0] = INSTRUCTION_READ;
+    tx_val_first_test[1] = 0x00;
+
     //Bytes of tx_val_sec will be dummy 0x00 instructions.
     for(i = 0; i < len; i++){
         tx_val_sec[i] = 0x00;
@@ -502,7 +505,7 @@ void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx
     //MCP2515 has auto-increment of address-pointer.
     //Write 1 byte of dummny instruction then read 1 byte.
     for(i = 0; i < len; i++){
-        spi_write_then_read(mcp2515_dev, &tx_val_sec[i], 1,&rx_val[i], 1);
+        spi_write_then_read(mcp2515_dev, tx_val_first_test, 2,&rx_val[i], 1);
     }
 }
 
