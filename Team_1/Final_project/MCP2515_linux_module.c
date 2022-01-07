@@ -20,8 +20,7 @@
 #include <linux/ktime.h>
 #include <asm/delay.h> 
 #include <linux/delay.h>
-//#include "mcp2515_driver.c"
-#include "Torval_Linux.c"
+#include "mcp2515_driver.c"
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
