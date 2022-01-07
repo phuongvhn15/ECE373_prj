@@ -473,7 +473,7 @@ uint8_t readRegister(struct spi_device *mcp2515_dev, uint8_t reg){
 
     tx_val[0] = INSTRUCTION_READ;
     tx_val[1] = reg;
-    
+
     spi_write_then_read(mcp2515_dev, tx_val, 2,&val, 1);
 
     return val;
@@ -515,8 +515,6 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t valu
     tx_val[0] = INSTRUCTION_WRITE;
     tx_val[1] = reg;
     tx_val[2] = value;
-
-    printk("%d %d %d", tx_val[0], tx_val[1], tx_val[2]);
     
     spi_write(mcp2515_dev, tx_val, 3);
 }
