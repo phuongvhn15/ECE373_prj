@@ -57,8 +57,7 @@ static int __init ModuleInit(void)
 	u8 rx_val = 0x00;
 	
 	spi_write(mcp2515_dev, tx_val1, 3);
-	spi_write(mcp2515_dev, tx_val2, 1);
-	spi_read(mcp2515_dev, &rx_val, 1);
+	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val, 1);
 	printk("0x%x", rx_val);
 	return 0;
 }
