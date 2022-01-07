@@ -52,8 +52,8 @@ static int __init ModuleInit(void)
 	}
 	
 	printk("Hello kernel!\n");
-	u8 tx_val1[] = [0x02, 0x036, 0x09];
-	u8 tx_val2[] = [0x03, 0x036];
+	u8 tx_val1[] = {0x02, 0x036, 0x09};
+	u8 tx_val2[] = {0x03, 0x036};
 	u8 rx_val = 0x00;
 	
 	spi_write(mcp2515_dev, tx_val1, 3);
