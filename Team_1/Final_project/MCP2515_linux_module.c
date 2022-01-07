@@ -94,14 +94,14 @@ static int __init ModuleInit(void) {
 	// mdelay(2000);
 
 	gpio_set_value(24,0);
-	u8 tx_val1[] = {0x2, 0x0E, 0x9};
+	u8 tx_val1[] = {0x2, 0x0F, 0x9};
 	u8 rx_val;
 	
 	spi_write(mcp2515_dev, tx_val1, 3);
 	gpio_set_value(24,1);
 
 	gpio_set_value(24,0);
-	u8 tx_val2[] = {0x03, 0x0E};
+	u8 tx_val2[] = {0x03, 0x0F};
 	spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val, 1);
 	printk("%d", rx_val);
 	gpio_set_value(24,1);
