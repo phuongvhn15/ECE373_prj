@@ -161,10 +161,6 @@ static int __init ModuleInit(void) {
         id |= CAN_RTR_FLAG; // <- Switch the corresponding RTR bit in the id to 1
     }
 
-    //Assigning value to frame struct
-    frame->can_id = id;
-    frame->can_dlc = dlc;
-
     //Reading data and assigning to frame data
     readRegisters(mcp2515_dev,rxb->DATA, frame->can_data, dlc); // <- This function is platform dependent
 
