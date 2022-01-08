@@ -861,6 +861,7 @@ int reset(struct spi_device *mcp2515_dev)
 
 int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const struct can_frame *frame)
 {
+    printk("before if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
     }
@@ -873,6 +874,7 @@ int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const 
     int rtr = (frame->can_id & CAN_RTR_FLAG);
     uint32_t id = (frame->can_id & (ext ? CAN_EFF_MASK : CAN_SFF_MASK));
 
+    printk("Inside prepare id %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
     prepareId(data, ext, id);
 
     data[MCP_DLC] = rtr ? (frame->can_dlc | RTR_MASK) : frame->can_dlc;
@@ -898,13 +900,16 @@ int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
     }
+    printk("Inside send message %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
 
     enum TXBn txBuffers[3] = {TXB0, TXB1, TXB2};
 
     for (i = 0; i<3; i++) {
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
+         
         uint8_t ctrlval = readRegister(mcp2515_dev, txbuf->CTRL);
         if ( (ctrlval & TXB_TXREQ) == 0 ) {
+            printk("Inside if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
             return sendMessageinHardware(mcp2515_dev, txBuffers[i], frame);
         }
     }
