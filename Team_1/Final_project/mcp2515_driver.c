@@ -1157,7 +1157,7 @@ int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
         return 0;
     }
 
-    enum TXBn txBuffers[N_TXBUFFERS] = {TXB0, TXB1, TXB2};
+    enum TXBn txBuffers[3] = {TXB0, TXB1, TXB2};
 
     for (i; i<N_TXBUFFERS; i++) {
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
