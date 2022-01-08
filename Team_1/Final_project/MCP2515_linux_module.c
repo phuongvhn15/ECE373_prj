@@ -78,9 +78,13 @@ static int __init ModuleInit(void) {
 	// //Reset and enter config mode.
 	// reset(mcp2515_dev);
 	// printk("%s","Inside setBitrate function");
-	// setBitrate(mcp2515_dev,CAN_500KBPS, MCP_8MHZ);
+	if(setBitrate(mcp2515_dev)){
+		printk("Set bit rate success");
+	}
+	else
+		printk("Set bit rate fail");
 	// printk("%s","Inside setMode function");
-	// setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 
 	// printk("Inside gpio set value");
 	// gpio_set_value(24,0);
@@ -109,10 +113,10 @@ static int __init ModuleInit(void) {
 
 	u8 tx_val[] = {0x2,0x6,0x9};
 	u8 rx_val[] = {0,0,0};
-	setRegisters(mcp2515_dev, 0x30, tx_val, 3);
-	readRegisters(mcp2515_dev, 0x30, rx_val, 3);
+	//setRegisters(mcp2515_dev, 0x30, tx_val, 3);
+	readRegisters(mcp2515_dev, 0x40, rx_val, 3);
 	//gpio_set_value(24,1);
-	printk(" %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
+	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
 	// struct can_frame can_frame_d;
 	// readMessage(mcp2515_dev, &can_frame_d);
