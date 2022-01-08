@@ -395,6 +395,15 @@ enum CANCTRL_REQOP_MODE {
     CANCTRL_REQOP_POWERUP    = 0xE0
 };
 
+enum TXBnCTRL {
+    TXB_ABTF   = 0x40,
+    TXB_MLOA   = 0x20,
+    TXB_TXERR  = 0x10,
+    TXB_TXREQ  = 0x08,
+    TXB_TXIE   = 0x04,
+    TXB_TXP    = 0x03
+};
+
 struct RXBn_REGS RXB[2] = {
     {MCP_RXB0CTRL, MCP_RXB0SIDH, MCP_RXB0DATA, CANINTF_RX0IF},
     {MCP_RXB1CTRL, MCP_RXB1SIDH, MCP_RXB1DATA, CANINTF_RX1IF}
@@ -441,7 +450,8 @@ static const uint8_t CANCTRL_OSM = 0x08;
 static const uint8_t CANCTRL_CLKEN = 0x04;
 static const uint8_t CANCTRL_CLKPRE = 0x03;
 
-
+static const int N_TXBUFFERS = 3;
+static const int N_RXBUFFERS = 2;
 
 
 
@@ -1128,18 +1138,18 @@ void sendMessageinHardware(enum TXBn txbn, const struct can_frame *frame)
 
     uint8_t ctrl = readRegister(txbuf->CTRL);
     if ((ctrl & (TXB_ABTF | TXB_MLOA | TXB_TXERR)) != 0) {
-        return ERROR_FAILTX;
+        return 0;
     }
-    return ERROR_OK;
+    return 1;
 }
 
 int sendMessage(const struct can_frame *frame)
 {
     if (frame->can_dlc > CAN_MAX_DLEN) {
-        return ERROR_FAILTX;
+        return 0;
     }
 
-    TXBn txBuffers[N_TXBUFFERS] = {TXB0, TXB1, TXB2};
+    enum TXBn txBuffers[N_TXBUFFERS] = {TXB0, TXB1, TXB2};
 
     for (int i=0; i<N_TXBUFFERS; i++) {
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
@@ -1149,5 +1159,5 @@ int sendMessage(const struct can_frame *frame)
         }
     }
 
-    return ERROR_ALLTXBUSY;
+    return 0;
 }
