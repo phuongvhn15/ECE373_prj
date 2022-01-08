@@ -133,9 +133,13 @@ static int __init ModuleInit(void) {
 	can_frame_tx.can_data[0] = 16;
 	can_frame_tx.can_data[0] = 17;
 	can_frame_tx.can_data[0] = 18;
-
 	printk("Sending CAN message");
-	sendMessage(mcp2515_dev, &can_frame_tx);
+	int count = 0;
+	while(count <10){
+		count++;
+		sendMessage(mcp2515_dev, &can_frame_tx);
+	}
+	
 	return 0;
 }
 
