@@ -892,14 +892,14 @@ int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const 
 
 int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
 {
-    int i=0;
+    int i;
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
     }
 
     enum TXBn txBuffers[3] = {TXB0, TXB1, TXB2};
 
-    for (i; i<N_TXBUFFERS; i++) {
+    for (i = 0; i<3; i++) {
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
         uint8_t ctrlval = readRegister(mcp2515_dev, txbuf->CTRL);
         if ( (ctrlval & TXB_TXREQ) == 0 ) {
