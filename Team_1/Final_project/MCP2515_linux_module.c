@@ -126,13 +126,13 @@ static int __init ModuleInit(void) {
 	can_frame_tx.can_id = 0xf2;
 	can_frame_tx.can_dlc = 8;
 	can_frame_tx.can_data[0] = 11;
-	can_frame_tx.can_data[0] = 12;
-	can_frame_tx.can_data[0] = 13;
-	can_frame_tx.can_data[0] = 14;
-	can_frame_tx.can_data[0] = 15;
-	can_frame_tx.can_data[0] = 16;
-	can_frame_tx.can_data[0] = 17;
-	can_frame_tx.can_data[0] = 18;
+	can_frame_tx.can_data[1] = 12;
+	can_frame_tx.can_data[2] = 21;
+	can_frame_tx.can_data[3] = 41;
+	can_frame_tx.can_data[4] = 32;
+	can_frame_tx.can_data[5] = 60;
+	can_frame_tx.can_data[6] = 71;
+	can_frame_tx.can_data[7] = 41;
 	printk("Sending CAN message");
 	int count = 0;
 	while(count <10){
