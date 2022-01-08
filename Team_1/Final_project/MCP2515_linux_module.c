@@ -124,14 +124,14 @@ static int __init ModuleInit(void) {
 
 	can_frame_tx.can_id = 0xf2;
 	can_frame_tx.can_dlc = 8;
-	can_frame_tx.can_data[0] = 0x01;
-	can_frame_tx.can_data[0] = 0x02;
-	can_frame_tx.can_data[0] = 0x03;
-	can_frame_tx.can_data[0] = 0x04;
-	can_frame_tx.can_data[0] = 0x05;
-	can_frame_tx.can_data[0] = 0x06;
-	can_frame_tx.can_data[0] = 0x07;
-	can_frame_tx.can_data[0] = 0x08;
+	can_frame_tx.can_data[0] = 1;
+	can_frame_tx.can_data[0] = 2;
+	can_frame_tx.can_data[0] = 3;
+	can_frame_tx.can_data[0] = 4;
+	can_frame_tx.can_data[0] = 5;
+	can_frame_tx.can_data[0] = 6;
+	can_frame_tx.can_data[0] = 7;
+	can_frame_tx.can_data[0] = 8;
 
 	printk("Sending CAN message");
 	sendMessage(mcp2515_dev, &can_frame_tx);
