@@ -623,7 +623,7 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulD
     enum REGISTER reg;
     uint8_t tbufdata[4];
     int res = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
-    if (res != 0) {
+    if (res == 0) {
         return res;
     }
 
