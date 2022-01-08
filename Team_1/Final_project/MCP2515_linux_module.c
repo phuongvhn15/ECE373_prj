@@ -133,6 +133,7 @@ static int __init ModuleInit(void) {
 	can_frame_tx.can_data[0] = 0x07;
 	can_frame_tx.can_data[0] = 0x08;
 
+	printk("Sending CAN message");
 	sendMessage(mcp2515_dev, &can_frame_tx);
 	return 0;
 }
