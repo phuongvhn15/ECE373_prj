@@ -481,33 +481,6 @@ uint8_t readRegister(struct spi_device *mcp2515_dev, uint8_t reg){
 
 //This function is used to read multiple registers from MCP2515
 void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx_val[], uint8_t len){
-    // uint8_t tx_val_first[2];
-    // uint8_t tx_val_sec[len];
-    // uint8_t i;
-
-    // //2 bytes of tx_val_first.
-    // tx_val_first[0] = INSTRUCTION_READ;
-    // tx_val_first[1] = reg;
-
-    // tx_val_first_test = INSTRUCTION_READ;
-
-    // //Bytes of tx_val_sec will be dummy 0x00 instructions.
-    // for(i = 0; i < len; i++){
-    //     tx_val_sec[i] = 0x00;
-    // }
-
-
-    // //2 bytes of tx_val_first will be transmitted first.
-    // spi_write(mcp2515_dev, tx_val_first, 2);
-
-
-    // //MCP2515 has auto-increment of address-pointer.
-    // //Write 1 byte of dummny instruction then read 1 byte.
-    // for(i = 0; i < len; i++){
-    //     spi_write_then_read(mcp2515_dev, tx_val_first_test, 1,&rx_val[i], 1);
-    // }
-
-
     uint8_t tx_val[2];
     uint8_t i;
 
@@ -518,9 +491,9 @@ void readRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t rx
     //MCP2515 has auto-increment of address-pointer.
     //Write 1 byte of dummny instruction then read 1 byte.
     for(i = 0; i < len; i++){
+        spi_write_then_read(mcp2515_dev, tx_val, 2,&rx_val[i], 1);
         reg+=1;
         tx_val[1] = reg;
-        spi_write_then_read(mcp2515_dev, tx_val, 2,&rx_val[i], 1);
     }
 }
 
