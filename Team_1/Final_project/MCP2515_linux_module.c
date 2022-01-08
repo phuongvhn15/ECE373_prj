@@ -119,7 +119,7 @@ static int __init ModuleInit(void) {
 
 	struct can_frame can_frame_d;
 	readMessage(mcp2515_dev, &can_frame_d);
-	printk("can_dlc: %d, can_id: %d", can_frame_d.can_dlc, can_frame_d.can_id);
+	printk("can_dlc: %d, can_id: %x", can_frame_d.can_dlc, can_frame_d.can_id);
 
 	return 0;
 }
