@@ -113,7 +113,7 @@ static int __init ModuleInit(void) {
 	// //gpio_set_value(24,1);
 	// printk("b %d %d %d", rx_val[0], rx_val[1], rx_val[2]);
 
-	const struct RXBn_REGS *rxb = &RXB[rxbn];
+	const struct RXBn_REGS *rxb = &RXB[0];
     uint32_t id;
     uint8_t dlc;
     uint8_t ctrl;
