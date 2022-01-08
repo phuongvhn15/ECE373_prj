@@ -113,32 +113,32 @@ static int __init ModuleInit(void) {
 	// //gpio_set_value(24,1);
 	// printk("b %x", rx_val);
 
-	u8 rx_val[] = {0,0,0};
-	//setRegisters(mcp2515_dev, 0x30, tx_val, 3);
-	readRegisters(mcp2515_dev, 40, rx_val, 3);
-	//gpio_set_value(24,1);
-	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
+	// u8 rx_val[] = {0,0,0};
+	// setRegisters(mcp2515_dev, 0x30, tx_val, 3);
+	// readRegisters(mcp2515_dev, 40, rx_val, 3);
+	// gpio_set_value(24,1);
+	// printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
 	
-	readMessage(mcp2515_dev, &can_frame_rx);
-	printk("can_dlc: %d, can_id: %x, can_data: %x %x %x %x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
+	// readMessage(mcp2515_dev, &can_frame_rx);
+	// printk("can_dlc: %d, can_id: %x, can_data: %x %x %x %x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
-	can_frame_tx.can_id = 0xf2;
-	can_frame_tx.can_dlc = 8;
-	can_frame_tx.can_data[0] = 1;
-	can_frame_tx.can_data[1] = 2;
-	can_frame_tx.can_data[2] = 3;
-	can_frame_tx.can_data[3] = 4;
-	can_frame_tx.can_data[4] = 5;
-	can_frame_tx.can_data[5] = 6;
-	can_frame_tx.can_data[6] = 7;
-	can_frame_tx.can_data[7] = 8;
-	printk("Sending CAN message");
-	int count = 0;
-	while(count <10){
-		count++;
-		sendMessage(mcp2515_dev, &can_frame_tx);
-	}
+	// can_frame_tx.can_id = 0xf2;
+	// can_frame_tx.can_dlc = 8;
+	// can_frame_tx.can_data[0] = 1;
+	// can_frame_tx.can_data[1] = 2;
+	// can_frame_tx.can_data[2] = 3;
+	// can_frame_tx.can_data[3] = 4;
+	// can_frame_tx.can_data[4] = 5;
+	// can_frame_tx.can_data[5] = 6;
+	// can_frame_tx.can_data[6] = 7;
+	// can_frame_tx.can_data[7] = 8;
+	// printk("Sending CAN message");
+	// int count = 0;
+	// while(count <10){
+	// 	count++;
+	// 	sendMessage(mcp2515_dev, &can_frame_tx);
+	// }
 	
 	return 0;
 }
