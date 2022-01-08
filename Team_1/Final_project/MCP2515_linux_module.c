@@ -27,12 +27,6 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Johannes 4 GNU/Linux");
 MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 sensor");
 
-struct can_frame {
-    uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-    uint8_t can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
-    uint8_t can_data[8];
-};
-
 char data_buffer[10];
 
 #define MY_BUS_NUM 0
