@@ -28,6 +28,8 @@ MODULE_AUTHOR("Johannes 4 GNU/Linux");
 MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 sensor");
 
 char data_buffer[10];
+struct can_frame can_frame_rx;
+struct can_frame can_frame_tx;
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
@@ -117,8 +119,7 @@ static int __init ModuleInit(void) {
 	//gpio_set_value(24,1);
 	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
-	struct can_frame can_frame_rx;
-	struct can_frame can_frame_tx;
+	
 	readMessage(mcp2515_dev, &can_frame_rx);
 	printk("can_dlc: %d, can_id: %x, can_data: %x %x %x %x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
