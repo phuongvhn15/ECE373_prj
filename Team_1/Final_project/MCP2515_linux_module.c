@@ -107,15 +107,16 @@ static int __init ModuleInit(void) {
 	// //gpio_set_value(24,1);
 	// printk("b %x", rx_val);
 
-	// u8 rx_val[] = {0,0,0};
-	// //setRegister(mcp2515_dev, 0x36, 0x13);
-	// readRegisters(mcp2515_dev, 0x36, rx_val, 3);
-	// //gpio_set_value(24,1);
-	// printk("b %d %d %d", rx_val[0], rx_val[1], rx_val[2]);
+	u8 tx_val[] = {0x12,0x13,0x14}
+	u8 rx_val[] = {0,0,0};
+	setRegisters(mcp2515_dev, 0x30, tx_val, 3);
+	readRegisters(mcp2515_dev, 0x30, rx_val, 3);
+	//gpio_set_value(24,1);
+	printk(" %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
-	struct can_frame can_frame_d;
-	readMessage(mcp2515_dev, &can_frame_d);
-	printk("can_dlc: %d, can_id: %d", can_frame_d.can_dlc, can_frame_d.can_id);
+	// struct can_frame can_frame_d;
+	// readMessage(mcp2515_dev, &can_frame_d);
+	// printk("can_dlc: %d, can_id: %d", can_frame_d.can_dlc, can_frame_d.can_id);
 
 	return 0;
 }
