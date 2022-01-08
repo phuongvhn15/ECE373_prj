@@ -679,9 +679,9 @@ int setBitrate(struct spi_device *mcp2515_dev)
     }
     printk("Setting config mode success");
     set = 1;
-    cfg1 = 0x01;
-    cfg2 = 0x9A;
-    cfg3 = 0x87;
+    cfg1 = 0x00;
+    cfg2 = 0x91;
+    cfg3 = 0x85;
 
     if (set) {
         printk("Inside setting config regs");
