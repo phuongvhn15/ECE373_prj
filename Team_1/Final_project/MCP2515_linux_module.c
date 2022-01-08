@@ -114,7 +114,7 @@ static int __init ModuleInit(void) {
 	u8 tx_val[] = {0x2,0x6,0x9};
 	u8 rx_val[] = {0,0,0};
 	//setRegisters(mcp2515_dev, 0x30, tx_val, 3);
-	readRegisters(mcp2515_dev, 0x40, rx_val, 3);
+	readRegisters(mcp2515_dev, 0x2A, rx_val, 3);
 	//gpio_set_value(24,1);
 	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
