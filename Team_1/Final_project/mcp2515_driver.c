@@ -330,6 +330,12 @@ static const struct RXBn_REGS {
     enum CANINTF  CANINTF_RXnIF;
 };
 
+static const struct TXBn_REGS {
+    enum REGISTER CTRL;
+    enum REGISTER SIDH;
+    enum REGISTER DATA;
+} TXB[N_TXBUFFERS];
+
 enum RXF {
     RXF0 = 0,
     RXF1 = 1,
@@ -361,6 +367,12 @@ enum CAN_SPEED {
 enum MASK {
     MASK0,
     MASK1
+};
+
+enum TXBn {
+    TXB0 = 0,
+    TXB1 = 1,
+    TXB2 = 2
 };
 
 enum RXBn {
@@ -510,21 +522,19 @@ void setRegister(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t valu
 
 void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t values[], uint8_t len)
 {
-    uint8_t tx_val_first[2];
+    uint8_t tx_val[3];
     uint8_t i;
 
     //2 bytes of tx_val_first.
-    tx_val_first[0] = INSTRUCTION_WRITE;
-    tx_val_first[1] = reg;
-
-    //2 bytes of tx_val_first will be transmitted first.
-    spi_write(mcp2515_dev, tx_val_first, 2);
-
+    tx_val[0] = INSTRUCTION_WRITE;
+    tx_val[1] = reg;
+    tx_val[2] = 0;
 
     //MCP2515 has auto-increment of address-pointer.
     //Write 1 byte of data continuously.
     for(i = 0; i < len; i++){
-        spi_write(mcp2515_dev, &values[i], 1);
+        tx_val[2] = values[i];
+        spi_write(mcp2515_dev, tx_val, 3);
     }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -1086,4 +1096,58 @@ int reset(struct spi_device *mcp2515_dev)
 
     return 1;
 }
+////////////////////////////////////////////////////
 
+
+
+////
+
+void sendMessageinHardware(enum TXBn txbn, const struct can_frame *frame)
+{
+    if (frame->can_dlc > CAN_MAX_DLEN) {
+        return 0;
+    }
+
+    const struct TXBn_REGS *txbuf = &TXB[txbn];
+
+    uint8_t data[13];
+
+    bool ext = (frame->can_id & CAN_EFF_FLAG);
+    bool rtr = (frame->can_id & CAN_RTR_FLAG);
+    uint32_t id = (frame->can_id & (ext ? CAN_EFF_MASK : CAN_SFF_MASK));
+
+    prepareId(data, ext, id);
+
+    data[MCP_DLC] = rtr ? (frame->can_dlc | RTR_MASK) : frame->can_dlc;
+
+    memcpy(&data[MCP_DATA], frame->data, frame->can_dlc);
+
+    setRegisters(txbuf->SIDH, data, 5 + frame->can_dlc);
+
+    modifyRegister(txbuf->CTRL, TXB_TXREQ, TXB_TXREQ);
+
+    uint8_t ctrl = readRegister(txbuf->CTRL);
+    if ((ctrl & (TXB_ABTF | TXB_MLOA | TXB_TXERR)) != 0) {
+        return ERROR_FAILTX;
+    }
+    return ERROR_OK;
+}
+
+int sendMessage(const struct can_frame *frame)
+{
+    if (frame->can_dlc > CAN_MAX_DLEN) {
+        return ERROR_FAILTX;
+    }
+
+    TXBn txBuffers[N_TXBUFFERS] = {TXB0, TXB1, TXB2};
+
+    for (int i=0; i<N_TXBUFFERS; i++) {
+        const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
+        uint8_t ctrlval = readRegister(txbuf->CTRL);
+        if ( (ctrlval & TXB_TXREQ) == 0 ) {
+            return sendMessage(txBuffers[i], frame);
+        }
+    }
+
+    return ERROR_ALLTXBUSY;
+}
