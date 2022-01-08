@@ -672,11 +672,12 @@ int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const 
 int setBitrate(struct spi_device *mcp2515_dev)
 {
     uint8_t set, cfg1, cfg2, cfg3;
+    printk("Setting config mode");
     int error = setMode(mcp2515_dev,CANCTRL_REQOP_CONFIG);
     if (error != 1) {
         return error;
     }
-
+    printk("Setting config mode success");
     set = 1;
     cfg1 = 0x00;
     cfg2 = 0x91;
