@@ -107,24 +107,71 @@ static int __init ModuleInit(void) {
 	// //gpio_set_value(24,1);
 	// printk("b %x", rx_val);
 
-	u8 rx_val[] = {0,0,0};
-	//setRegister(mcp2515_dev, 0x36, 0x13);
-	readRegisters(mcp2515_dev, 0x36, rx_val, 3);
-	//gpio_set_value(24,1);
-	printk("b %d %d %d", rx_val[0], rx_val[1], rx_val[2]);
-
-	// u8 tx_val[] = {0x02, 0x36, 0x31, 0x03};
-	// u8 rx_val = 0;
-	// printk("a %d", rx_val);
-	
-	// spi_write(mcp2515_dev, tx_val, 4);
-	// rx_val = spi_w8r8(mcp2515_dev, 0x36);
+	// u8 rx_val[] = {0,0,0};
+	// //setRegister(mcp2515_dev, 0x36, 0x13);
+	// readRegisters(mcp2515_dev, 0x36, rx_val, 3);
 	// //gpio_set_value(24,1);
-	// printk("b %d", rx_val);
+	// printk("b %d %d %d", rx_val[0], rx_val[1], rx_val[2]);
 
-	// mcp251x_write_reg(mcp2515_dev, CANSTAT, 10);
-	// u8 reg_val = mcp251x_read_reg(mcp2515_dev, CANSTAT);
-	// printk("%d", reg_val);
+	const struct RXBn_REGS *rxb = &RXB[rxbn];
+    uint32_t id;
+    uint8_t dlc;
+    uint8_t ctrl;
+
+    // Five bytes are used to store Standard and Extend Identifiers
+    // Reading 5 bytes of Identifier to tbufdata
+    uint8_t tbufdata[5];
+    readRegisters(mcp2515_dev,rxb->SIDH, tbufdata, 5); // <- This function is platform dependent
+    //
+
+    //Bit manipulation to obtain ID field in the message
+    //Inside tbufdata[5] array there are registers:
+    //      + [0] SIDH 
+    //      + [1] SIDL
+    //      + [2] EIDH
+    //      + [3] EIDL
+    //      + [4] DLC
+    //ID has 11 bits in length
+    id = (tbufdata[MCP_SIDH]<<3) + (tbufdata[MCP_SIDL]>>5);
+
+    //If extended standard id is used then modify id
+    //In final project, we dont use extended id so this code can be removed with no effect. 
+    if ( (tbufdata[MCP_SIDL] & TXB_EXIDE_MASK) ==  TXB_EXIDE_MASK ) {
+        id = (id<<2) + (tbufdata[MCP_SIDL] & 0x03);
+        id = (id<<8) + tbufdata[MCP_EID8];
+        id = (id<<8) + tbufdata[MCP_EID0];
+        id |= CAN_EFF_FLAG;
+    }
+    //
+
+    //Data length (DLC) is obtained by masking DLC_MASK with tbufdata[4]
+    //If data length is more then 8 then return error.
+    //CAN_MAX_DLEN(maximum data length) is 8
+    //DLC has 4 bit in length
+    dlc = (tbufdata[MCP_DLC] & DLC_MASK);
+    if (dlc > 8) {
+        return 0;
+    }
+
+    //Read value of CTRL register
+    //CTRL register has 8 bits, including RTR bit, IDE bit, Reserved bit, Data filtering bits. 
+    ctrl = readRegister(mcp2515_dev,rxb->CTRL); // <- This function is platform dependent.
+    if (ctrl & RXBnCTRL_RTR) // <- If RTR bit of CTRL register is 1 then 
+    {
+        id |= CAN_RTR_FLAG; // <- Switch the corresponding RTR bit in the id to 1
+    }
+
+    //Assigning value to frame struct
+    frame->can_id = id;
+    frame->can_dlc = dlc;
+
+    //Reading data and assigning to frame data
+    readRegisters(mcp2515_dev,rxb->DATA, frame->can_data, dlc); // <- This function is platform dependent
+
+	printk("can id :%d can_dlc: %d", id, dlc);
+    //Clearing CAN interrupt flag for new data to reside.
+    modifyRegister(mcp2515_dev,MCP_CANINTF, rxb->CANINTF_RXnIF, 0); // <- This function is platform dependent
+
 	return 0;
 }
 
