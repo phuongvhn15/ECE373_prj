@@ -1143,7 +1143,7 @@ int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const 
 
     modifyRegister(mcp2515_dev,txbuf->CTRL, TXB_TXREQ, TXB_TXREQ);
 
-    uint8_t ctrl = readRegister(txbuf->CTRL);
+    uint8_t ctrl = readRegister(mcp2515_dev, txbuf->CTRL);
     if ((ctrl & (TXB_ABTF | TXB_MLOA | TXB_TXERR)) != 0) {
         return 0;
     }
@@ -1163,7 +1163,7 @@ int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
         uint8_t ctrlval = readRegister(mcp2515_dev, txbuf->CTRL);
         if ( (ctrlval & TXB_TXREQ) == 0 ) {
-            return sendMessage(mcp2515_dev, txBuffers[i], frame);
+            return sendMessageinHardware(mcp2515_dev, txBuffers[i], frame);
         }
     }
 
