@@ -404,6 +404,13 @@ enum TXBnCTRL {
     TXB_TXP    = 0x03
 };
 
+struct TXBn_REGS TXB[3] = {
+    {MCP_TXB0CTRL, MCP_TXB0SIDH, MCP_TXB0DATA},
+    {MCP_TXB1CTRL, MCP_TXB1SIDH, MCP_TXB1DATA},
+    {MCP_TXB2CTRL, MCP_TXB2SIDH, MCP_TXB2DATA}
+};
+
+
 struct RXBn_REGS RXB[2] = {
     {MCP_RXB0CTRL, MCP_RXB0SIDH, MCP_RXB0DATA, CANINTF_RX0IF},
     {MCP_RXB1CTRL, MCP_RXB1SIDH, MCP_RXB1DATA, CANINTF_RX1IF}
@@ -1112,7 +1119,7 @@ int reset(struct spi_device *mcp2515_dev)
 
 ////
 
-int sendMessageinHardware(enum TXBn txbn, const struct can_frame *frame)
+int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const struct can_frame *frame)
 {
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
@@ -1143,7 +1150,7 @@ int sendMessageinHardware(enum TXBn txbn, const struct can_frame *frame)
     return 1;
 }
 
-int sendMessage(const struct can_frame *frame)
+int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
 {
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
@@ -1153,9 +1160,9 @@ int sendMessage(const struct can_frame *frame)
 
     for (int i=0; i<N_TXBUFFERS; i++) {
         const struct TXBn_REGS *txbuf = &TXB[txBuffers[i]];
-        uint8_t ctrlval = readRegister(txbuf->CTRL);
+        uint8_t ctrlval = readRegister(mcp2515_dev, txbuf->CTRL);
         if ( (ctrlval & TXB_TXREQ) == 0 ) {
-            return sendMessage(txBuffers[i], frame);
+            return sendMessage(mcp2515_dev, txBuffers[i], frame);
         }
     }
 
