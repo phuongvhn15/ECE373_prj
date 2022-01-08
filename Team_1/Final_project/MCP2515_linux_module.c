@@ -114,7 +114,6 @@ static int __init ModuleInit(void) {
 	// printk("b %x", rx_val);
 
 	// u8 rx_val[] = {0,0,0};
-	// setRegisters(mcp2515_dev, 0x30, tx_val, 3);
 	// readRegisters(mcp2515_dev, 40, rx_val, 3);
 	// gpio_set_value(24,1);
 	// printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
@@ -146,54 +145,44 @@ static int __init ModuleInit(void) {
 
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	
-	// struct can_frame CAN_FRAME;
-	// if(readMessage(mcp2515_dev,&CAN_FRAME) < 0){
-	// 	printk("Cant read message");
-	// }
+	struct can_frame CAN_FRAME;
+	if(readMessage(mcp2515_dev,&CAN_FRAME) < 0){
+		printk("Cant read message");
+	}
 
 	
-	// u32 can_id = CAN_FRAME.can_id;
-	// u8 can_dlc = CAN_FRAME.can_dlc;
+	u32 can_id = CAN_FRAME.can_id;
+	u8 can_dlc = CAN_FRAME.can_dlc;
 	
-	// char id_dlc_buffer[4];
-	// sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
+	char id_dlc_buffer[4];
+	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
 
-	// //Copy can_data to data buffer
-	// char data_buffer[can_dlc*2];
+	//Copy can_data to data buffer
+	char data_buffer[can_dlc*2];
 	
-	// int count_data = 0;
-	// int i;
-	// for(i = 0; i < can_dlc*2; i+=2){
-	// 	sprintf(data_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
-	// }
+	int count_data = 0;
+	int i;
+	for(i = 0; i < can_dlc*2; i+=2){
+		sprintf(data_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
+	}
 
-	// //Concatenate id, dlc, data into 1 data array
-	// char can_buffer[4 + can_dlc*2];
+	//Concatenate id, dlc, data into 1 data array
+	char can_buffer[4 + can_dlc*2];
 
-	// for(i = 0; i < 4; i++){
-	// 	can_buffer[i] = id_dlc_buffer[i];
-	// }
+	for(i = 0; i < 4; i++){
+		can_buffer[i] = id_dlc_buffer[i];
+	}
 
-	// for (i = 4; i < (can_dlc*2+4); i++)
-	// {
-	// 	can_buffer[i] = data_buffer[i-4];
-	// }
-
-	int returned_val = readRegister(mcp2515_dev, MCP_CANSTAT);
-
-	int to_copy = 0;
-	int not_copied = 0;
-	int delta = 0;
-	/* Get amount of data to copy */
-	//to_copy = min(count, sizeof(can_buffer));
-	to_copy = min(count, sizeof(returned_val));
-	/* Copy data to user */
-	not_copied = copy_to_user(user_buffer, &returned_val, to_copy);
-
-	/* Calculate data */
-	delta = to_copy - not_copied;
+	for (i = 4; i < (can_dlc*2+4); i++)
+	{
+		can_buffer[i] = data_buffer[i-4];
+	}
 
 	return delta;
+}
+
+static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+
 }
 static struct file_operations fops = {
 	.owner = THIS_MODULE,
