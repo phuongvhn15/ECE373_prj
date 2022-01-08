@@ -553,6 +553,7 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val
         tx_val[2] = values[i];
         spi_write(mcp2515_dev, tx_val, 3);
         reg+=1;
+        tx_val[1] = reg;
     }
 }
 /////////////////////////////////////////////////////////////////////////////
