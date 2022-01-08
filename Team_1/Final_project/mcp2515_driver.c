@@ -877,9 +877,10 @@ int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const 
 
     data[MCP_DLC] = rtr ? (frame->can_dlc | RTR_MASK) : frame->can_dlc;
 
+    printk("before memcpy %x %x %x ", data[0],data[1],data[2]);
     memcpy(&data[MCP_DATA], frame->can_data, frame->can_dlc);
-
-    setRegisters(mcp2515_dev,txbuf->SIDH, data, 5 + frame->can_dlc);
+    printk("after memcpy %x %x %x ", data[0],data[1],data[2]);
+    setRegisters(mcp2515_dev,txbuf->SIDH, data, 13);
 
     modifyRegister(mcp2515_dev,txbuf->CTRL, TXB_TXREQ, TXB_TXREQ);
 
