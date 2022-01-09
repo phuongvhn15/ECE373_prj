@@ -1,3 +1,18 @@
+/****************************************************
+* This driver is written by Group 1 for the ECE372  *
+* course project. It is written based on Arduino  	*
+* mcp2515 driver.									*
+* 													*
+* You are free to copy and modify as you like!!		*	
+*													*
+* Group 4.													*			
+* Instructor : Hồ Văn Nguyên Phương					*
+* Contributor : Nguyễn Cao Minh						*
+*				Phan Anh Tú							*
+*				Lưu Anh Khang						*
+*				Vũ Việt Hoàng						*
+* **************************************************/
+
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
@@ -108,6 +123,15 @@ static int __init ModuleInit(void) {
 	return 0;
 }
 
+/**
+ * @brief 
+ * 
+ * @param File file handler được trả về từ hàm fopen
+ * @param user_buffer buffer dùng để chứa giá trị
+ * @param count số lượng byte của buffer
+ * @param offs 
+ * @return ssize_t 
+ */
 
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	int i;
@@ -167,6 +191,15 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	int i;
 	struct can_frame CAN_FRAME;
+
+	CAN_FRAME.can_data[0] = 0;
+	CAN_FRAME.can_data[1] = 0;
+	CAN_FRAME.can_data[2] = 0;
+	CAN_FRAME.can_data[3] = 0;
+	CAN_FRAME.can_data[4] = 0;
+	CAN_FRAME.can_data[5] = 0;
+	CAN_FRAME.can_data[6] = 0;
+	CAN_FRAME.can_data[7] = 0;
 
 	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
 	CAN_FRAME.can_id = user_buffer[0];
