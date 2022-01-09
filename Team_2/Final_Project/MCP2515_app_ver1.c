@@ -148,13 +148,23 @@ void menu()
     printf("===========MENU============\n");
     printf("1. Session control 01\n");
     printf("2. Session control 03\n");
-    printf("3. Read engine\n");
-    printf("4. Read radar\n");
-    printf("5. Write radar\n");
-    printf("6. Read DTC\n");
-    printf("7. Clear diagnostic\n");
-    printf("8. Request seed\n");
-    printf("9.ECU reset\n");
+    printf("3. Read ECU voltage engine\n");
+    printf("4. Read temperature engine\n");
+    printf("5. Read odometer engine\n");
+    printf("6. Read velocity engine\n");
+
+    printf("7. Read ECU voltage radar\n");
+    printf("8. Read angel azimuth radar\n");
+    printf("9. Object detection radar\n");
+    printf("10. Warning detection radar\n");
+
+    printf("11. Write angel azimuth radar\n");
+
+    printf("12. Read DTC\n");
+    printf("13. Clear diagnostic\n");
+    printf("14. Request seed\n");
+    printf("15. Send seed\n");
+    printf("16.ECU reset\n");
     printf("=======================\n");
 
 }
