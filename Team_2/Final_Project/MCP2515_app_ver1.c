@@ -180,6 +180,13 @@ int main()
                 printf("%02x  ",canMsg1.data[i]);
             }
         }
+        else if(select == 2)
+        {
+            for (int i =0;i<canMsg2.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg2.data[i]);
+            }
+        }
         else if(select == 3)
         {
             for (int i =0;i<canMsg3.can_dlc;i++)
