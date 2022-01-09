@@ -24,12 +24,8 @@
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Johannes 4 GNU/Linux");
-MODULE_DESCRIPTION("A simple LKM to read and write some registers of a BMP280 sensor");
-
-char data_buffer[10];
-struct can_frame can_frame_rx;
-struct can_frame can_frame_tx;
+MODULE_AUTHOR("Nhom4: Khang, Minhproviptk, Tu, Hoang");
+MODULE_DESCRIPTION("MCP2515 linux module");
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
@@ -75,50 +71,20 @@ static int __init ModuleInit(void) {
 		return -1;
 	}
 
-	// /* Read Chip ID */
-	// printk("%s","Inside reset function");
-	// //Reset and enter config mode.
-	// reset(mcp2515_dev);
-	// printk("%s","Inside setBitrate function");
+	//Setting bitrate of 500Kbs and MCP2515 clock of 12Mhz.
 	if(setBitrate(mcp2515_dev)){
 		printk("Set bit rate success");
 	}
 	else
 		printk("Set bit rate fail");
-	// printk("%s","Inside setMode function");
+	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 
-	// printk("Inside gpio set value");
-	// gpio_set_value(24,0);
-
-	// printk("Inside set Register value");
-	// setRegister(mcp2515_dev, MCP_CANSTAT,10);
-	// printk("%s","Inside readRegister function");
-	// int reg_val = readRegister(mcp2515_dev, MCP_CANSTAT);
-	// printk("CAN state register value :%d", reg_val);
-	// gpio_set_value(24,1);
-	// mdelay(2000);
-
-	// gpio_set_value(24,0);
-	// u8 tx_val1[] = {0x02, 0x36, 0x12};
-	// u8 rx_val = 0;
-	// printk("a %d", rx_val);
-	
-	// spi_write(mcp2515_dev, tx_val1, 3);
-	// //gpio_set_value(24,1);
-
-	// //gpio_set_value(24,0);
-	// u8 tx_val2[] = {0x03, 0x36};
-	// spi_write_then_read(mcp2515_dev, tx_val2, 2, &rx_val,1);
-	// //gpio_set_value(24,1);
-	// printk("b %x", rx_val);
-
+	////Test Sending and Receiving.
 	// u8 rx_val[] = {0,0,0};
 	// readRegisters(mcp2515_dev, 40, rx_val, 3);
-	// gpio_set_value(24,1);
 	// printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
-	
 	// readMessage(mcp2515_dev, &can_frame_rx);
 	// printk("can_dlc: %d, can_id: %x, can_data: %x %x %x %x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
@@ -199,14 +165,27 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 }
 
 static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+	int i;
+	struct can_frame CAN_FRAME;
 
+	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
+	CAN_FRAME.can_id = user_buffer[0];
+	CAN_FRAME.can_dlc = user_buffer[1];
+
+	//Copy 8 bytes of can_data to CAN_FRAME.
+	for(i = 0; i < 8; i++){
+		CAN_FRAME.can_data[i] = user_buffer[i+2];
+	} 
+
+	printk("Sending CAN message");
+	sendMessage(mcp2515_dev, &CAN_FRAME);
 }
 static struct file_operations fops = {
 	.owner = THIS_MODULE,
 	//.open = mcp2515_open,
 	//.release = mcp2515_close,
 	.read = mcp2515_read,
-	//.write = mcp2515_write
+	.write = mcp2515_write
 };
 
 /**
