@@ -204,6 +204,13 @@ int main()
                 printf("%02x  ",canMsg3.data[i]);
             }
         }
+        else if(select == 7)
+        {
+            for (int i =0;i<canMsg7.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg7.data[i]);
+            }
+        }
         else if(select == 16)
         {
             for (int i =0;i<canMsg16.can_dlc;i++)
