@@ -5,7 +5,7 @@
 * 													*
 * You are free to copy and modify as you like!!		*	
 *													*
-* Group 4.													*			
+* Group 4.											*			
 * Instructor : Hồ Văn Nguyên Phương					*
 * Contributor : Nguyễn Cao Minh						*
 *				Phan Anh Tú							*
