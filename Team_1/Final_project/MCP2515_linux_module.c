@@ -144,36 +144,51 @@ static int __init ModuleInit(void) {
 
 
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
-	
+	int i;
 	struct can_frame CAN_FRAME;
-	if(readMessage(mcp2515_dev,&CAN_FRAME) < 0){
-		printk("Cant read message");
+
+	CAN_FRAME.can_data[0] = 0;
+	CAN_FRAME.can_data[1] = 0;
+	CAN_FRAME.can_data[2] = 0;
+	CAN_FRAME.can_data[3] = 0;
+	CAN_FRAME.can_data[4] = 0;
+	CAN_FRAME.can_data[5] = 0;
+	CAN_FRAME.can_data[6] = 0;
+	CAN_FRAME.can_data[7] = 0;
+
+	if(readMessage(mcp2515_dev,&CAN_FRAME)){
+		printk("Read message successful");
 	}
+	else
+		printk("Fail to read message ");
 
 	
 	u32 can_id = CAN_FRAME.can_id;
 	u8 can_dlc = CAN_FRAME.can_dlc;
 	
-	char id_dlc_buffer[4];
+	char id_dlc_buffer[2];
 	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
-
-	//Copy can_data to data buffer
-	char data_buffer[can_dlc*2];
+	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
 	
-	int count_data = 0;
-	int i;
-	for(i = 0; i < can_dlc*2; i+=2){
-		sprintf(data_buffer[i], "%x", CAN_FRAME.can_data[count_data]);
+	//
+	//Copy can_data to data buffer
+	char data_buffer[8];
+	for(i = 0; i < 8; i++){
+		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
 	}
+	//
+	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
+
 
 	//Concatenate id, dlc, data into 1 data array
-	char can_buffer[4 + can_dlc*2];
+	char can_buffer[2 + 8];
 
-	for(i = 0; i < 4; i++){
+	//Copy id and dlc to can_buffer.
+	for(i = 0; i < 2; i++){
 		can_buffer[i] = id_dlc_buffer[i];
 	}
 
-	for (i = 4; i < (can_dlc*2+4); i++)
+	for (i = 2; i < 10; i++)
 	{
 		can_buffer[i] = data_buffer[i-4];
 	}

@@ -763,7 +763,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
     //Clearing CAN interrupt flag for new data to reside.
     modifyRegister(mcp2515_dev,MCP_CANINTF, rxb->CANINTF_RXnIF, 0); // <- This function is platform dependent
 
-    return 0;
+    return 1;
 }
 
 //This function will be called directly to get data frame
