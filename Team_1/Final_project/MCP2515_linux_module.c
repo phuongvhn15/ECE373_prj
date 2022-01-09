@@ -1,16 +1,16 @@
 /****************************************************
-* This driver is written by Group 1 for the ECE372  *
-* course project. It is written based on Arduino  	*
-* mcp2515 driver.									*
-* 													*
-* You are free to copy and modify as you like!!		*	
-*													*
-* Group 4.											*			
-* Instructor : Hồ Văn Nguyên Phương					*
-* Contributor : Nguyễn Cao Minh						*
-*				Phan Anh Tú							*
-*				Lưu Anh Khang						*
-*				Vũ Việt Hoàng						*
+* This driver is written by Group 1 for the ECE372  
+* course project. It is written based on Arduino  	
+* mcp2515 driver.									
+* 													
+* You are free to copy and modify as you like!!			
+*													
+* Group 1.														
+* Instructor : Hồ Văn Nguyên Phương					
+* Contributor : Nguyễn Cao Minh						
+*		Phan Anh Tú							
+*		Lưu Anh Khang					
+*		Vũ Việt Hoàng						
 * **************************************************/
 
 #include <linux/types.h>
