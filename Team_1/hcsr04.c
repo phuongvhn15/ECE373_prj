@@ -70,7 +70,7 @@ ssize_t hcsr04_read(struct file *filp, char __user *buf, size_t count, loff_t *f
 	if(pulse <1130)
 	{
 	
-    printk( KERN_INFO "ON" );
+        printk( KERN_INFO "ON" );
 		gpio_set_value(SPEAKER,1);
 		//udelay(1000000);
 	}

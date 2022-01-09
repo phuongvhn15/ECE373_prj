@@ -187,13 +187,15 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	for(i = 0; i < 2; i++){
 		can_buffer[i] = id_dlc_buffer[i];
 	}
-
+	//Copy data to can_buffer
 	for (i = 2; i < 10; i++)
 	{
-		can_buffer[i] = data_buffer[i-4];
+		can_buffer[i] = data_buffer[i-2];
 	}
 
-	return delta;
+	printk("Copy to userbuffer");
+	copy_to_user(user_buffer, can_buffer, 10);
+	return 1;
 }
 
 static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
