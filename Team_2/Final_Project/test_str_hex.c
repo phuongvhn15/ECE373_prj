@@ -24,7 +24,6 @@ void init()
   canMsg1.data[5] = 0xED;
   canMsg1.data[6] = 0x00;
   canMsg1.data[7] = 0x00;
-
 }
 int main()
 {

@@ -39,6 +39,7 @@ void init()
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
+  canMsg1.data[3] = 0x00;
 
   canMsg2.can_id  = 0x750;
   canMsg2.can_dlc = 3;
@@ -181,11 +182,11 @@ int main(int argc, char **argv)
     char can_data[128]={0};
     char can_frame[128]={0};
     init();
-    if ((fd = open(dev_name,O_RDWR)) < 0 )
-{
-    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-    return( 1 );
-}
+//     if ((fd = open(dev_name,O_RDWR)) < 0 )
+// {
+//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+//     return( 1 );
+// }
 
     do{
         system("cls");
@@ -247,6 +248,10 @@ int main(int argc, char **argv)
                 printf("%02x  ",canMsg16.data[i]);
             }
         }
+        strcpy(can_id,"0");
+        strcpy(can_dlc,"0");
+        strcpy(can_data,"0");
+        strcpy(can_frame,"0");
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
