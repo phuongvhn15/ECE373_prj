@@ -66,7 +66,7 @@ static struct spi_device *mcp2515_dev_spi;
  * @return ssize_t 
  */
 
-static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, loff_t *offs) {
 	int i;
 	struct can_frame CAN_FRAME;
 
@@ -117,7 +117,7 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	}
 
 	printk("Copy to userbuffer");
-	copy_to_user(user_buffer, can_buffer, 10);
+	copy_to_user(buf, can_buffer, 10);
 	return 1;
 }
 
