@@ -115,16 +115,12 @@ static int __init ModuleInit(void) {
 
 		printk("Device class can not e created!\n");
 
-		goto ClassError;
-
 	}
 	/* create device file */
 
 	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev_ver2d") == NULL) {
 
 		printk("Can not create device file!\n");
-
-		goto FileError;
 
 	}
 
