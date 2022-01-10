@@ -7,9 +7,8 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdlib.h>
-#define CAN_FRAME_MAX_DATA_LEN 8
-#define CAN_FRAME_MAX_BITS 128
 
+#define CAN_FRAME_MAX_DATA_LEN 8
 struct can_frame {
     uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
     uint8_t    can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
@@ -181,19 +180,19 @@ void clearBuffer(char *can_frame, char *rx_frame)
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev_ver2d";
+    //char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
     char con;
-    char can_frame[10]={0};
-    char rx_frame[10] = {0};
+    char can_frame[11]={0};
+    char rx_frame[11] = {0};
     init();
-    if ((fd = open(dev_name,O_RDWR)) < 0 )
-{
-    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-    return( 1 );
-}
+//     if ((fd = open(dev_name,O_RDWR)) < 0 )
+// {
+//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+//     return( 1 );
+// }
 
     do{
         menu();
@@ -207,11 +206,12 @@ int main(int argc, char **argv)
         if(select == 1)
         { 
             can_frame[0] = canMsg1.can_id;
-            can_frame[1] = canMsg1.can_dlc;
-            can_frame[2] = canMsg1.data[0];
-            can_frame[3] = canMsg1.data[1];
-            can_frame[4] = canMsg1.data[2];
-            can_frame[5] = canMsg1.data[3];
+            can_frame[1] = canMsg1.can_id;
+            can_frame[2] = canMsg1.can_dlc;
+            can_frame[3] = canMsg1.data[0];
+            can_frame[4] = canMsg1.data[1];
+            can_frame[5] = canMsg1.data[2];
+            can_frame[6] = canMsg1.data[3];
 
             write(fd, can_frame, 10);
             printf("CAN Transmission: ");
@@ -219,7 +219,7 @@ int main(int argc, char **argv)
             printf("\n");
             read(fd, rx_frame, 10);
             printf("CAN Response: ");
-            printMessage(rx_frame);
+            displayMessageCAN(rx_frame);
             printf("\n");
         }
         else if(select == 2)
