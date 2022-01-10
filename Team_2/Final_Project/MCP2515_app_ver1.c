@@ -168,11 +168,23 @@ void menu()
     printf("=======================\n");
 
 }
-int main()
+int main(int argc, char **argv)
 {
+    char *app_name = argv[0];
+    char *dev_name = "/dev/mcp2515_dev";
+    int fd = -1;
+    char c;
     int select = 0;
     char con;
+    char temp_dlc[] = {0};
+    char temp_id[] = {0};
     init();
+    if ((fd = open(dev_name,O_RDWR)) < 0 )
+{
+    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    return( 1 );
+}
+
     do{
         system("cls");
         menu();
@@ -185,10 +197,15 @@ int main()
         }
         if(select == 1)
         {
+            printf("CAN FRAME IN APP: ");
             for (int i =0;i<canMsg1.can_dlc;i++)
             {
                 printf("%02x  ",canMsg1.data[i]);
             }
+            sprintf(temp,"%x",hex1);
+            read(fd,&canMsg1.can_id,10);
+            read(fd,&canMsg1.can_dlc,10);
+
         }
         else if(select == 2)
         {
