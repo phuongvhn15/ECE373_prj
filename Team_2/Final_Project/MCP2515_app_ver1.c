@@ -172,9 +172,11 @@ void menu()
 
 void printMessage(char *buffer){
     int i = 0;
+    printf("CAN message: ");
     for(i = 0; i < sizeof(buffer); i++){
-        printf("%02x", buffer[i]);
+        printf("%02x ", buffer[i]);
     }
+    printf("\n");
 }
 
 int main(int argc, char **argv)
