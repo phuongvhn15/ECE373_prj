@@ -177,10 +177,10 @@ int main(int argc, char **argv)
     char c;
     int select = 0;
     char con;
-    char can_id[128]={0};
-    char can_dlc[128];
-    char can_data[128]={0};
-    char can_frame[128]={0};
+    char can_id={0};
+    char can_dlc;
+    char can_data[8]={0};
+    char can_frame[10]={0};
     init();
     if ((fd = open(dev_name,O_RDWR)) < 0 )
 {
@@ -200,42 +200,41 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         {
-            // sprintf(can_id,"%x",canMsg1.can_id);
-            // printf("CAN ID: %s\n",can_id);
-            // sprintf(can_dlc,"%d",canMsg1.can_dlc);
-            // printf("CAN DLC: %s\n",can_dlc);
-            // for(int i=0;i<8;i++)
-            // {
-            //     char temp[2] = {0};
-            //     sprintf(temp,"%02x",canMsg1.data[i]);
-            //     strcat(can_data,temp);
-            // }
-            // printf("CAN DATA: %s\n",can_data);
-            // strcat(can_frame,can_id);
-            // strcat(can_frame,can_dlc);
-            // strcat(can_frame,can_data);
-            // printf("CAN FRAME: %s",can_frame);
-            // for(int i =0;i<strlen(can_frame);i++)
-            // {
-            //     write(fd,&can_frame[i],1);
-            // }
-            char buffer_test_[10] = {0};
-            buffer_test_[0] = 0xf2;
-            buffer_test_[1] =  8;
-            buffer_test_[2] = 1;
-            buffer_test_[3] = 2;
-            buffer_test_[4] = 3;
-            buffer_test_[5] = 4;
-            buffer_test_[6] = 5;
-            buffer_test_[7] = 6;
-            buffer_test_[8] = 7;
-            buffer_test_[9] = 8;
-            printf("Sending CAN message");
+            sprintf(can_id,"%x",canMsg1.can_id);
+            printf("CAN ID: %s\n",can_id);
+            sprintf(can_dlc,"%d",canMsg1.can_dlc);
+            printf("CAN DLC: %s\n",can_dlc);
+            for(int i=0;i<8;i++)
+            {
+                char temp[2] = {0};
+                sprintf(temp,"%02x",canMsg1.data[i]);
+                strcat(can_data,temp);
+            }
+            printf("CAN DATA: %s\n",can_data);
+            strcat(can_frame,can_id);
+            strcat(can_frame,can_dlc);
+            strcat(can_frame,can_data);
+            printf("CAN FRAME: %s",can_frame);
+            
+            write(fd, can_frame, 10);
 
-            //read(fd,buffer_test_,10);
-            write(fd,buffer_test_,10);
+            // char buffer_test_[10] = {0};
+            // buffer_test_[0] = 0xf2;
+            // buffer_test_[1] =  8;
+            // buffer_test_[2] = 1;
+            // buffer_test_[3] = 2;
+            // buffer_test_[4] = 3;
+            // buffer_test_[5] = 4;
+            // buffer_test_[6] = 5;
+            // buffer_test_[7] = 6;
+            // buffer_test_[8] = 7;
+            // buffer_test_[9] = 8;
+            // printf("Sending CAN message");
 
-            printf("CAN_MESSAGE %s: ", buffer_test_);
+            // //read(fd,buffer_test_,10);
+            // write(fd,buffer_test_,10);
+
+            // printf("CAN_MESSAGE %s: ", buffer_test_);
         }
         else if(select == 2)
         {
