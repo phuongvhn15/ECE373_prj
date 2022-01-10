@@ -34,14 +34,13 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x750;
+  canMsg1.can_id  = 0x758;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
-  canMsg1.data[3] = 0x00;
 
-  canMsg2.can_id  = 0x750;
+  canMsg2.can_id  = 0x758;
   canMsg2.can_dlc = 3;
   canMsg2.data[0] = 0x02;
   canMsg2.data[1] = 0x10;
@@ -210,23 +209,7 @@ int main(int argc, char **argv)
             scanf("%d",&select);
         }
         if(select == 1)
-        {
-            // sprintf(can_id,"%x",canMsg1.can_id);
-            // printf("CAN ID: %s\n",can_id);
-            // sprintf(can_dlc,"%d",canMsg1.can_dlc);
-            // printf("CAN DLC: %s\n",can_dlc);
-            // for(int i=0;i<8;i++)
-            // {
-            //     char temp[2] = {0};
-            //     sprintf(temp,"%02x",canMsg1.data[i]);
-            //     strcat(can_data,temp);
-            // }
-            // printf("CAN DATA: %s\n",can_data);
-            // strcat(can_frame,can_id);
-            // strcat(can_frame,can_dlc);
-            // strcat(can_frame,can_data);
-            // printf("CAN FRAME: %s",can_frame);
-            
+        { 
             can_frame[0] = canMsg1.can_id;
             can_frame[1] = canMsg1.can_dlc;
             can_frame[2] = canMsg1.data[0];
