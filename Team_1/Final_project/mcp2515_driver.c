@@ -769,6 +769,7 @@ int readMessagefromHardware(struct spi_device *mcp2515_dev, enum RXBn rxbn, stru
 //This function will be called directly to get data frame
 int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
 {
+    printk("Inside read message");
     int rc;
     uint8_t stat = getStatus(mcp2515_dev);
 
@@ -789,6 +790,7 @@ int readMessage(struct spi_device *mcp2515_dev,struct can_frame *frame)
         //Quit function
         rc = 0;
     }
+    printk("Return");
     return rc;
 }
 //////////////////////////////////////////////////////////
