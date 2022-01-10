@@ -217,7 +217,7 @@ int main(int argc, char **argv)
             printf("CAN FRAME: %s",can_frame);
             for(int i =0;i<strlen(can_frame);i++)
             {
-                read(fd,&can_frame[i],1);
+                write(fd,&can_frame[i],1);
             }
         }
         else if(select == 2)
