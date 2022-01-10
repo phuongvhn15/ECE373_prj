@@ -271,10 +271,10 @@ int main(int argc, char **argv)
                 printf("%02x  ",canMsg16.data[i]);
             }
         }
-        strcpy(can_id,"0");
-        strcpy(can_dlc,"0");
-        strcpy(can_data,"0");
-        strcpy(can_frame,"0");
+        // strcpy(can_id,"0");
+        // strcpy(can_dlc,"0");
+        // strcpy(can_data,"0");
+        // strcpy(can_frame,"0");
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
