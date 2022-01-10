@@ -190,6 +190,7 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 
 static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
 	int i;
+	int error;
 	struct can_frame CAN_FRAME;
 
 	CAN_FRAME.can_data[0] = 0;
@@ -211,7 +212,8 @@ static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count,
 	} 
 
 	printk("Sending CAN message");
-	sendMessage(mcp2515_dev, &CAN_FRAME);
+	error = sendMessage(mcp2515_dev, &CAN_FRAME);
+	return error;
 }
 static struct file_operations fops = {
 	.owner = THIS_MODULE,
