@@ -50,7 +50,7 @@ struct cdev mcp2515_cdev;		 //defines structure to hold character device propert
 
 static struct class *my_class;
 
-static struct spi_device *mcp2515_dev;
+static struct spi_device *mcp2515_dev_spi;
 /**
  * @brief This function is called, when the module is loaded into the kernel
  */
@@ -181,24 +181,24 @@ static int __init ModuleInit(void) {
 
 	printk("Inside spi_new_device function");
 	/* Create new SPI device */
-	mcp2515_dev = spi_new_device(master, &spi_device_info);
-	if(!mcp2515_dev) {
+	mcp2515_dev_spi = spi_new_device(master, &spi_device_info);
+	if(!mcp2515_dev_spi) {
 		printk("Could not create device!\n");
 		return -1;
 	}
 
-	mcp2515_dev -> bits_per_word = 8;
+	mcp2515_dev_spi -> bits_per_word = 8;
 
 	printk("%s","Inside spi_setups function");
 	/* Setup the bus for device's parameters */
-	if(spi_setup(mcp2515_dev) != 0){
+	if(spi_setup(mcp2515_dev_spi) != 0){
 		printk("Could not change bus setup!\n");
-		spi_unregister_device(mcp2515_dev);
+		spi_unregister_device(mcp2515_dev_spi);
 		return -1;
 	}
 
 	//Setting bitrate of 500Kbs and MCP2515 clock of 12Mhz.
-	if(setBitrate(mcp2515_dev)){
+	if(setBitrate(mcp2515_dev_spi)){
 		printk("Set bit rate success");
 	}
 	else
@@ -233,14 +233,14 @@ static int __init ModuleInit(void) {
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
 
 
-	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
+	setMode(mcp2515_dev_spi,CANCTRL_REQOP_NORMAL);
 
 	//Test Sending and Receiving.
 	u8 rx_val[] = {0,0,0};
-	readRegisters(mcp2515_dev, 40, rx_val, 3);
+	readRegisters(mcp2515_dev_spi, 40, rx_val, 3);
 	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
-	readMessage(mcp2515_dev, &can_frame_rx);
+	readMessage(mcp2515_dev_spi, &can_frame_rx);
 	printk("can_dlc: %d, can_id: %x, can_data: %x %x %x %x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
 	can_frame_tx.can_id = 0xf2;
@@ -257,7 +257,7 @@ static int __init ModuleInit(void) {
 	int count = 0;
 	while(count <10){
 		count++;
-		sendMessage(mcp2515_dev, &can_frame_tx);
+		sendMessage(mcp2515_dev_spi, &can_frame_tx);
 	}
 	
 	return 0;
@@ -272,7 +272,7 @@ static void __exit ModuleExit(void) {
 	class_destroy(my_class);
     unregister_chrdev_region( mcp2515_dev, 1 );
 	if(mcp2515_dev)
-		spi_unregister_device(mcp2515_dev);
+		spi_unregister_device(mcp2515_dev_spi);
 		
 	printk("Goodbye, Kernel\n");
 }
