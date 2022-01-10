@@ -190,7 +190,7 @@ int main(int argc, char **argv)
     char can_id={0};
     char can_dlc;
     char can_data[8]={0};
-    char can_frame[10]={0};
+    char can_frame[11]={0};
     char rx_frame[10] = {0};
     init();
     if ((fd = open(dev_name,O_RDWR)) < 0 )
