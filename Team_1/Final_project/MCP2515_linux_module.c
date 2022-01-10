@@ -43,6 +43,11 @@ MODULE_AUTHOR("Nhom4: Khang, Minhproviptk, Tu, Hoang");
 MODULE_DESCRIPTION("MCP2515 linux module");
 
 #define MY_BUS_NUM 0
+
+static dev_t mcp2515_dev;		//defines structure to hold major and minor number of device//
+
+struct cdev mcp2515_cdev;		 //defines structure to hold character device properties//
+
 static struct spi_device *mcp2515_dev;
 /**
  * @brief This function is called, when the module is loaded into the kernel
@@ -95,6 +100,39 @@ static int __init ModuleInit(void) {
 	else
 		printk("Set bit rate fail");
 	printk("%s","Inside setMode function");
+
+	char buffer[64];
+    int	ret = 0;
+
+    printk(KERN_INFO "Loading mcp2515_module\n");
+
+    alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev_ver2d");
+    printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
+
+    /* Create device class */
+
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL) {
+
+		printk("Device class can not e created!\n");
+
+		goto ClassError;
+
+	}
+	/* create device file */
+
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev_ver2d") == NULL) {
+
+		printk("Can not create device file!\n");
+
+		goto FileError;
+
+	}
+
+    cdev_init(&mcp2515_cdev, &mcp2515_fops);
+    mcp2515_cdev.owner = THIS_MODULE;
+    cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
+
+
 	setMode(mcp2515_dev,CANCTRL_REQOP_NORMAL);
 
 	//Test Sending and Receiving.
@@ -217,7 +255,7 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	error = sendMessage(mcp2515_dev, &CAN_FRAME);
 	return error;
 }
-static struct file_operations fops = {
+static struct file_operations mcp2515_fops = {
 	.owner = THIS_MODULE,
 	//.open = mcp2515_open,
 	//.release = mcp2515_close,
