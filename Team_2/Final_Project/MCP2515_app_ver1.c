@@ -256,6 +256,5 @@ int main(int argc, char **argv)
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
     printf("========OUT==========");
-    
     return 0;
 }
