@@ -48,6 +48,8 @@ static struct spi_device *mcp2515_dev;
  * @brief This function is called, when the module is loaded into the kernel
  */
 static int __init ModuleInit(void) {
+	can_frame can_frame_tx;
+	can_frame can_frame_rx;
 	struct spi_master *master;
 
 	/* Parameters for SPI device */
