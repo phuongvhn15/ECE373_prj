@@ -25,15 +25,19 @@ int main()
 {
     init();
     char str1[] = "0x7503020310"; // string --> ID:750  DLC:3 DATA: 02 03 10
-    printf("%s\n",str1);
-    for (int i = 0;i<strlen(str1);i++)
-    {
-        printf("%c\n",str1[i]);
+    char ID[] = "";
+    char DLC[] = "";
+    char Data[] = "" ;
+    for(int i = 0 ; i < 3 ; i++){
+         printf("%c\n",str1[i+2]);
+         ID[i] = str1[i+2];
+         DLC[i] = str1[5];
     }
-    int num1  =(int)strtol(str1,NULL,16);
-    int hex1 = 0x45;
-    char temp[] ={0};
-    sprintf(temp,"%x",hex1); // hex ->string
-    printf("%s\n",temp);
-    printf("\n%x",num1);
+     printf("%s\n",ID);
+      printf("%s\n",DLC);
+
+    for (int i = 6 ; i < strlen(str1);i++ ){
+        Data[i - 6] = str1[i] ; 
+    }
+     printf("%s\n",Data);
 }
