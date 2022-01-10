@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include <string.h>
 #define CAN_FRAME_MAX_DATA_LEN 8
 #define CAN_FRAME_MAX_BITS 128
 
@@ -29,15 +29,15 @@ int main()
     char DLC[] = "";
     char Data[] = "" ;
     for(int i = 0 ; i < 3 ; i++){
-         printf("%c\n",str1[i+2]);
+         printf("%c",str1[i+2]);
          ID[i] = str1[i+2];
          DLC[i] = str1[5];
     }
-     printf("%s\n",ID);
-      printf("%s\n",DLC);
-
-    for (int i = 6 ; i < strlen(str1);i++ ){
-        Data[i - 6] = str1[i] ; 
-    }
-     printf("%s\n",Data);
+    printf("\n");
+    printf("%s\n",ID);
+    //printf("%s\n",DLC);
+    // for (int i = 6 ; i < strlen(str1);i++ ){
+    //     Data[i - 6] = str1[i] ; 
+    // }
+    //  printf("%s\n",Data);
 }

@@ -202,7 +202,6 @@ int main(int argc, char **argv)
             {
                 printf("%02x  ",canMsg1.data[i]);
             }
-            sprintf(temp,"%x",hex1);
             read(fd,&canMsg1.can_id,10);
             read(fd,&canMsg1.can_dlc,10);
 

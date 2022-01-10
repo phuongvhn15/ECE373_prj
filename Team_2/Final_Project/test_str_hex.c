@@ -56,18 +56,27 @@ int main()
     // printf("%s\n",can_frame);
   char can_id[3];
   char can_dlc[1];
-  char can_data[]
-  for (int i =0;i<canMsg1.can_dlc;i++)
+  char can_data[16]={0};
+  char can_frame[10];
+  sprintf(can_id,"%03x",canMsg1.can_id);
+  printf("CAN ID: %s",can_id);
+  sprintf(can_dlc,"%d",canMsg1.can_dlc);
+  printf("\nCAN DLC: %s\n",can_dlc);
+  for(int i=0;i<8;i++)
   {
-    printf("%02x  ",canMsg1.data[i]);
+
+    sprintf(&can_data,"%02x",canMsg1.data[i]);
+    printf("%s ",can_data);
   }
-  printf("\n");
-  for (int i =0;i<strlen(can_frame);i++)
-  {
-    printf("%c ",can_frame[i]);
-  }
-  printf("\n");
-  sprintf(&can_frame,"%x",canMsg1.can_id);
-  printf("%s",can_frame);
+  printf("\nCAN DATA: %s ",can_data);
+  // for(int i =0;i<2;i++)
+  // {
+  //   can_frame[i] = can_data[i-2];
+  // }
+  // for(int i =2;i<10;i++)
+  // {
+  //   can_frame[i] = can_data[i-2];
+  // }
+  // printf("\n%s",can_frame);
   return 0;
 }
