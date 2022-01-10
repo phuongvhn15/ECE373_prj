@@ -224,11 +224,12 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg1.data[2];
             can_frame[5] = canMsg1.data[3];
 
-            printf("sending can message: %s", can_frame);
+            
             write(fd, can_frame, 10);
+            printf("Sending can message: %s \n", can_frame);
 
-            printf("respond can message: %s", rx_frame);
             read(fd, rx_frame, 10);
+            printf("Respond can message: %s", rx_frame);
 
 
             // char can_frame[10] = {0};
