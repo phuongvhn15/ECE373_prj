@@ -52,6 +52,108 @@ static struct spi_device *mcp2515_dev;
 /**
  * @brief This function is called, when the module is loaded into the kernel
  */
+
+
+/**
+ * @brief 
+ * 
+ * @param File file handler được trả về từ hàm fopen
+ * @param user_buffer buffer dùng để chứa giá trị
+ * @param count số lượng byte của buffer
+ * @param offs 
+ * @return ssize_t 
+ */
+
+static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+	int i;
+	struct can_frame CAN_FRAME;
+
+	CAN_FRAME.can_data[0] = 0;
+	CAN_FRAME.can_data[1] = 0;
+	CAN_FRAME.can_data[2] = 0;
+	CAN_FRAME.can_data[3] = 0;
+	CAN_FRAME.can_data[4] = 0;
+	CAN_FRAME.can_data[5] = 0;
+	CAN_FRAME.can_data[6] = 0;
+	CAN_FRAME.can_data[7] = 0;
+
+	if(readMessage(mcp2515_dev,&CAN_FRAME)){
+		printk("Read message successful");
+	}
+	else
+		printk("Fail to read message ");
+
+	
+	u32 can_id = CAN_FRAME.can_id;
+	u8 can_dlc = CAN_FRAME.can_dlc;
+	
+	char id_dlc_buffer[2];
+	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
+	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
+	
+	//
+	//Copy can_data to data buffer
+	char data_buffer[8];
+	for(i = 0; i < 8; i++){
+		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
+	}
+	//
+	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
+
+
+	//Concatenate id, dlc, data into 1 data array
+	char can_buffer[2 + 8];
+
+	//Copy id and dlc to can_buffer.
+	for(i = 0; i < 2; i++){
+		can_buffer[i] = id_dlc_buffer[i];
+	}
+	//Copy data to can_buffer
+	for (i = 2; i < 10; i++)
+	{
+		can_buffer[i] = data_buffer[i-2];
+	}
+
+	printk("Copy to userbuffer");
+	copy_to_user(user_buffer, can_buffer, 10);
+	return 1;
+}
+
+static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
+	int i;
+	int error;
+	struct can_frame CAN_FRAME;
+
+	CAN_FRAME.can_data[0] = 0;
+	CAN_FRAME.can_data[1] = 0;
+	CAN_FRAME.can_data[2] = 0;
+	CAN_FRAME.can_data[3] = 0;
+	CAN_FRAME.can_data[4] = 0;
+	CAN_FRAME.can_data[5] = 0;
+	CAN_FRAME.can_data[6] = 0;
+	CAN_FRAME.can_data[7] = 0;
+
+	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
+	CAN_FRAME.can_id = buffer[0];
+	CAN_FRAME.can_dlc = buffer[1];
+
+	//Copy 8 bytes of can_data to CAN_FRAME.
+	for(i = 0; i < 8; i++){
+		CAN_FRAME.can_data[i] = buffer[i+2];
+	} 
+
+	printk("Sending CAN message");
+	error = sendMessage(mcp2515_dev, &CAN_FRAME);
+	return error;
+}
+static struct file_operations mcp2515_fops = {
+	.owner = THIS_MODULE,
+	//.open = mcp2515_open,
+	//.release = mcp2515_close,
+	.read = mcp2515_read,
+	.write = mcp2515_write,
+};
+
 static int __init ModuleInit(void) {
 	struct can_frame can_frame_tx;
 	struct can_frame can_frame_rx;
@@ -160,109 +262,13 @@ static int __init ModuleInit(void) {
 }
 
 /**
- * @brief 
- * 
- * @param File file handler được trả về từ hàm fopen
- * @param user_buffer buffer dùng để chứa giá trị
- * @param count số lượng byte của buffer
- * @param offs 
- * @return ssize_t 
- */
-
-static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
-	int i;
-	struct can_frame CAN_FRAME;
-
-	CAN_FRAME.can_data[0] = 0;
-	CAN_FRAME.can_data[1] = 0;
-	CAN_FRAME.can_data[2] = 0;
-	CAN_FRAME.can_data[3] = 0;
-	CAN_FRAME.can_data[4] = 0;
-	CAN_FRAME.can_data[5] = 0;
-	CAN_FRAME.can_data[6] = 0;
-	CAN_FRAME.can_data[7] = 0;
-
-	if(readMessage(mcp2515_dev,&CAN_FRAME)){
-		printk("Read message successful");
-	}
-	else
-		printk("Fail to read message ");
-
-	
-	u32 can_id = CAN_FRAME.can_id;
-	u8 can_dlc = CAN_FRAME.can_dlc;
-	
-	char id_dlc_buffer[2];
-	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
-	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
-	
-	//
-	//Copy can_data to data buffer
-	char data_buffer[8];
-	for(i = 0; i < 8; i++){
-		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
-	}
-	//
-	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
-
-
-	//Concatenate id, dlc, data into 1 data array
-	char can_buffer[2 + 8];
-
-	//Copy id and dlc to can_buffer.
-	for(i = 0; i < 2; i++){
-		can_buffer[i] = id_dlc_buffer[i];
-	}
-	//Copy data to can_buffer
-	for (i = 2; i < 10; i++)
-	{
-		can_buffer[i] = data_buffer[i-2];
-	}
-
-	printk("Copy to userbuffer");
-	copy_to_user(user_buffer, can_buffer, 10);
-	return 1;
-}
-
-static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
-	int i;
-	int error;
-	struct can_frame CAN_FRAME;
-
-	CAN_FRAME.can_data[0] = 0;
-	CAN_FRAME.can_data[1] = 0;
-	CAN_FRAME.can_data[2] = 0;
-	CAN_FRAME.can_data[3] = 0;
-	CAN_FRAME.can_data[4] = 0;
-	CAN_FRAME.can_data[5] = 0;
-	CAN_FRAME.can_data[6] = 0;
-	CAN_FRAME.can_data[7] = 0;
-
-	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
-	CAN_FRAME.can_id = buffer[0];
-	CAN_FRAME.can_dlc = buffer[1];
-
-	//Copy 8 bytes of can_data to CAN_FRAME.
-	for(i = 0; i < 8; i++){
-		CAN_FRAME.can_data[i] = buffer[i+2];
-	} 
-
-	printk("Sending CAN message");
-	error = sendMessage(mcp2515_dev, &CAN_FRAME);
-	return error;
-}
-static struct file_operations mcp2515_fops = {
-	.owner = THIS_MODULE,
-	//.open = mcp2515_open,
-	//.release = mcp2515_close,
-	.read = mcp2515_read,
-	.write = mcp2515_write,
-};
-
-/**
  * @brief This function is called, when the module is removed from the kernel
  */
 static void __exit ModuleExit(void) {
+	cdev_del(&mcp2515_cdev);
+	device_destroy(my_class,mcp2515_dev);
+	class_destroy(my_class);
+    unregister_chrdev_region( mcp2515_dev, 1 );
 	if(mcp2515_dev)
 		spi_unregister_device(mcp2515_dev);
 		
