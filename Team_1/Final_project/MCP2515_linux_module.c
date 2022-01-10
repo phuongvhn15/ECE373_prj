@@ -220,7 +220,7 @@ static struct file_operations fops = {
 	//.open = mcp2515_open,
 	//.release = mcp2515_close,
 	.read = mcp2515_read,
-	.write = mcp2515_write
+	.write = mcp2515_write,
 };
 
 /**
