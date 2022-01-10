@@ -271,7 +271,7 @@ static void __exit ModuleExit(void) {
 	device_destroy(my_class,mcp2515_dev);
 	class_destroy(my_class);
     unregister_chrdev_region( mcp2515_dev, 1 );
-	if(mcp2515_dev)
+	if(mcp2515_dev_spi)
 		spi_unregister_device(mcp2515_dev_spi);
 		
 	printk("Goodbye, Kernel\n");
