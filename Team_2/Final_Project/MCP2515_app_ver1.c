@@ -182,14 +182,14 @@ int main(int argc, char **argv)
     char can_data[128]={0};
     char can_frame[128]={0};
     init();
-//     if ((fd = open(dev_name,O_RDWR)) < 0 )
-// {
-//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-//     return( 1 );
-// }
+    if ((fd = open(dev_name,O_RDWR)) < 0 )
+{
+    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    return( 1 );
+}
 
     do{
-        system("cls");
+        //system("cls");
         menu();
         printf("Enter your choice (1-->16): ");
         scanf("%d",&select);
