@@ -220,7 +220,20 @@ int main(int argc, char **argv)
             //     write(fd,&can_frame[i],1);
             // }
             char buffer_test_[10] = {0};
-            read(fd,buffer_test_,10);
+            buffer_test_[0] = 0xf2;
+            buffer_test_[1] =  8;
+            buffer_test_[2] = 1;
+            buffer_test_[3] = 2;
+            buffer_test_[4] = 3;
+            buffer_test_[5] = 4;
+            buffer_test_[6] = 5;
+            buffer_test_[7] = 6;
+            buffer_test_[8] = 7;
+            buffer_test_[9] = 8;
+            printf("Sending CAN message");
+
+            //read(fd,buffer_test_,10);
+            write(fd,buffer_test_,10);
 
             printf("CAN_MESSAGE %s: ", buffer_test_);
         }
