@@ -200,41 +200,48 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         {
-            sprintf(can_id,"%x",canMsg1.can_id);
-            printf("CAN ID: %s\n",can_id);
-            sprintf(can_dlc,"%d",canMsg1.can_dlc);
-            printf("CAN DLC: %s\n",can_dlc);
-            for(int i=0;i<8;i++)
-            {
-                char temp[2] = {0};
-                sprintf(temp,"%02x",canMsg1.data[i]);
-                strcat(can_data,temp);
-            }
-            printf("CAN DATA: %s\n",can_data);
-            strcat(can_frame,can_id);
-            strcat(can_frame,can_dlc);
-            strcat(can_frame,can_data);
-            printf("CAN FRAME: %s",can_frame);
+            // sprintf(can_id,"%x",canMsg1.can_id);
+            // printf("CAN ID: %s\n",can_id);
+            // sprintf(can_dlc,"%d",canMsg1.can_dlc);
+            // printf("CAN DLC: %s\n",can_dlc);
+            // for(int i=0;i<8;i++)
+            // {
+            //     char temp[2] = {0};
+            //     sprintf(temp,"%02x",canMsg1.data[i]);
+            //     strcat(can_data,temp);
+            // }
+            // printf("CAN DATA: %s\n",can_data);
+            // strcat(can_frame,can_id);
+            // strcat(can_frame,can_dlc);
+            // strcat(can_frame,can_data);
+            // printf("CAN FRAME: %s",can_frame);
             
+            can_frame[0] = canMsg1.can_id;
+            can_frame[1] = canMsg1.can_dlc;
+            can_frame[2] = canMsg1.data[0];
+            can_frame[3] = canMsg1.data[1];
+            can_frame[4] = canMsg1.data[2];
+            can_frame[5] = canMsg1.data[3];
+
             write(fd, can_frame, 10);
 
-            // char buffer_test_[10] = {0};
-            // buffer_test_[0] = 0xf2;
-            // buffer_test_[1] =  8;
-            // buffer_test_[2] = 1;
-            // buffer_test_[3] = 2;
-            // buffer_test_[4] = 3;
-            // buffer_test_[5] = 4;
-            // buffer_test_[6] = 5;
-            // buffer_test_[7] = 6;
-            // buffer_test_[8] = 7;
-            // buffer_test_[9] = 8;
+            // char can_frame[10] = {0};
+            // can_frame[0] = 0xf2;
+            // can_frame[1] =  8;
+            // can_frame[2] = 1;
+            // can_frame[3] = 2;
+            // can_frame[4] = 3;
+            // can_frame[5] = 4;
+            // can_frame[6] = 5;
+            // can_frame[7] = 6;
+            // can_frame[8] = 7;
+            // can_frame[9] = 8;
             // printf("Sending CAN message");
 
-            // //read(fd,buffer_test_,10);
-            // write(fd,buffer_test_,10);
+            // //read(fd,can_frame,10);
+            // write(fd,can_frame,10);
 
-            // printf("CAN_MESSAGE %s: ", buffer_test_);
+            // printf("CAN_MESSAGE %s: ", can_frame);
         }
         else if(select == 2)
         {
