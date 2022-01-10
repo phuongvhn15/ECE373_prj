@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 
             
             write(fd, can_frame, 10);
-            printf("Sending can message: %s \n", can_frame);
+            printf("Sending can message: %x \n", can_frame);
 
             read(fd, rx_frame, 10);
             printf("Respond can message: %s", rx_frame);
