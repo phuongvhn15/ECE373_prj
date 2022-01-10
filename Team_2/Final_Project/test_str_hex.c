@@ -21,72 +21,33 @@ void init()
   canMsg1.data[2] = 0x01;
   canMsg1.data[3] = 0x01;
   canMsg1.data[4] = 0x00;
-  canMsg1.data[5] = 0x00;
+  canMsg1.data[5] = 0xED;
   canMsg1.data[6] = 0x00;
   canMsg1.data[7] = 0x00;
 
 }
 int main()
 {
-    init();
-    // char str1[] = "75030203100000000000"; // string --> ID:750  DLC:3 DATA: 02 03 10 00 00 00 00 00
-    // printf("%s\n",str1);
-    // for (int i = 0;i<strlen(str1);i++)
-    // {
-    //     printf("%c\n",str1[i]);
-    // }
-    // int num1  =(int)strtol(str1,NULL,16);
-    // int hex1 = 0x45;
-    // char temp[] ={0};
-    // sprintf(temp,"%x",hex1); // hex ->string
-    // printf("%s\n",temp);
-    // printf("\n%x",num1);
-    // char temp[] ={0};
-    // char can_frame[50] = {0};
-    // int hex = 0x32;
-    // sprintf(can_frame[0],"%x",hex);
-    // printf("%s   ",&can_frame[0]);
-    // sprintf(can_frame[1],"%d",canMsg1.can_dlc);
-    // printf("%s   ",can_frame[1]);
-    // for(int i =0;i<8;i++)
-    // {
-    //     sprintf(&can_frame[i+2],"%02x",canMsg1.data[i]);
-    //     printf("%s    ",can_frame[i+2]);
-    // }
-    // printf("%s\n",can_frame);
-  char can_id[3];
-  char can_dlc[1];
-  char can_data[16]={0};
-  char can_frame[10];
-  sprintf(can_id,"%03x",canMsg1.can_id);
-  printf("CAN ID: %s",can_id);
+  init();
+  char can_id[128]={0};
+  char can_dlc[128];
+  char can_data[128]={0};
+  char can_frame[128]={0};
+  sprintf(can_id,"%x",canMsg1.can_id);
+  printf("CAN ID: %s\n",can_id);
   sprintf(can_dlc,"%d",canMsg1.can_dlc);
-  printf("\nCAN DLC: %s\n",can_dlc);
+  printf("CAN DLC: %s\n",can_dlc);
   for(int i=0;i<8;i++)
   {
     char temp[2] = {0};
     sprintf(temp,"%02x",canMsg1.data[i]);
     strcat(can_data,temp);
   }
-  printf("CAN DATA:");
-  for(int i = 0;i<strlen(can_data);i++)
-  {
-    if(i%2==0)
-    {
-      printf(" ");
-    }
-    else{
-      printf("%02c",can_data[i]);
-    }
-  }
-  // for(int i =0;i<2;i++)
-  // {
-  //   can_frame[i] = can_data[i-2];
-  // }
-  // for(int i =2;i<10;i++)
-  // {
-  //   can_frame[i] = can_data[i-2];
-  // }
-  // printf("\n%s",can_frame);
+  printf("CAN DATA: %s\n",can_data);
+  strcat(can_frame,can_id);
+  strcat(can_frame,can_dlc);
+  strcat(can_frame,can_data);
+  printf("CAN FRAME: %s",can_frame);
+  printf("%d",strlen(can_frame));
   return 0;
 }

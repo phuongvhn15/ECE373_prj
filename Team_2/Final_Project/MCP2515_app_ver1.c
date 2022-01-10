@@ -176,8 +176,10 @@ int main(int argc, char **argv)
     char c;
     int select = 0;
     char con;
-    char temp_dlc[] = {0};
-    char temp_id[] = {0};
+    char can_id[128]={0};
+    char can_dlc[128];
+    char can_data[128]={0};
+    char can_frame[128]={0};
     init();
     if ((fd = open(dev_name,O_RDWR)) < 0 )
 {
@@ -197,14 +199,25 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         {
-            printf("CAN FRAME IN APP: ");
-            for (int i =0;i<canMsg1.can_dlc;i++)
+            sprintf(can_id,"%x",canMsg1.can_id);
+            printf("CAN ID: %s\n",can_id);
+            sprintf(can_dlc,"%d",canMsg1.can_dlc);
+            printf("CAN DLC: %s\n",can_dlc);
+            for(int i=0;i<8;i++)
             {
-                printf("%02x  ",canMsg1.data[i]);
+                char temp[2] = {0};
+                sprintf(temp,"%02x",canMsg1.data[i]);
+                strcat(can_data,temp);
             }
-            read(fd,&canMsg1.can_id,10);
-            read(fd,&canMsg1.can_dlc,10);
-
+            printf("CAN DATA: %s\n",can_data);
+            strcat(can_frame,can_id);
+            strcat(can_frame,can_dlc);
+            strcat(can_frame,can_data);
+            printf("CAN FRAME: %s",can_frame);
+            for(int i =0;i<strlen(can_frame);i++)
+            {
+                read(fd,&can_frame[i],1);
+            }
         }
         else if(select == 2)
         {
