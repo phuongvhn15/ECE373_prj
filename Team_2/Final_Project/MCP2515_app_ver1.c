@@ -173,7 +173,7 @@ void menu()
 void printMessage(char *buffer){
     int i = 0;
     printf("CAN message: ");
-    for(i = 0; i < sizeof(buffer); i++){
+    for(i = 0; i < sizeof(buffer) + 1; i++){
         printf("%02x ", buffer[i]);
     }
     printf("\n");
