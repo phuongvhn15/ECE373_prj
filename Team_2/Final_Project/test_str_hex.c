@@ -64,11 +64,21 @@ int main()
   printf("\nCAN DLC: %s\n",can_dlc);
   for(int i=0;i<8;i++)
   {
-
-    sprintf(&can_data,"%02x",canMsg1.data[i]);
-    printf("%s ",can_data);
+    char temp[2] = {0};
+    sprintf(temp,"%02x",canMsg1.data[i]);
+    strcat(can_data,temp);
   }
-  printf("\nCAN DATA: %s ",can_data);
+  printf("CAN DATA:");
+  for(int i = 0;i<strlen(can_data);i++)
+  {
+    if(i%2==0)
+    {
+      printf(" ");
+    }
+    else{
+      printf("%02c",can_data[i]);
+    }
+  }
   // for(int i =0;i<2;i++)
   // {
   //   can_frame[i] = can_data[i-2];
