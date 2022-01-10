@@ -181,6 +181,7 @@ int main(int argc, char **argv)
     char can_dlc;
     char can_data[8]={0};
     char can_frame[10]={0};
+    char rx_frame[10] = {0};
     init();
     if ((fd = open(dev_name,O_RDWR)) < 0 )
 {
@@ -223,7 +224,12 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg1.data[2];
             can_frame[5] = canMsg1.data[3];
 
+            printf("sending can message: %s", can_frame);
             write(fd, can_frame, 10);
+
+            printf("respond can message: %s", rx_frame);
+            read(fd, rx_frame, 10);
+
 
             // char can_frame[10] = {0};
             // can_frame[0] = 0xf2;
