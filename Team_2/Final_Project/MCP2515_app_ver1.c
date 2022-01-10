@@ -46,56 +46,56 @@ void init()
   canMsg2.data[1] = 0x10;
   canMsg2.data[2] = 0x03;
 
-  canMsg3.can_id  = 0x750;
+  canMsg3.can_id  = 0x758;
   canMsg3.can_dlc = 4;
   canMsg3.data[0] = 0x03;
   canMsg3.data[1] = 0x22;
   canMsg3.data[2] = 0xF1;
   canMsg3.data[3] = 0x00;
 
-  canMsg4.can_id  = 0x750;
+  canMsg4.can_id  = 0x758;
   canMsg4.can_dlc = 4;
   canMsg4.data[0] = 0x03;
   canMsg4.data[1] = 0x22;
   canMsg4.data[2] = 0xF1;
   canMsg4.data[3] = 0x80;
 
-  canMsg5.can_id  = 0x750;
+  canMsg5.can_id  = 0x758;
   canMsg5.can_dlc = 4;
   canMsg5.data[0] = 0x03;
   canMsg5.data[1] = 0x22;
   canMsg5.data[2] = 0xF1;
   canMsg5.data[3] = 0x81;
 
-  canMsg6.can_id  = 0x750;
+  canMsg6.can_id  = 0x758;
   canMsg6.can_dlc = 4;
   canMsg6.data[0] = 0x03;
   canMsg6.data[1] = 0x22;
   canMsg6.data[2] = 0xF1;
   canMsg6.data[3] = 0x82;
 
-  canMsg7.can_id  = 0x750;
+  canMsg7.can_id  = 0x760;
   canMsg7.can_dlc = 4;
   canMsg7.data[0] = 0x03;
   canMsg7.data[1] = 0x22;
   canMsg7.data[2] = 0xF1;
   canMsg7.data[3] = 0x00;
 
-  canMsg8.can_id  = 0x750;
+  canMsg8.can_id  = 0x760;
   canMsg8.can_dlc = 4;
   canMsg8.data[0] = 0x03;
   canMsg8.data[1] = 0x22;
   canMsg8.data[2] = 0xF1;
   canMsg8.data[3] = 0x90;
 
-  canMsg9.can_id  = 0x750;
+  canMsg9.can_id  = 0x760;
   canMsg9.can_dlc = 4;
   canMsg9.data[0] = 0x03;
   canMsg9.data[1] = 0x22;
   canMsg9.data[2] = 0xF1;
   canMsg9.data[3] = 0x91;
 
-  canMsg10.can_id  = 0x750;
+  canMsg10.can_id  = 0x760;
   canMsg10.can_dlc = 4;
   canMsg10.data[0] = 0x03;
   canMsg10.data[1] = 0x22;
@@ -137,7 +137,7 @@ void init()
   canMsg15.data[2] = 0x0;
   canMsg15.data[3] = 0x0;
 
-  canMsg16.can_id  = 0x750;
+  canMsg16.can_id  = 0x758;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
   canMsg16.data[1] = 0x11;
@@ -152,32 +152,32 @@ void menu()
     printf("4. Read temperature engine\n");
     printf("5. Read odometer engine\n");
     printf("6. Read velocity engine\n");
-
     printf("7. Read ECU voltage radar\n");
     printf("8. Read angel azimuth radar\n");
     printf("9. Object detection radar\n");
     printf("10. Warning detection radar\n");
-
     printf("11. Write angel azimuth radar\n");
-
     printf("12. Read DTC\n");
     printf("13. Clear diagnostic\n");
     printf("14. Request seed\n");
     printf("15. Send seed\n");
     printf("16.ECU reset\n");
     printf("=======================\n");
-
 }
 
-void printMessage(char *buffer){
-    int i = 0;
-    printf("CAN message: ");
-    for(i = 0; i < sizeof(buffer) + 1; i++){
+void displayMessageCAN(char *buffer){
+    for(int i = 0; i < sizeof(buffer) + 1; i++){
         printf("%02x ", buffer[i]);
     }
-    printf("\n");
 }
-
+void clearBuffer(char *can_frame, char *rx_frame)
+{
+    for (int i=0; i<sizeof(can_frame);i++)
+    {
+        can_frame[i]  = 0x00;
+        rx_frame[i]  = 0x00;
+    }
+}
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
@@ -186,9 +186,6 @@ int main(int argc, char **argv)
     char c;
     int select = 0;
     char con;
-    char can_id={0};
-    char can_dlc;
-    char can_data[8]={0};
     char can_frame[10]={0};
     char rx_frame[10] = {0};
     init();
@@ -199,7 +196,6 @@ int main(int argc, char **argv)
 }
 
     do{
-        //system("cls");
         menu();
         printf("Enter your choice (1-->16): ");
         scanf("%d",&select);
@@ -217,66 +213,36 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg1.data[2];
             can_frame[5] = canMsg1.data[3];
 
-            
             write(fd, can_frame, 10);
-            //printf("Sending can message: %x \n", can_frame);
-            printMessage(can_frame);
-
+            printf("CAN Transmission: ");
+            displayMessageCAN(can_frame);
+            printf("\n");
             read(fd, rx_frame, 10);
-            //printf("Respond can message: %s", rx_frame);
+            printf("CAN Response: ");
             printMessage(rx_frame);
-
-
-            // char can_frame[10] = {0};
-            // can_frame[0] = 0xf2;
-            // can_frame[1] =  8;
-            // can_frame[2] = 1;
-            // can_frame[3] = 2;
-            // can_frame[4] = 3;
-            // can_frame[5] = 4;
-            // can_frame[6] = 5;
-            // can_frame[7] = 6;
-            // can_frame[8] = 7;
-            // can_frame[9] = 8;
-            // printf("Sending CAN message");
-
-            // //read(fd,can_frame,10);
-            // write(fd,can_frame,10);
-
-            // printf("CAN_MESSAGE %s: ", can_frame);
+            printf("\n");
         }
         else if(select == 2)
         {
-            for (int i =0;i<canMsg2.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg2.data[i]);
-            }
+           
         }
         else if(select == 3)
         {
-            for (int i =0;i<canMsg3.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg3.data[i]);
-            }
+           
         }
         else if(select == 7)
         {
-            for (int i =0;i<canMsg7.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg7.data[i]);
-            }
+            
         }
         else if(select == 16)
         {
-            for (int i =0;i<canMsg16.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg16.data[i]);
-            }
+            
         }
         // strcpy(can_id,"0");
         // strcpy(can_dlc,"0");
         // strcpy(can_data,"0");
         // strcpy(can_frame,"0");
+        clearBuffer(can_frame,rx_frame);
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
