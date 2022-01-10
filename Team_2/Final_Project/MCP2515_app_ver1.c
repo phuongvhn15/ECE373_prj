@@ -200,25 +200,29 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         {
-            sprintf(can_id,"%x",canMsg1.can_id);
-            printf("CAN ID: %s\n",can_id);
-            sprintf(can_dlc,"%d",canMsg1.can_dlc);
-            printf("CAN DLC: %s\n",can_dlc);
-            for(int i=0;i<8;i++)
-            {
-                char temp[2] = {0};
-                sprintf(temp,"%02x",canMsg1.data[i]);
-                strcat(can_data,temp);
-            }
-            printf("CAN DATA: %s\n",can_data);
-            strcat(can_frame,can_id);
-            strcat(can_frame,can_dlc);
-            strcat(can_frame,can_data);
-            printf("CAN FRAME: %s",can_frame);
-            for(int i =0;i<strlen(can_frame);i++)
-            {
-                write(fd,&can_frame[i],1);
-            }
+            // sprintf(can_id,"%x",canMsg1.can_id);
+            // printf("CAN ID: %s\n",can_id);
+            // sprintf(can_dlc,"%d",canMsg1.can_dlc);
+            // printf("CAN DLC: %s\n",can_dlc);
+            // for(int i=0;i<8;i++)
+            // {
+            //     char temp[2] = {0};
+            //     sprintf(temp,"%02x",canMsg1.data[i]);
+            //     strcat(can_data,temp);
+            // }
+            // printf("CAN DATA: %s\n",can_data);
+            // strcat(can_frame,can_id);
+            // strcat(can_frame,can_dlc);
+            // strcat(can_frame,can_data);
+            // printf("CAN FRAME: %s",can_frame);
+            // for(int i =0;i<strlen(can_frame);i++)
+            // {
+            //     write(fd,&can_frame[i],1);
+            // }
+            char buffer_test_[10];
+            read(fd,buffer_test_,10);
+
+            printf("CAN_MESSAGE %s: ", buffer_test_);
         }
         else if(select == 2)
         {
