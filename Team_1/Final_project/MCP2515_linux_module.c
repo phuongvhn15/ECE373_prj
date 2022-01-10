@@ -48,6 +48,8 @@ static dev_t mcp2515_dev;		//defines structure to hold major and minor number of
 
 struct cdev mcp2515_cdev;		 //defines structure to hold character device properties//
 
+static struct class *my_class;
+
 static struct spi_device *mcp2515_dev;
 /**
  * @brief This function is called, when the module is loaded into the kernel
