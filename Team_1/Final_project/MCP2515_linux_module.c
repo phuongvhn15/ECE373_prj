@@ -79,7 +79,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 	CAN_FRAME.can_data[6] = 0;
 	CAN_FRAME.can_data[7] = 0;
 
-	if(readMessage(mcp2515_dev,&CAN_FRAME)){
+	if(readMessage(mcp2515_dev_spi,&CAN_FRAME)){
 		printk("Read message successful");
 	}
 	else
