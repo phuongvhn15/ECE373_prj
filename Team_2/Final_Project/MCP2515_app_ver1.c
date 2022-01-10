@@ -169,6 +169,14 @@ void menu()
     printf("=======================\n");
 
 }
+
+void printMessage(char *buffer){
+    int i = 0;
+    for(i = 0; i < sizeof(buffer); i++){
+        printf("%02x", buffer[i]);
+    }
+}
+
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
@@ -180,7 +188,7 @@ int main(int argc, char **argv)
     char can_id={0};
     char can_dlc;
     char can_data[8]={0};
-    uint8_t can_frame[10]={0};
+    char can_frame[10]={0};
     char rx_frame[10] = {0};
     init();
     if ((fd = open(dev_name,O_RDWR)) < 0 )
@@ -226,10 +234,12 @@ int main(int argc, char **argv)
 
             
             write(fd, can_frame, 10);
-            printf("Sending can message: %x \n", can_frame);
+            //printf("Sending can message: %x \n", can_frame);
+            printMessage(can_frame);
 
             read(fd, rx_frame, 10);
-            printf("Respond can message: %s", rx_frame);
+            //printf("Respond can message: %s", rx_frame);
+            printMessage(rx_frame);
 
 
             // char can_frame[10] = {0};
