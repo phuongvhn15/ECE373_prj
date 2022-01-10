@@ -219,7 +219,7 @@ int main(int argc, char **argv)
             // {
             //     write(fd,&can_frame[i],1);
             // }
-            char buffer_test_[10];
+            char buffer_test_[10] = {0};
             read(fd,buffer_test_,10);
 
             printf("CAN_MESSAGE %s: ", buffer_test_);
