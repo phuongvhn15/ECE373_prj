@@ -145,7 +145,7 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	} 
 
 	printk("Sending CAN message");
-	error = sendMessage(mcp2515_dev, &CAN_FRAME);
+	error = sendMessage(mcp2515_dev_spi, &CAN_FRAME);
 	return error;
 }
 static struct file_operations mcp2515_fops = {
