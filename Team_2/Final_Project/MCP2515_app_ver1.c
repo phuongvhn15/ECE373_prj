@@ -35,7 +35,7 @@ void init()
 {
   canMsg1.can_id  = 0x58;
   canMsg1.can_dlc = 3;
-  canMsg1.data[0] = 0x02;
+  canMsg1.data[0] = 0x01;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
 
