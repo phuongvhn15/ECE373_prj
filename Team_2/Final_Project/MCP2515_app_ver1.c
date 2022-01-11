@@ -108,12 +108,12 @@ void init()
   canMsg11.data[2] = 0xF1;
   canMsg11.data[3] = 0x90;
 
-  canMsg12.can_id  = 0x50;
+  canMsg12.can_id  = 0x58;
   canMsg12.can_dlc = 2;
   canMsg12.data[0] = 0x19;
   canMsg12.data[1] = 0x00;
 
-  canMsg13.can_id  = 0x50;
+  canMsg13.can_id  = 0x58;
   canMsg13.can_dlc = 2;
   canMsg13.data[0] = 0x14;
   canMsg13.data[1] = 0x00;
@@ -136,11 +136,11 @@ void init()
   canMsg15.data[4] = 0x0;
   canMsg15.data[5] = 0x0;
 
-  canMsg16.can_id  = 0x50;
+  canMsg16.can_id  = 0x58;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
-  canMsg16.data[1] = 0x11;
-  canMsg16.data[2] = 0x01;
+  canMsg16.data[1] = 0x0;
+  canMsg16.data[2] = 0x0;
 }
 void menu()
 {
@@ -181,7 +181,7 @@ void clearBuffer(char *can_frame, char *rx_frame)
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    //char *dev_name = "/dev/mcp2515_dev_ver2d";
+    char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
@@ -189,11 +189,11 @@ int main(int argc, char **argv)
     char can_frame[10]={0};
     char rx_frame[10] = {0};
     init();
-//      if ((fd = open(dev_name,O_RDWR)) < 0 )
-// {
-//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-//     return( 1 );
-// }
+     if ((fd = open(dev_name,O_RDWR)) < 0 )
+{
+    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    return( 1 );
+}
 
     do{
         menu();
