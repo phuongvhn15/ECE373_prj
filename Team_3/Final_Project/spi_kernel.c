@@ -161,6 +161,7 @@ static int __init ModuleInit(void)
 	}
 	else
 		printk("Set bit rate fail");
+		
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
 
@@ -169,12 +170,18 @@ static int __init ModuleInit(void)
 	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
     printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
 
-	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL) {
-		printk("Device class can not e created!\n");
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL){
+		printk("Device class can not be created!\n");
+	}
+	else{
+		printk("Device class created!\n");
 	}
 
-	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL) {
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL){
 		printk("Can not create device file!\n");
+	}
+	else{
+		printk("Create device file!\n");
 	}
 
 	cdev_init(&mcp2515_cdev, &mcp2515_fops);
