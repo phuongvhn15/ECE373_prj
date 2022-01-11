@@ -33,110 +33,110 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x758;
+  canMsg1.can_id  = 0x50;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
 
-  canMsg2.can_id  = 0x758;
+  canMsg2.can_id  = 0x50;
   canMsg2.can_dlc = 3;
   canMsg2.data[0] = 0x02;
   canMsg2.data[1] = 0x10;
   canMsg2.data[2] = 0x03;
 
-  canMsg3.can_id  = 0x758;
+  canMsg3.can_id  = 0x58;
   canMsg3.can_dlc = 4;
   canMsg3.data[0] = 0x03;
   canMsg3.data[1] = 0x22;
   canMsg3.data[2] = 0xF1;
   canMsg3.data[3] = 0x00;
 
-  canMsg4.can_id  = 0x758;
+  canMsg4.can_id  = 0x58;
   canMsg4.can_dlc = 4;
   canMsg4.data[0] = 0x03;
   canMsg4.data[1] = 0x22;
   canMsg4.data[2] = 0xF1;
   canMsg4.data[3] = 0x80;
 
-  canMsg5.can_id  = 0x758;
+  canMsg5.can_id  = 0x58;
   canMsg5.can_dlc = 4;
   canMsg5.data[0] = 0x03;
   canMsg5.data[1] = 0x22;
   canMsg5.data[2] = 0xF1;
   canMsg5.data[3] = 0x81;
 
-  canMsg6.can_id  = 0x758;
+  canMsg6.can_id  = 0x58;
   canMsg6.can_dlc = 4;
   canMsg6.data[0] = 0x03;
   canMsg6.data[1] = 0x22;
   canMsg6.data[2] = 0xF1;
   canMsg6.data[3] = 0x82;
 
-  canMsg7.can_id  = 0x760;
+  canMsg7.can_id  = 0x60;
   canMsg7.can_dlc = 4;
   canMsg7.data[0] = 0x03;
   canMsg7.data[1] = 0x22;
   canMsg7.data[2] = 0xF1;
   canMsg7.data[3] = 0x00;
 
-  canMsg8.can_id  = 0x760;
+  canMsg8.can_id  = 0x60;
   canMsg8.can_dlc = 4;
   canMsg8.data[0] = 0x03;
   canMsg8.data[1] = 0x22;
   canMsg8.data[2] = 0xF1;
   canMsg8.data[3] = 0x90;
 
-  canMsg9.can_id  = 0x760;
+  canMsg9.can_id  = 0x60;
   canMsg9.can_dlc = 4;
   canMsg9.data[0] = 0x03;
   canMsg9.data[1] = 0x22;
   canMsg9.data[2] = 0xF1;
   canMsg9.data[3] = 0x91;
 
-  canMsg10.can_id  = 0x760;
+  canMsg10.can_id  = 0x60;
   canMsg10.can_dlc = 4;
   canMsg10.data[0] = 0x03;
   canMsg10.data[1] = 0x22;
   canMsg10.data[2] = 0xF1;
   canMsg10.data[3] = 0x92;
 
-  canMsg11.can_id  = 0x750;
+  canMsg11.can_id  = 0x60;
   canMsg11.can_dlc = 4;
   canMsg11.data[0] = 0x03;
   canMsg11.data[1] = 0x2E;
   canMsg11.data[2] = 0xF1;
   canMsg11.data[3] = 0x90;
 
-  canMsg12.can_id  = 0x0;
-  canMsg12.can_dlc = 0x0;
-  canMsg12.data[0] = 0x0;
-  canMsg12.data[1] = 0x0;
-  canMsg12.data[2] = 0x0;
-  canMsg12.data[3] = 0x0;
+  canMsg12.can_id  = 0x50;
+  canMsg12.can_dlc = 2;
+  canMsg12.data[0] = 0x19;
+  canMsg12.data[1] = 0x00;
 
-  canMsg13.can_id  = 0x0;
-  canMsg13.can_dlc = 0x0;
-  canMsg13.data[0] = 0x0;
-  canMsg13.data[1] = 0x0;
-  canMsg13.data[2] = 0x0;
-  canMsg13.data[3] = 0x0;
+  canMsg13.can_id  = 0x50;
+  canMsg13.can_dlc = 2;
+  canMsg13.data[0] = 0x14;
+  canMsg13.data[1] = 0x00;
 
-  canMsg14.can_id  = 0x0;
-  canMsg14.can_dlc = 0x0;
-  canMsg14.data[0] = 0x0;
-  canMsg14.data[1] = 0x0;
+  canMsg14.can_id  = 0x50;
+  canMsg14.can_dlc = 6;
+  canMsg14.data[0] = 0x27;
+  canMsg14.data[1] = 0x01;
   canMsg14.data[2] = 0x0;
   canMsg14.data[3] = 0x0;
+  canMsg15.data[4] = 0x0;
+  canMsg15.data[5] = 0x0;
 
-  canMsg15.can_id  = 0x0;
-  canMsg15.can_dlc = 0x0;
-  canMsg15.data[0] = 0x0;
-  canMsg15.data[1] = 0x0;
+  canMsg15.can_id  = 0x50;
+  canMsg15.can_dlc = 6;
+  canMsg15.data[0] = 0x27;
+  canMsg15.data[1] = 0x02;
   canMsg15.data[2] = 0x0;
   canMsg15.data[3] = 0x0;
+  canMsg15.data[4] = 0x0;
+  canMsg15.data[5] = 0x0;
 
-  canMsg16.can_id  = 0x758;
+  canMsg16.can_id  = 0x50;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
   canMsg16.data[1] = 0x11;
@@ -205,30 +205,22 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         { 
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg1.can_dlc;
-            can_frame[3] = canMsg1.data[0];
-            can_frame[4] = canMsg1.data[1];
-            can_frame[5] = canMsg1.data[2];
+            can_frame[0] = canMsg1.can_id;
+            can_frame[1] = canMsg1.can_dlc;
+            can_frame[2] = canMsg1.data[0];
+            can_frame[3] = canMsg1.data[1];
+            can_frame[4] = canMsg1.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
         }
         else if(select == 2)
         {
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg2.can_dlc;
-            can_frame[3] = canMsg2.data[0];
-            can_frame[4] = canMsg2.data[1];
-            can_frame[5] = canMsg2.data[2];
+            can_frame[0] = canMsg2.can_id;
+            can_frame[1] = canMsg2.can_dlc;
+            can_frame[2] = canMsg2.data[0];
+            can_frame[3] = canMsg2.data[1];
+            can_frame[4] = canMsg2.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
@@ -239,19 +231,119 @@ int main(int argc, char **argv)
         }
         else if(select == 7)
         {
-            
+            can_frame[0] = canMsg7.can_id; 
+            can_frame[1] = canMsg7.can_dlc;
+            can_frame[2] = canMsg7.data[0];
+            can_frame[3] = canMsg7.data[1];
+            can_frame[4] = canMsg7.data[2];
+            can_frame[5] = canMsg7.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
+        else if(select == 8)
+        {
+            can_frame[0] = canMsg8.can_id;
+            can_frame[1] = canMsg8.can_dlc;
+            can_frame[2] = canMsg8.data[0];
+            can_frame[3] = canMsg8.data[1];
+            can_frame[4] = canMsg8.data[2];
+            can_frame[5] = canMsg8.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 9)
+        {
+            can_frame[0] = canMsg9.can_id;
+            can_frame[1] = canMsg9.can_dlc;
+            can_frame[2] = canMsg9.data[0];
+            can_frame[3] = canMsg9.data[1];
+            can_frame[4] = canMsg9.data[2];
+            can_frame[5] = canMsg9.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 10)
+        {
+            can_frame[0] = canMsg10.can_id;
+            can_frame[1] = canMsg10.can_dlc;
+            can_frame[2] = canMsg10.data[0];
+            can_frame[3] = canMsg10.data[1];
+            can_frame[4] = canMsg10.data[2];
+            can_frame[5] = canMsg10.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 11)
+        {
+            can_frame[0] = canMsg11.can_id;
+            can_frame[1] = canMsg11.can_dlc;
+            can_frame[2] = canMsg11.data[0];
+            can_frame[3] = canMsg11.data[1];
+            can_frame[4] = canMsg11.data[2];
+            can_frame[5] = canMsg11.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 12)
+        {
+            can_frame[0] = canMsg12.can_id;
+            can_frame[1] = canMsg12.can_dlc;
+            can_frame[2] = canMsg12.data[0];
+            can_frame[3] = canMsg12.data[1];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 13)
+        {
+            can_frame[0] = canMsg13.can_id; 
+            can_frame[1] = canMsg13.can_dlc;
+            can_frame[2] = canMsg13.data[0];
+            can_frame[3] = canMsg13.data[1];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 14)
+        {
+            can_frame[0] = canMsg14.can_id; 
+            can_frame[1] = canMsg14.can_dlc;
+            can_frame[2] = canMsg14.data[0];
+            can_frame[3] = canMsg14.data[1];
+            can_frame[4] = canMsg14.data[2];
+            can_frame[5] = canMsg14.data[3];
+            can_frame[6] = canMsg14.data[4];
+            can_frame[7] = canMsg14.data[5];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 15)
+        {
+            can_frame[0] = canMsg15.can_id; 
+            can_frame[1] = canMsg15.can_dlc;
+            can_frame[2] = canMsg15.data[0];
+            can_frame[3] = canMsg15.data[1];
+            can_frame[4] = canMsg15.data[2];
+            can_frame[5] = canMsg15.data[3];
+            can_frame[6] = canMsg15.data[4];
+            can_frame[7] = canMsg15.data[5];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
+        }   
         else if(select == 16)
         {
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg16.can_dlc;
-            can_frame[3] = canMsg16.data[0];
-            can_frame[4] = canMsg16.data[1];
-            can_frame[5] = canMsg16.data[2];
+            can_frame[0] = canMsg16.can_id; 
+            can_frame[1] = canMsg16.can_dlc;
+            can_frame[2] = canMsg16.data[0];
+            can_frame[3] = canMsg16.data[1];
+            can_frame[4] = canMsg16.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
