@@ -1,210 +1,256 @@
-/*
- * SPI testing utility (using spidev driver)
- *
- * Copyright (c) 2007  MontaVista Software, Inc.
- * Copyright (c) 2007  Anton Vorontsov <avorontsov@ru.mvista.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License.
- *
- * Cross-compile with cross-gcc -I/path/to/cross-kernel/include
- */
-
-#include <stdint.h>
-#include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/types.h>
-#include <linux/spi/spidev.h>
+#include <stdint.h>
+#include <stdlib.h>
+#define CAN_FRAME_MAX_DATA_LEN 8
+#define CAN_FRAME_MAX_BITS 128
 
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+struct can_frame {
+    uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
+    uint8_t    can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
+    uint8_t    data[CAN_FRAME_MAX_DATA_LEN];
+};
 
-static void pabort(const char *s)
+struct can_frame canMsg1;
+struct can_frame canMsg2;
+struct can_frame canMsg3;
+struct can_frame canMsg4;
+struct can_frame canMsg5;
+struct can_frame canMsg6;
+struct can_frame canMsg7;
+struct can_frame canMsg8;
+struct can_frame canMsg9;
+struct can_frame canMsg10;
+struct can_frame canMsg11;
+struct can_frame canMsg12;
+struct can_frame canMsg13;
+struct can_frame canMsg14;
+struct can_frame canMsg15;
+struct can_frame canMsg16;
+void init()
 {
-	perror(s);
-	abort();
+  canMsg1.can_id  = 0x750;
+  canMsg1.can_dlc = 3;
+  canMsg1.data[0] = 0x02;
+  canMsg1.data[1] = 0x10;
+  canMsg1.data[2] = 0x01;
+  canMsg1.data[3] = 0x00;
+
+  canMsg2.can_id  = 0x750;
+  canMsg2.can_dlc = 3;
+  canMsg2.data[0] = 0x02;
+  canMsg2.data[1] = 0x10;
+  canMsg2.data[2] = 0x03;
+
+  canMsg3.can_id  = 0x750;
+  canMsg3.can_dlc = 4;
+  canMsg3.data[0] = 0x03;
+  canMsg3.data[1] = 0x22;
+  canMsg3.data[2] = 0xF1;
+  canMsg3.data[3] = 0x00;
+
+  canMsg4.can_id  = 0x750;
+  canMsg4.can_dlc = 4;
+  canMsg4.data[0] = 0x03;
+  canMsg4.data[1] = 0x22;
+  canMsg4.data[2] = 0xF1;
+  canMsg4.data[3] = 0x80;
+
+  canMsg5.can_id  = 0x750;
+  canMsg5.can_dlc = 4;
+  canMsg5.data[0] = 0x03;
+  canMsg5.data[1] = 0x22;
+  canMsg5.data[2] = 0xF1;
+  canMsg5.data[3] = 0x81;
+
+  canMsg6.can_id  = 0x750;
+  canMsg6.can_dlc = 4;
+  canMsg6.data[0] = 0x03;
+  canMsg6.data[1] = 0x22;
+  canMsg6.data[2] = 0xF1;
+  canMsg6.data[3] = 0x82;
+
+  canMsg7.can_id  = 0x750;
+  canMsg7.can_dlc = 4;
+  canMsg7.data[0] = 0x03;
+  canMsg7.data[1] = 0x22;
+  canMsg7.data[2] = 0xF1;
+  canMsg7.data[3] = 0x00;
+
+  canMsg8.can_id  = 0x750;
+  canMsg8.can_dlc = 4;
+  canMsg8.data[0] = 0x03;
+  canMsg8.data[1] = 0x22;
+  canMsg8.data[2] = 0xF1;
+  canMsg8.data[3] = 0x90;
+
+  canMsg9.can_id  = 0x750;
+  canMsg9.can_dlc = 4;
+  canMsg9.data[0] = 0x03;
+  canMsg9.data[1] = 0x22;
+  canMsg9.data[2] = 0xF1;
+  canMsg9.data[3] = 0x91;
+
+  canMsg10.can_id  = 0x750;
+  canMsg10.can_dlc = 4;
+  canMsg10.data[0] = 0x03;
+  canMsg10.data[1] = 0x22;
+  canMsg10.data[2] = 0xF1;
+  canMsg10.data[3] = 0x92;
+
+  canMsg11.can_id  = 0x750;
+  canMsg11.can_dlc = 4;
+  canMsg11.data[0] = 0x03;
+  canMsg11.data[1] = 0x2E;
+  canMsg11.data[2] = 0xF1;
+  canMsg11.data[3] = 0x90;
+
+  canMsg12.can_id  = 0x0;
+  canMsg12.can_dlc = 0x0;
+  canMsg12.data[0] = 0x0;
+  canMsg12.data[1] = 0x0;
+  canMsg12.data[2] = 0x0;
+  canMsg12.data[3] = 0x0;
+
+  canMsg13.can_id  = 0x0;
+  canMsg13.can_dlc = 0x0;
+  canMsg13.data[0] = 0x0;
+  canMsg13.data[1] = 0x0;
+  canMsg13.data[2] = 0x0;
+  canMsg13.data[3] = 0x0;
+
+  canMsg14.can_id  = 0x0;
+  canMsg14.can_dlc = 0x0;
+  canMsg14.data[0] = 0x0;
+  canMsg14.data[1] = 0x0;
+  canMsg14.data[2] = 0x0;
+  canMsg14.data[3] = 0x0;
+
+  canMsg15.can_id  = 0x0;
+  canMsg15.can_dlc = 0x0;
+  canMsg15.data[0] = 0x0;
+  canMsg15.data[1] = 0x0;
+  canMsg15.data[2] = 0x0;
+  canMsg15.data[3] = 0x0;
+
+  canMsg16.can_id  = 0x750;
+  canMsg16.can_dlc = 3;
+  canMsg16.data[0] = 0x02;
+  canMsg16.data[1] = 0x11;
+  canMsg16.data[2] = 0x01;
 }
-
-static const char *device = "/dev/spidev0.1";
-static uint8_t mode;
-static uint8_t bits = 8;
-static uint32_t speed = 10000000;
-static uint16_t delay;
-
-static void transfer(int fd)
+void menu()
 {
-	int ret;
-	uint8_t tx[] = {
-		0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-		0x40, 0x00, 0x00, 0x00, 0x00, 0x95,
-		0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-		0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-		0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-		0xDE, 0xAD, 0xBE, 0xEF, 0xBA, 0xAD,
-		0xF0, 0x0D,
-	};
-	uint8_t rx[ARRAY_SIZE(tx)] = {0, };
-	struct spi_ioc_transfer tr = {
-		.tx_buf = (unsigned long)tx,
-		.rx_buf = (unsigned long)rx,
-		.len = ARRAY_SIZE(tx),
-		.delay_usecs = delay,
-		.speed_hz = speed,
-		.bits_per_word = bits,
-	};
+    printf("===========MENU============\n");
+    printf("1. Session control 01\n");
+    printf("2. Session control 03\n");
+    printf("3. Read ECU voltage engine\n");
+    printf("4. Read temperature engine\n");
+    printf("5. Read odometer engine\n");
+    printf("6. Read velocity engine\n");
 
-	ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-	if (ret < 1)
-		pabort("can't send spi message");
+    printf("7. Read ECU voltage radar\n");
+    printf("8. Read angel azimuth radar\n");
+    printf("9. Object detection radar\n");
+    printf("10. Warning detection radar\n");
 
-	for (ret = 0; ret < ARRAY_SIZE(tx); ret++) {
-		if (!(ret % 6))
-			puts("");
-		printf("%.2X ", rx[ret]);
-	}
-	puts("");
+    printf("11. Write angel azimuth radar\n");
+
+    printf("12. Read DTC\n");
+    printf("13. Clear diagnostic\n");
+    printf("14. Request seed\n");
+    printf("15. Send seed\n");
+    printf("16.ECU reset\n");
+    printf("=======================\n");
+
 }
-
-static void print_usage(const char *prog)
+int main(int argc, char **argv)
 {
-	printf("Usage: %s [-DsbdlHOLC3]\n", prog);
-	puts("  -D --device   device to use (default /dev/spidev1.1)\n"
-	     "  -s --speed    max speed (Hz)\n"
-	     "  -d --delay    delay (usec)\n"
-	     "  -b --bpw      bits per word \n"
-	     "  -l --loop     loopback\n"
-	     "  -H --cpha     clock phase\n"
-	     "  -O --cpol     clock polarity\n"
-	     "  -L --lsb      least significant bit first\n"
-	     "  -C --cs-high  chip select active high\n"
-	     "  -3 --3wire    SI/SO signals shared\n");
-	exit(1);
-}
+    char *app_name = argv[0];
+    char *dev_name = "/dev/mcp2515_dev";
+    int fd = -1;
+    char c;
+    int select = 0;
+    char con;
+    char can_id[128]={0};
+    char can_dlc[128];
+    char can_data[128]={0};
+    char can_frame[128]={0};
+    init();
 
-static void parse_opts(int argc, char *argv[])
-{
-	while (1) {
-		static const struct option lopts[] = {
-			{ "device",  1, 0, 'D' },
-			{ "speed",   1, 0, 's' },
-			{ "delay",   1, 0, 'd' },
-			{ "bpw",     1, 0, 'b' },
-			{ "loop",    0, 0, 'l' },
-			{ "cpha",    0, 0, 'H' },
-			{ "cpol",    0, 0, 'O' },
-			{ "lsb",     0, 0, 'L' },
-			{ "cs-high", 0, 0, 'C' },
-			{ "3wire",   0, 0, '3' },
-			{ "no-cs",   0, 0, 'N' },
-			{ "ready",   0, 0, 'R' },
-			{ NULL, 0, 0, 0 },
-		};
-		int c;
-
-		c = getopt_long(argc, argv, "D:s:d:b:lHOLC3NR", lopts, NULL);
-
-		if (c == -1)
-			break;
-
-		switch (c) {
-		case 'D':
-			device = optarg;
-			break;
-		case 's':
-			speed = atoi(optarg);
-			break;
-		case 'd':
-			delay = atoi(optarg);
-			break;
-		case 'b':
-			bits = atoi(optarg);
-			break;
-		case 'l':
-			mode |= SPI_LOOP;
-			break;
-		case 'H':
-			mode |= SPI_CPHA;
-			break;
-		case 'O':
-			mode |= SPI_CPOL;
-			break;
-		case 'L':
-			mode |= SPI_LSB_FIRST;
-			break;
-		case 'C':
-			mode |= SPI_CS_HIGH;
-			break;
-		case '3':
-			mode |= SPI_3WIRE;
-			break;
-		case 'N':
-			mode |= SPI_NO_CS;
-			break;
-		case 'R':
-			mode |= SPI_READY;
-			break;
-		default:
-			print_usage(argv[0]);
-			break;
-		}
-	}
-}
-
-int main(int argc, char *argv[])
-{
-	int ret = 0;
-	int fd;
-
-	parse_opts(argc, argv);
-
-	fd = open(device, O_RDWR);
-	if (fd < 0)
-		pabort("can't open device");
-
-	/*
-	 * spi mode
-	 */
-	ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
-	if (ret == -1)
-		pabort("can't set spi mode");
-
-	ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
-	if (ret == -1)
-		pabort("can't get spi mode");
-
-	/*
-	 * bits per word
-	 */
-	ret = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
-	if (ret == -1)
-		pabort("can't set bits per word");
-
-	ret = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits);
-	if (ret == -1)
-		pabort("can't get bits per word");
-
-	/*
-	 * max speed hz
-	 */
-	ret = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed);
-	if (ret == -1)
-		pabort("can't set max speed hz");
-
-	ret = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &speed);
-	if (ret == -1)
-		pabort("can't get max speed hz");
-
-	printf("spi mode: %d\n", mode);
-	printf("bits per word: %d\n", bits);
-	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
-
-	transfer(fd);
-
-	close(fd);
-
-	return ret;
+    do{
+        system("cls");
+        menu();
+        printf("Enter your choice (1-->16): ");
+        scanf("%d",&select);
+        while(select<1 || select > 16)
+        {
+            printf("Error! Enter your choice (1-->16): ");
+            scanf("%d",&select);
+        }
+        if(select == 1)
+        {
+            sprintf(can_id,"%x",canMsg1.can_id);
+            printf("CAN ID: %s\n",can_id);
+            sprintf(can_dlc,"%d",canMsg1.can_dlc);
+            printf("CAN DLC: %s\n",can_dlc);
+            for(int i=0;i<8;i++)
+            {
+                char temp[2] = {0};
+                sprintf(temp,"%02x",canMsg1.data[i]);
+                strcat(can_data,temp);
+            }
+            printf("CAN DATA: %s\n",can_data);
+            strcat(can_frame,can_id);
+            strcat(can_frame,can_dlc);
+            strcat(can_frame,can_data);
+            printf("CAN FRAME: %s",can_frame);
+            for(int i =0;i<strlen(can_frame);i++)
+            {
+                read(fd,&can_frame[i],1);
+            }
+        }
+        else if(select == 2)
+        {
+            for (int i =0;i<canMsg2.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg2.data[i]);
+            }
+        }
+        else if(select == 3)
+        {
+            for (int i =0;i<canMsg3.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg3.data[i]);
+            }
+        }
+        else if(select == 7)
+        {
+            for (int i =0;i<canMsg7.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg7.data[i]);
+            }
+        }
+        else if(select == 16)
+        {
+            for (int i =0;i<canMsg16.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg16.data[i]);
+            }
+        }
+        strcpy(can_id,"0");
+        strcpy(can_dlc,"0");
+        strcpy(can_data,"0");
+        strcpy(can_frame,"0");
+        printf("\nDo you want to continue? Y or N: ");
+        scanf(" %c",&con);
+    } while ( con =='Y'|| con =='y' );
+    printf("========OUT==========");
+    
+    return 0;
 }
