@@ -213,6 +213,15 @@ int main(int argc, char **argv)
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
+            printf("%x %x %x %x %x %x %x %x %x %x", can_frame[0],
+                                                    can_frame[1],
+                                                    can_frame[2],
+                                                    can_frame[3],
+                                                    can_frame[5],
+                                                    can_frame[6],
+                                                    can_frame[7],
+                                                    can_frame[8],
+                                                    can_frame[9]);
         }
         else if(select == 2)
         {
