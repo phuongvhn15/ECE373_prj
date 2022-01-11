@@ -267,21 +267,21 @@ static int __init ModuleInit(void) {
 	readMessage(mcp2515_dev_spi, &can_frame_rx);
 	printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
-	can_frame_tx.can_id = 0x58;
-	can_frame_tx.can_dlc = 4;
-	can_frame_tx.can_data[0] = 0x03;
-	can_frame_tx.can_data[1] = 0x22;
-	can_frame_tx.can_data[2] = 0xf1;
-	can_frame_tx.can_data[3] = 0x80;
-	can_frame_tx.can_data[4] = 0;
-	can_frame_tx.can_data[5] = 0;
-	can_frame_tx.can_data[6] = 0;
-	can_frame_tx.can_data[7] = 0;
-	printk("Sending CAN message ");
-	sendMessage(mcp2515_dev_spi, &can_frame_tx);
+	// can_frame_tx.can_id = 0x58;
+	// can_frame_tx.can_dlc = 4;
+	// can_frame_tx.can_data[0] = 0x03;
+	// can_frame_tx.can_data[1] = 0x22;
+	// can_frame_tx.can_data[2] = 0xf1;
+	// can_frame_tx.can_data[3] = 0x80;
+	// can_frame_tx.can_data[4] = 0;
+	// can_frame_tx.can_data[5] = 0;
+	// can_frame_tx.can_data[6] = 0;
+	// can_frame_tx.can_data[7] = 0;
+	// printk("Sending CAN message ");
+	// sendMessage(mcp2515_dev_spi, &can_frame_tx);
 
-	readMessage(mcp2515_dev_spi, &can_frame_rx);
-	printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
+	// readMessage(mcp2515_dev_spi, &can_frame_rx);
+	// printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 	
 	return 0;
 }
