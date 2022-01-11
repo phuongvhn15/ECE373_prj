@@ -33,7 +33,7 @@ static dev_t mcp2515_dev;
 struct cdev mcp2515_cdev;
 static struct class *my_class;
 
-static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs){
+static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count, loff_t *offs){
 	int i;
 	struct can_frame CAN_FRAME;
 
@@ -161,7 +161,7 @@ static int __init ModuleInit(void)
 	}
 	else
 		printk("Set bit rate fail");
-		
+
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
 
@@ -188,7 +188,6 @@ static int __init ModuleInit(void)
     mcp2515_cdev.owner = THIS_MODULE;
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
 	
-	printk("Hello kernel!\n");
 	return 0;
 }
 
