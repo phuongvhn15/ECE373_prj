@@ -28,7 +28,8 @@ MODULE_AUTHOR("Nguyen Van Thanh Huy");
 MODULE_DESCRIPTION("SPI module for MCP2515");
 
 #define MY_BUS_NUM 0
-static struct spi_device *mcp2515_dev;
+static struct spi_device *mcp2515_dev_spi;
+struct dev_t mcp2515_dev;
 struct cdev mcp2515_cdev;
 static struct class *my_class;
 
@@ -124,7 +125,7 @@ static int __init ModuleInit(void)
 	
 	//SPI device information
 	struct spi_board_info spi_device_info = {
-		.modalias = "mcp2515_dev",
+		.modalias = "mcp2515_dev_spi",
 		.max_speed_hz = 12000000,
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
@@ -141,27 +142,29 @@ static int __init ModuleInit(void)
 	}
 	
 	//Create new SPI device
-	mcp2515_dev = spi_new_device(master, &spi_device_info);
-	if(!mcp2515_dev){
+	mcp2515_dev_spi = spi_new_device(master, &spi_device_info);
+	if(!mcp2515_dev_spi){
 		printk("Couldn't create device!\n");
 		return -1;
 	}
 	
-	mcp2515_dev -> bits_per_word = 8;
+	mcp2515_dev_spi -> bits_per_word = 8;
 	
-	if(spi_setup(mcp2515_dev) != 0){
+	if(spi_setup(mcp2515_dev_spi) != 0){
 		printk("Could not change bus set-up!\n");
 		spi_unregister_device(mcp2515_dev);
 		return -1;
 	}
 
-	if(setBitrate(mcp2515_dev)){
+	if(setBitrate(mcp2515_dev_spi)){
 		printk("Set bit rate success");
 	}
 	else
 		printk("Set bit rate fail");
 	printk("%s","Inside setMode function");
-	setMode(mcp2515_dev, CANCTRL_REQOP_NORMAL);
+	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
+
+	char buffer[64];
 
 	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
     printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
@@ -188,9 +191,9 @@ static void __exit ModuleExit(void)
 	device_destroy(my_class,mcp2515_dev);
 	class_destroy(my_class);
     unregister_chrdev_region( mcp2515_dev, 1 );
-    if(mcp2515_dev)
+    if(mcp2515_dev_spi)
     {
-        spi_unregister_device(mcp2515_dev);
+        spi_unregister_device(mcp2515_dev_spi);
     }
 	printk("Goodbye kernel!\n");
 }
