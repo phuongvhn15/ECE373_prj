@@ -33,7 +33,7 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x58;
+  canMsg1.can_id  = 0x50;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
