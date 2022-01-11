@@ -1,6 +1,25 @@
+#include <linux/types.h>
+#include <linux/spi/spi.h>
 #include <linux/module.h>
 #include <linux/init.h>
-#include <linux/spi/spi.h>
+#include <linux/kernel.h>
+ 
+#include <linux/kdev_t.h>
+#include <linux/fs.h>   
+#include <linux/cdev.h> 
+#include <asm/uaccess.h>
+
+#include <linux/gpio.h>
+
+#include <linux/interrupt.h>
+
+#include <linux/kobject.h> 
+#include <linux/sysfs.h>
+
+#include <linux/time.h>
+#include <linux/ktime.h>
+#include <asm/delay.h> 
+#include <linux/delay.h>
 #include "mcp2515_driver.c"
 
 /*Driver Information*/
@@ -10,15 +29,8 @@ MODULE_DESCRIPTION("SPI module for MCP2515");
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev;
-
-enum CANCTRL_REQOP_MODE {
-    CANCTRL_REQOP_NORMAL     = 0x00,
-    CANCTRL_REQOP_SLEEP      = 0x20,
-    CANCTRL_REQOP_LOOPBACK   = 0x40,
-    CANCTRL_REQOP_LISTENONLY = 0x60,
-    CANCTRL_REQOP_CONFIG     = 0x80,
-    CANCTRL_REQOP_POWERUP    = 0xE0
-};
+struct cdev mcp2515_cdev;
+static struct class *my_class;
 
 struct can_frame {
     uint32_t 	can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
@@ -29,7 +41,7 @@ struct can_frame {
 static const struct file_operations mcp2515_fops = {
 	.owner =	THIS_MODULE,
 	.read = 	mcp2515_read,
-	.write =	mcp215_write,
+	.write =	mcp2515_write,
 };
 
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs){
@@ -154,6 +166,21 @@ static int __init ModuleInit(void)
 		printk("Set bit rate fail");
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev, CANCTRL_REQOP_NORMAL);
+
+	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
+    printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
+
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL) {
+		printk("Device class can not e created!\n");
+	}
+
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL) {
+		printk("Can not create device file!\n");
+	}
+
+	cdev_init(&mcp2515_cdev, &mcp2515_fops);
+    mcp2515_cdev.owner = THIS_MODULE;
+    cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
 	
 	printk("Hello kernel!\n");
 	return 0;
