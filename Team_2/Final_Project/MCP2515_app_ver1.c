@@ -166,7 +166,7 @@ void menu()
 
 void displayMessageCAN(char *buffer){
     for(int i = 0; i < sizeof(buffer) + 2; i++){
-        printf("%02x ", buffer[i]);
+        printf("%02X ", (unsigned char)buffer[i]);
     }
 }
 void clearBuffer(char *can_frame, char *rx_frame)
@@ -180,7 +180,7 @@ void clearBuffer(char *can_frame, char *rx_frame)
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    //char *dev_name = "/dev/mcp2515_dev_ver2d";
+    char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
@@ -188,11 +188,11 @@ int main(int argc, char **argv)
     char can_frame[10]={0};
     char rx_frame[10] = {0};
     init();
-//     if ((fd = open(dev_name,O_RDWR)) < 0 )
-// {
-//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-//     return( 1 );
-// }
+    if ((fd = open(dev_name,O_RDWR)) < 0 )
+{
+    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    return( 1 );
+}
 
     do{
         menu();
