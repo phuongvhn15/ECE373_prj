@@ -277,7 +277,7 @@ int main(int argc, char **argv)
             }
         }
         else if(select == 16)
-        {
+       {
             uint32_t res = canMsg1.can_id & 0xFF0;
             uint32_t mod = canMsg1.can_id - res;
             res = res >> 4;
