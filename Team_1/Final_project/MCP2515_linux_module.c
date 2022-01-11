@@ -264,6 +264,8 @@ static int __init ModuleInit(void) {
 	printk("Sending CAN message ");
 	sendMessage(mcp2515_dev_spi, &can_frame_tx);
 
+	readMessage(mcp2515_dev_spi, &can_frame_rx);
+	printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 
 	can_frame_tx.can_id = 0x58;
 	can_frame_tx.can_dlc = 4;
