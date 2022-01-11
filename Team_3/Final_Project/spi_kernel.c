@@ -38,12 +38,6 @@ struct can_frame {
     uint8_t    	can_data[8];
 };
 
-static const struct file_operations mcp2515_fops = {
-	.owner =	THIS_MODULE,
-	.read = 	mcp2515_read,
-	.write =	mcp2515_write,
-};
-
 static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs){
 	int i;
 	struct can_frame CAN_FRAME;
@@ -194,6 +188,12 @@ static void __exit ModuleExit(void)
     }
 	printk("Goodbye kernel!\n");
 }
+
+static const struct file_operations mcp2515_fops = {
+	.owner =	THIS_MODULE,
+	.read = 	mcp2515_read,
+	.write =	mcp2515_write,
+};
 
 module_init(ModuleInit);
 module_exit(ModuleExit);
