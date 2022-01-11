@@ -145,42 +145,37 @@ void init()
 void menu()
 {
     printf("===========MENU============\n");
-    printf("1. Session control 01\n");
-    printf("2. Session control 03\n");
-    printf("3. Read ECU voltage engine\n");
-    printf("4. Read temperature engine\n");
-    printf("5. Read odometer engine\n");
-    printf("6. Read velocity engine\n");
-    printf("7. Read ECU voltage radar\n");
-    printf("8. Read angel azimuth radar\n");
-    printf("9. Object detection radar\n");
+    printf("1.  Session control 01\n");
+    printf("2.  Session control 03\n");
+    printf("3.  Read ECU voltage engine\n");
+    printf("4.  Read temperature engine\n");
+    printf("5.  Read odometer engine\n");
+    printf("6.  Read velocity engine\n");
+    printf("7.  Read ECU voltage radar\n");
+    printf("8.  Read angel azimuth radar\n");
+    printf("9.  Object detection radar\n");
     printf("10. Warning detection radar\n");
     printf("11. Write angel azimuth radar\n");
     printf("12. Read DTC\n");
     printf("13. Clear diagnostic\n");
     printf("14. Request seed\n");
     printf("15. Send seed\n");
-    printf("16.ECU reset\n");
+    printf("16. ECU reset\n");
     printf("=======================\n");
 }
 
 void displayMessageCAN(char *buffer){
-    for(int i = 0; i < sizeof(buffer) + 1; i++){
+    for(int i = 0; i < sizeof(buffer) + 2; i++){
         printf("%02x ", buffer[i]);
     }
 }
 void clearBuffer(char *can_frame, char *rx_frame)
 {
-    for (int i=0; i<sizeof(can_frame);i++)
+    for (int i=0; i<sizeof(can_frame)+2;i++)
     {
         can_frame[i]  = 0x00;
         rx_frame[i]  = 0x00;
     }
-}
-char *(can_frame)
-{
-    char buffer_frame[10]={0};
-    
 }
 int main(int argc, char **argv)
 {
@@ -222,17 +217,22 @@ int main(int argc, char **argv)
             can_frame[6] = canMsg1.data[3];
 
             write(fd, can_frame, 10);
-            printf("CAN Transmission: ");
-            displayMessageCAN(can_frame);
-            printf("\n");
             read(fd, rx_frame, 10);
-            printf("CAN Response: ");
-            displayMessageCAN(rx_frame);
-            printf("\n");
         }
         else if(select == 2)
         {
-           
+           uint32_t res = canMsg1.can_id & 0xFF0;
+            uint32_t mod = canMsg1.can_id - res;
+            res = res >> 4;
+            can_frame[0] = res;
+            can_frame[1] = mod; 
+            can_frame[2] = canMsg2.can_dlc;
+            can_frame[3] = canMsg2.data[0];
+            can_frame[4] = canMsg2.data[1];
+            can_frame[5] = canMsg2.data[2];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         else if(select == 3)
         {
@@ -246,11 +246,15 @@ int main(int argc, char **argv)
         {
             
         }
-        // strcpy(can_id,"0");
-        // strcpy(can_dlc,"0");
-        // strcpy(can_data,"0");
-        // strcpy(can_frame,"0");
+        printf("CAN Transmission: ");
+        displayMessageCAN(can_frame);
+        printf("\n");
+        printf("CAN Response: ");
+        displayMessageCAN(rx_frame);
+        printf("\n");
+
         clearBuffer(can_frame,rx_frame);
+
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
