@@ -271,7 +271,7 @@ static int __init ModuleInit(void) {
 	can_frame_tx.can_dlc = 3;
 	can_frame_tx.can_data[0] = 0x01;
 	can_frame_tx.can_data[1] = 0x10;
-	can_frame_tx.can_data[2] = 0x01;
+	can_frame_tx.can_data[2] = 0x03;
 	can_frame_tx.can_data[3] = 0x00;
 	can_frame_tx.can_data[4] = 0x00;
 	can_frame_tx.can_data[5] = 0x00;
