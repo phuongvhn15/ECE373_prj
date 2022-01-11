@@ -227,29 +227,16 @@ int main(int argc, char **argv)
         }
         else if(select == 3)
         {
-           for (int i =0;i<canMsg3.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg3.data[i]);
-            }
+           
         }
-
         else if(select == 4 ){
-          for (int i =0;i<canMsg4.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg4.data[i]);
-            }
+         
         }
         else if(select == 5){
-          for (int i =0;i<canMsg5.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg5.data[i]);
-            }
+         
         }
         else if(select == 6){
-          for (int i =0;i<canMsg6.can_dlc;i++)
-            {
-                printf("%02x  ",canMsg6.data[i]);
-            }
+         
         }
         else if(select == 7)
         {
@@ -360,15 +347,9 @@ int main(int argc, char **argv)
             read(fd, rx_frame, 10);
         }   
         else if(select == 16)
-<<<<<<< HEAD
         {
             can_frame[0] = canMsg16.can_id; 
             can_frame[1] = canMsg16.can_dlc;
-=======
-       {
-            can_fram[0] = canmsg.can_id ;
-            can_frame[1] = canMsg8.can_dlc; 
->>>>>>> efd38fcb732c70b788b79bd41a8602bb4fb429d3
             can_frame[2] = canMsg16.data[0];
             can_frame[3] = canMsg16.data[1];
             can_frame[4] = canMsg16.data[2];
