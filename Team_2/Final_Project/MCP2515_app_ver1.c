@@ -241,7 +241,25 @@ int main(int argc, char **argv)
             {
                 printf("%02x  ",canMsg3.data[i]);
             }
-           
+        }
+
+        else if(select == 4 ){
+          for (int i =0;i<canMsg4.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg4.data[i]);
+            }
+        }
+        else if(select == 5){
+          for (int i =0;i<canMsg5.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg5.data[i]);
+            }
+        }
+        else if(select == 6){
+          for (int i =0;i<canMsg6.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg6.data[i]);
+            }
         }
         else if(select == 7)
         {
@@ -250,6 +268,12 @@ int main(int argc, char **argv)
              for (int i =0;i<canMsg7.can_dlc;i++)
             {
                 printf("%02x  ",canMsg7.data[i]);
+            }
+        }
+        else if(select == 8 ){
+          for (int i =0;i<canMsg8.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg8.data[i]);
             }
         }
         else if(select == 16)
