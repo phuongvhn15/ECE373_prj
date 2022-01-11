@@ -261,7 +261,7 @@ static int __init ModuleInit(void) {
 	can_frame_tx.can_data[5] = 0;
 	can_frame_tx.can_data[6] = 0;
 	can_frame_tx.can_data[7] = 0;
-	printk("Sending CAN message : %s", );
+	printk("Sending CAN message ");
 	sendMessage(mcp2515_dev_spi, &can_frame_tx);
 
 	readMessage(mcp2515_dev_spi, &can_frame_rx);
