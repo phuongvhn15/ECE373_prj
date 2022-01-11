@@ -245,6 +245,7 @@ static int __init ModuleInit(void) {
 	//Config MCP2515 into normal mode.
 	setMode(mcp2515_dev_spi,CANCTRL_REQOP_NORMAL);
 
+	//HARDWARE TESTING CODE.
 	//Test Sending and Receiving.
 	u8 rx_val[] = {0,0,0};
 	readRegisters(mcp2515_dev_spi, 40, rx_val, 3);
