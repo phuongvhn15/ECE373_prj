@@ -46,14 +46,14 @@ void init()
   canMsg2.data[2] = 0x03;
 
   canMsg3.can_id  = 0x58;
-  canMsg3.can_dlc = 4;
+  canMsg3.can_dlc = 1;
   canMsg3.data[0] = 0x03;
   canMsg3.data[1] = 0x22;
-  canMsg3.data[2] = 0xFE;
+  canMsg3.data[2] = 0xF1;
   canMsg3.data[3] = 0x00;
 
   canMsg4.can_id  = 0x58;
-  canMsg4.can_dlc = 4;
+  canMsg4.can_dlc = 1;
   canMsg4.data[0] = 0x03;
   canMsg4.data[1] = 0x22;
   canMsg4.data[2] = 0xF1;
@@ -67,14 +67,14 @@ void init()
   canMsg5.data[3] = 0x81;
 
   canMsg6.can_id  = 0x58;
-  canMsg6.can_dlc = 4;
+  canMsg6.can_dlc = 1;
   canMsg6.data[0] = 0x03;
   canMsg6.data[1] = 0x22;
   canMsg6.data[2] = 0xF1;
   canMsg6.data[3] = 0x82;
 
   canMsg7.can_id  = 0x60;
-  canMsg7.can_dlc = 4;
+  canMsg7.can_dlc = 1;
   canMsg7.data[0] = 0x03;
   canMsg7.data[1] = 0x22;
   canMsg7.data[2] = 0xF1;
@@ -88,14 +88,14 @@ void init()
   canMsg8.data[3] = 0x90;
 
   canMsg9.can_id  = 0x60;
-  canMsg9.can_dlc = 4;
+  canMsg9.can_dlc = 1;
   canMsg9.data[0] = 0x03;
   canMsg9.data[1] = 0x22;
   canMsg9.data[2] = 0xF1;
   canMsg9.data[3] = 0x91;
 
   canMsg10.can_id  = 0x60;
-  canMsg10.can_dlc = 4;
+  canMsg10.can_dlc = 1;
   canMsg10.data[0] = 0x03;
   canMsg10.data[1] = 0x22;
   canMsg10.data[2] = 0xF1;
@@ -103,7 +103,7 @@ void init()
 
   canMsg11.can_id  = 0x60;
   canMsg11.can_dlc = 4;
-  canMsg11.data[0] = 0x03;
+  canMsg11.data[0] = 0x02;
   canMsg11.data[1] = 0x2E;
   canMsg11.data[2] = 0xF1;
   canMsg11.data[3] = 0x90;
