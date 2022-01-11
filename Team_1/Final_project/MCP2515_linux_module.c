@@ -161,6 +161,9 @@ static int __init ModuleInit(void) {
 	struct can_frame can_frame_rx;
 	struct spi_master *master;
 
+
+	//General SPI device set up
+	//
 	/* Parameters for SPI device */
 	struct spi_board_info spi_device_info = {
 		.modalias = "mcp2515_dev_spi",
@@ -196,7 +199,9 @@ static int __init ModuleInit(void) {
 		spi_unregister_device(mcp2515_dev_spi);
 		return -1;
 	}
+	/////////////////////////////////////////////
 
+	//MCP2515 set up
 	//Setting bitrate of 500Kbs and MCP2515 clock of 12Mhz.
 	if(setBitrate(mcp2515_dev_spi)){
 		printk("Set bit rate success");
@@ -209,7 +214,11 @@ static int __init ModuleInit(void) {
     int	ret = 0;
 
     printk(KERN_INFO "Loading mcp2515_module\n");
+	///////////////////////////////////////////////////////
 
+	//
+	//
+	// VFS set up
     alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev_ver2d");
     printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
 
@@ -231,8 +240,9 @@ static int __init ModuleInit(void) {
     cdev_init(&mcp2515_cdev, &mcp2515_fops);
     mcp2515_cdev.owner = THIS_MODULE;
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
+	/////////////////////////////////////
 
-
+	//Config MCP2515 into normal mode.
 	setMode(mcp2515_dev_spi,CANCTRL_REQOP_NORMAL);
 
 	// //Test Sending and Receiving.
