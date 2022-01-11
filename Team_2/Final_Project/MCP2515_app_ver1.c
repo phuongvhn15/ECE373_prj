@@ -41,7 +41,7 @@ void init()
 
   canMsg2.can_id  = 0x58;
   canMsg2.can_dlc = 3;
-  canMsg2.data[0] = 0x02;
+  canMsg2.data[0] = 0x01;
   canMsg2.data[1] = 0x10;
   canMsg2.data[2] = 0x03;
 
@@ -164,24 +164,10 @@ void menu()
     printf("=======================\n");
 }
 
-void displayMessageCAN(char *buffer){
-    for(int i = 0; i < sizeof(buffer); i++){
-        printf("%02X ",(unsigned char)buffer[i]);
-    }
-    
-}
-void clearBuffer(char *can_frame, char *rx_frame)
-{
-    for (int i=0; i<sizeof(can_frame);i++)
-    {
-        can_frame[i]  = 0x0;
-        rx_frame[i]  = 0x0;
-    }
-}
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev_ver2d";
+    //char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
@@ -189,11 +175,11 @@ int main(int argc, char **argv)
     char can_frame[10]={0};
     char rx_frame[10] = {0};
     init();
-     if ((fd = open(dev_name,O_RDWR)) < 0 )
-{
-    fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-    return( 1 );
-}
+//      if ((fd = open(dev_name,O_RDWR)) < 0 )
+// {
+//     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+//     return( 1 );
+// }
 
     do{
         menu();
@@ -391,14 +377,17 @@ int main(int argc, char **argv)
             read(fd, rx_frame, 10);
         }
         printf("CAN Transmission: ");
-        displayMessageCAN(can_frame);
+        for(int i = 0;i<sizeof(can_frame);i++)
+        {
+            printf("%02X ",(unsigned char)can_frame[i]);
+        }
         printf("\n");
         printf("CAN Response: ");
-        displayMessageCAN(rx_frame);
+        for(int i = 0;i<sizeof(can_frame);i++)
+        {
+            printf("%02X ",(unsigned char)rx_frame[i]);
+        }
         printf("\n");
-
-        clearBuffer(can_frame,rx_frame);
-
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
