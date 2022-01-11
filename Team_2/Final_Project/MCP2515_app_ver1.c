@@ -118,7 +118,7 @@ void init()
   canMsg13.data[0] = 0x14;
   canMsg13.data[1] = 0x00;
 
-  canMsg14.can_id  = 0x58;
+  canMsg14.can_id  = 0x50;
   canMsg14.can_dlc = 6;
   canMsg14.data[0] = 0x27;
   canMsg14.data[1] = 0x01;
@@ -127,7 +127,7 @@ void init()
   canMsg15.data[4] = 0x0;
   canMsg15.data[5] = 0x0;
 
-  canMsg15.can_id  = 0x58;
+  canMsg15.can_id  = 0x50;
   canMsg15.can_dlc = 6;
   canMsg15.data[0] = 0x27;
   canMsg15.data[1] = 0x02;
