@@ -29,7 +29,7 @@ MODULE_DESCRIPTION("SPI module for MCP2515");
 
 #define MY_BUS_NUM 0
 static struct spi_device *mcp2515_dev_spi;
-struct dev_t mcp2515_dev;
+static dev_t mcp2515_dev;
 struct cdev mcp2515_cdev;
 static struct class *my_class;
 
