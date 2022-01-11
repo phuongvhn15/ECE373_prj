@@ -214,14 +214,13 @@ int main(int argc, char **argv)
             can_frame[3] = canMsg1.data[0];
             can_frame[4] = canMsg1.data[1];
             can_frame[5] = canMsg1.data[2];
-            can_frame[6] = canMsg1.data[3];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
         }
         else if(select == 2)
         {
-           uint32_t res = canMsg1.can_id & 0xFF0;
+            uint32_t res = canMsg1.can_id & 0xFF0;
             uint32_t mod = canMsg1.can_id - res;
             res = res >> 4;
             can_frame[0] = res;
@@ -244,7 +243,18 @@ int main(int argc, char **argv)
         }
         else if(select == 16)
         {
-            
+            uint32_t res = canMsg1.can_id & 0xFF0;
+            uint32_t mod = canMsg1.can_id - res;
+            res = res >> 4;
+            can_frame[0] = res;
+            can_frame[1] = mod; 
+            can_frame[2] = canMsg16.can_dlc;
+            can_frame[3] = canMsg16.data[0];
+            can_frame[4] = canMsg16.data[1];
+            can_frame[5] = canMsg16.data[2];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         printf("CAN Transmission: ");
         displayMessageCAN(can_frame);
