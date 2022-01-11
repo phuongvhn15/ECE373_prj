@@ -168,6 +168,7 @@ void displayMessageCAN(char *buffer){
     for(int i = 0; i < sizeof(buffer) + 2; i++){
         printf("%02X ",(unsigned char)buffer[i]);
     }
+    
 }
 void clearBuffer(char *can_frame, char *rx_frame)
 {
