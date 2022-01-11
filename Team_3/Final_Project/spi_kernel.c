@@ -80,7 +80,7 @@ static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count
 	}
 
 	printk("Copy to userbuffer");
-	copy_to_user(user_buffer, can_buffer, 10);
+	copy_to_user(buffer, can_buffer, 10);
 	return 1;
 }
 
