@@ -33,7 +33,7 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x50;
+  canMsg1.can_id  = 0x58;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
@@ -108,17 +108,17 @@ void init()
   canMsg11.data[2] = 0xF1;
   canMsg11.data[3] = 0x90;
 
-  canMsg12.can_id  = 0x50;
+  canMsg12.can_id  = 0x58;
   canMsg12.can_dlc = 2;
   canMsg12.data[0] = 0x19;
   canMsg12.data[1] = 0x00;
 
-  canMsg13.can_id  = 0x50;
+  canMsg13.can_id  = 0x58;
   canMsg13.can_dlc = 2;
   canMsg13.data[0] = 0x14;
   canMsg13.data[1] = 0x00;
 
-  canMsg14.can_id  = 0x50;
+  canMsg14.can_id  = 0x58;
   canMsg14.can_dlc = 6;
   canMsg14.data[0] = 0x27;
   canMsg14.data[1] = 0x01;
@@ -127,7 +127,7 @@ void init()
   canMsg15.data[4] = 0x0;
   canMsg15.data[5] = 0x0;
 
-  canMsg15.can_id  = 0x50;
+  canMsg15.can_id  = 0x58;
   canMsg15.can_dlc = 6;
   canMsg15.data[0] = 0x27;
   canMsg15.data[1] = 0x02;
@@ -136,7 +136,7 @@ void init()
   canMsg15.data[4] = 0x0;
   canMsg15.data[5] = 0x0;
 
-  canMsg16.can_id  = 0x50;
+  canMsg16.can_id  = 0x58;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
   canMsg16.data[1] = 0x11;
