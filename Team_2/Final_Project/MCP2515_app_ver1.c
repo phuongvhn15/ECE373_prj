@@ -235,11 +235,22 @@ int main(int argc, char **argv)
         }
         else if(select == 3)
         {
+           uint32_t res = canMsg1.can_id & 0xFF0;
+           uint32_t mod = canMsg1.can_id - res;
+           for (int i =0;i<canMsg3.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg3.data[i]);
+            }
            
         }
         else if(select == 7)
         {
-            
+            uint32_t res = canMsg1.can_id & 0xFF0;
+            uint32_t mod = canMsg1.can_id - res;
+             for (int i =0;i<canMsg7.can_dlc;i++)
+            {
+                printf("%02x  ",canMsg7.data[i]);
+            }
         }
         else if(select == 16)
         {
