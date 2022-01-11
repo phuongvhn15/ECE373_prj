@@ -1,6 +1,25 @@
+#include <linux/types.h>
+#include <linux/spi/spi.h>
 #include <linux/module.h>
 #include <linux/init.h>
-#include <linux/spi/spi.h>
+#include <linux/kernel.h>
+ 
+#include <linux/kdev_t.h>
+#include <linux/fs.h>   
+#include <linux/cdev.h> 
+#include <asm/uaccess.h>
+
+#include <linux/gpio.h>
+
+#include <linux/interrupt.h>
+
+#include <linux/kobject.h> 
+#include <linux/sysfs.h>
+
+#include <linux/time.h>
+#include <linux/ktime.h>
+#include <asm/delay.h> 
+#include <linux/delay.h>
 #include "mcp2515_driver.c"
 
 /*Driver Information*/
@@ -9,30 +28,12 @@ MODULE_AUTHOR("Nguyen Van Thanh Huy");
 MODULE_DESCRIPTION("SPI module for MCP2515");
 
 #define MY_BUS_NUM 0
-static struct spi_device *mcp2515_dev;
+static struct spi_device *mcp2515_dev_spi;
+static dev_t mcp2515_dev;
+struct cdev mcp2515_cdev;
+static struct class *my_class;
 
-enum CANCTRL_REQOP_MODE {
-    CANCTRL_REQOP_NORMAL     = 0x00,
-    CANCTRL_REQOP_SLEEP      = 0x20,
-    CANCTRL_REQOP_LOOPBACK   = 0x40,
-    CANCTRL_REQOP_LISTENONLY = 0x60,
-    CANCTRL_REQOP_CONFIG     = 0x80,
-    CANCTRL_REQOP_POWERUP    = 0xE0
-};
-
-struct can_frame {
-    uint32_t 	can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-    uint8_t    	can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
-    uint8_t    	can_data[8];
-};
-
-static const struct file_operations mcp2515_fops = {
-	.owner =	THIS_MODULE,
-	.read = 	mcp2515_read,
-	.write =	mcp215_write,
-};
-
-static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, loff_t *offs){
+static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count, loff_t *offs){
 	int i;
 	struct can_frame CAN_FRAME;
 
@@ -79,12 +80,13 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	}
 
 	printk("Copy to userbuffer");
-	copy_to_user(user_buffer, can_buffer, 10);
+	copy_to_user(buffer, can_buffer, 10);
 	return 1;
 }
 
-static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
 	int i;
+	int error;
 	struct can_frame CAN_FRAME;
 
 	CAN_FRAME.can_data[0] = 0;
@@ -97,17 +99,24 @@ static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count,
 	CAN_FRAME.can_data[7] = 0;
 
 	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
-	CAN_FRAME.can_id = user_buffer[0];
-	CAN_FRAME.can_dlc = user_buffer[1];
+	CAN_FRAME.can_id = buffer[0];
+	CAN_FRAME.can_dlc = buffer[1];
 
 	//Copy 8 bytes of can_data to CAN_FRAME.
 	for(i = 0; i < 8; i++){
-		CAN_FRAME.can_data[i] = user_buffer[i+2];
+		CAN_FRAME.can_data[i] = buffer[i+2];
 	} 
 
 	printk("Sending CAN message");
-	sendMessage(mcp2515_dev, &CAN_FRAME);
+	error = sendMessage(mcp2515_dev_spi, &CAN_FRAME);
+	return error;
 }
+
+static const struct file_operations mcp2515_fops = {
+	.owner =	THIS_MODULE,
+	.read = 	mcp2515_read,
+	.write =	mcp2515_write,
+};
 
 /*Init and Exit module*/
 static int __init ModuleInit(void)
@@ -116,7 +125,7 @@ static int __init ModuleInit(void)
 	
 	//SPI device information
 	struct spi_board_info spi_device_info = {
-		.modalias = "mcp2515_dev",
+		.modalias = "mcp2515_dev_spi",
 		.max_speed_hz = 12000000,
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
@@ -133,37 +142,64 @@ static int __init ModuleInit(void)
 	}
 	
 	//Create new SPI device
-	mcp2515_dev = spi_new_device(master, &spi_device_info);
-	if(!mcp2515_dev){
+	mcp2515_dev_spi = spi_new_device(master, &spi_device_info);
+	if(!mcp2515_dev_spi){
 		printk("Couldn't create device!\n");
 		return -1;
 	}
 	
-	mcp2515_dev -> bits_per_word = 8;
+	mcp2515_dev_spi -> bits_per_word = 8;
 	
-	if(spi_setup(mcp2515_dev) != 0){
+	if(spi_setup(mcp2515_dev_spi) != 0){
 		printk("Could not change bus set-up!\n");
 		spi_unregister_device(mcp2515_dev);
 		return -1;
 	}
 
-	if(setBitrate(mcp2515_dev)){
+	if(setBitrate(mcp2515_dev_spi)){
 		printk("Set bit rate success");
 	}
 	else
 		printk("Set bit rate fail");
+
 	printk("%s","Inside setMode function");
-	setMode(mcp2515_dev, CANCTRL_REQOP_NORMAL);
+	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
+
+	char buffer[64];
+
+	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
+    printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
+
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL){
+		printk("Device class can not be created!\n");
+	}
+	else{
+		printk("Device class created!\n");
+	}
+
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL){
+		printk("Can not create device file!\n");
+	}
+	else{
+		printk("Create device file!\n");
+	}
+
+	cdev_init(&mcp2515_cdev, &mcp2515_fops);
+    mcp2515_cdev.owner = THIS_MODULE;
+    cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
 	
-	printk("Hello kernel!\n");
 	return 0;
 }
 
 static void __exit ModuleExit(void)
 {
-    if(mcp2515_dev)
+	cdev_del(&mcp2515_cdev);
+	device_destroy(my_class,mcp2515_dev);
+	class_destroy(my_class);
+    unregister_chrdev_region( mcp2515_dev, 1 );
+    if(mcp2515_dev_spi)
     {
-        spi_unregister_device(mcp2515_dev);
+        spi_unregister_device(mcp2515_dev_spi);
     }
 	printk("Goodbye kernel!\n");
 }
