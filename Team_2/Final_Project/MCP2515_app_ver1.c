@@ -139,8 +139,8 @@ void init()
   canMsg16.can_id  = 0x58;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
-  canMsg16.data[1] = 0x11;
-  canMsg16.data[2] = 0x01;
+  canMsg16.data[1] = 0x0;
+  canMsg16.data[2] = 0x0;
 }
 void menu()
 {
