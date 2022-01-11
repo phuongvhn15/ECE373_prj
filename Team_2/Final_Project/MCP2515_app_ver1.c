@@ -33,75 +33,75 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x758;
+  canMsg1.can_id  = 0x58;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
 
-  canMsg2.can_id  = 0x758;
+  canMsg2.can_id  = 0x58;
   canMsg2.can_dlc = 3;
   canMsg2.data[0] = 0x02;
   canMsg2.data[1] = 0x10;
   canMsg2.data[2] = 0x03;
 
-  canMsg3.can_id  = 0x758;
+  canMsg3.can_id  = 0x58;
   canMsg3.can_dlc = 4;
   canMsg3.data[0] = 0x03;
   canMsg3.data[1] = 0x22;
   canMsg3.data[2] = 0xF1;
   canMsg3.data[3] = 0x00;
 
-  canMsg4.can_id  = 0x758;
+  canMsg4.can_id  = 0x58;
   canMsg4.can_dlc = 4;
   canMsg4.data[0] = 0x03;
   canMsg4.data[1] = 0x22;
   canMsg4.data[2] = 0xF1;
   canMsg4.data[3] = 0x80;
 
-  canMsg5.can_id  = 0x758;
+  canMsg5.can_id  = 0x58;
   canMsg5.can_dlc = 4;
   canMsg5.data[0] = 0x03;
   canMsg5.data[1] = 0x22;
   canMsg5.data[2] = 0xF1;
   canMsg5.data[3] = 0x81;
 
-  canMsg6.can_id  = 0x758;
+  canMsg6.can_id  = 0x58;
   canMsg6.can_dlc = 4;
   canMsg6.data[0] = 0x03;
   canMsg6.data[1] = 0x22;
   canMsg6.data[2] = 0xF1;
   canMsg6.data[3] = 0x82;
 
-  canMsg7.can_id  = 0x760;
+  canMsg7.can_id  = 0x60;
   canMsg7.can_dlc = 4;
   canMsg7.data[0] = 0x03;
   canMsg7.data[1] = 0x22;
   canMsg7.data[2] = 0xF1;
   canMsg7.data[3] = 0x00;
 
-  canMsg8.can_id  = 0x760;
+  canMsg8.can_id  = 0x60;
   canMsg8.can_dlc = 4;
   canMsg8.data[0] = 0x03;
   canMsg8.data[1] = 0x22;
   canMsg8.data[2] = 0xF1;
   canMsg8.data[3] = 0x90;
 
-  canMsg9.can_id  = 0x760;
+  canMsg9.can_id  = 0x60;
   canMsg9.can_dlc = 4;
   canMsg9.data[0] = 0x03;
   canMsg9.data[1] = 0x22;
   canMsg9.data[2] = 0xF1;
   canMsg9.data[3] = 0x91;
 
-  canMsg10.can_id  = 0x760;
+  canMsg10.can_id  = 0x60;
   canMsg10.can_dlc = 4;
   canMsg10.data[0] = 0x03;
   canMsg10.data[1] = 0x22;
   canMsg10.data[2] = 0xF1;
   canMsg10.data[3] = 0x92;
 
-  canMsg11.can_id  = 0x750;
+  canMsg11.can_id  = 0x50;
   canMsg11.can_dlc = 4;
   canMsg11.data[0] = 0x03;
   canMsg11.data[1] = 0x2E;
@@ -136,7 +136,7 @@ void init()
   canMsg15.data[2] = 0x0;
   canMsg15.data[3] = 0x0;
 
-  canMsg16.can_id  = 0x758;
+  canMsg16.can_id  = 0x58;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
   canMsg16.data[1] = 0x11;
@@ -205,38 +205,28 @@ int main(int argc, char **argv)
         }
         if(select == 1)
         { 
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg1.can_dlc;
-            can_frame[3] = canMsg1.data[0];
-            can_frame[4] = canMsg1.data[1];
-            can_frame[5] = canMsg1.data[2];
+            can_fram[0] = canmsg.can_id 
+            can_frame[1] = canMsg1.can_dlc;
+            can_frame[2] = canMsg1.data[0];
+            can_frame[3] = canMsg1.data[1];
+            can_frame[4] = canMsg1.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
         }
         else if(select == 2)
         {
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg2.can_dlc;
-            can_frame[3] = canMsg2.data[0];
-            can_frame[4] = canMsg2.data[1];
-            can_frame[5] = canMsg2.data[2];
+            can_frame[0] = canmsg.can_id
+            can_frame[1] = canMsg2.can_dlc;
+            can_frame[2] = canMsg2.data[0];
+            can_frame[3] = canMsg2.data[1];
+            can_frame[4] = canMsg2.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
         }
         else if(select == 3)
         {
-           uint32_t res = canMsg1.can_id & 0xFF0;
-           uint32_t mod = canMsg1.can_id - res;
            for (int i =0;i<canMsg3.can_dlc;i++)
             {
                 printf("%02x  ",canMsg3.data[i]);
@@ -263,8 +253,7 @@ int main(int argc, char **argv)
         }
         else if(select == 7)
         {
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
+  
              for (int i =0;i<canMsg7.can_dlc;i++)
             {
                 printf("%02x  ",canMsg7.data[i]);
@@ -278,15 +267,11 @@ int main(int argc, char **argv)
         }
         else if(select == 16)
        {
-            uint32_t res = canMsg1.can_id & 0xFF0;
-            uint32_t mod = canMsg1.can_id - res;
-            res = res >> 4;
-            can_frame[0] = res;
-            can_frame[1] = mod; 
-            can_frame[2] = canMsg16.can_dlc;
-            can_frame[3] = canMsg16.data[0];
-            can_frame[4] = canMsg16.data[1];
-            can_frame[5] = canMsg16.data[2];
+            can_fram[0] = canmsg.can_id ;
+            can_frame[1] = canMsg8.can_dlc; 
+            can_frame[2] = canMsg16.data[0];
+            can_frame[3] = canMsg16.data[1];
+            can_frame[4] = canMsg16.data[2];
 
             write(fd, can_frame, 10);
             read(fd, rx_frame, 10);
