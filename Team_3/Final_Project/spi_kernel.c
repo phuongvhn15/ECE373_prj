@@ -187,6 +187,39 @@ static int __init ModuleInit(void)
 	cdev_init(&mcp2515_cdev, &mcp2515_fops);
     mcp2515_cdev.owner = THIS_MODULE;
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
+
+	int i;
+	struct can_frame CAN_FRAME;
+
+	CAN_FRAME.can_data[0] = 0;
+	CAN_FRAME.can_data[1] = 0;
+	CAN_FRAME.can_data[2] = 0;
+	CAN_FRAME.can_data[3] = 0;
+	CAN_FRAME.can_data[4] = 0;
+	CAN_FRAME.can_data[5] = 0;
+	CAN_FRAME.can_data[6] = 0;
+	CAN_FRAME.can_data[7] = 0;
+
+	if(readMessage(mcp2515_dev,&CAN_FRAME)){
+		printk("Read message successful");
+	}
+	else{
+		printk("Fail to read message ");
+	}
+
+	u32 can_id = CAN_FRAME.can_id;
+	u8 can_dlc = CAN_FRAME.can_dlc;
+
+	char id_dlc_buffer[2];
+	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
+	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
+
+	char data_buffer[8];
+	for(i = 0; i < 8; i++){
+		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
+	}
+
+	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
 	
 	return 0;
 }
