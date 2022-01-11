@@ -117,6 +117,12 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	return error;
 }
 
+static const struct file_operations mcp2515_fops = {
+	.owner =	THIS_MODULE,
+	.read = 	mcp2515_read,
+	.write =	mcp2515_write,
+};
+
 /*Init and Exit module*/
 static int __init ModuleInit(void)
 {
@@ -184,18 +190,16 @@ static int __init ModuleInit(void)
 
 static void __exit ModuleExit(void)
 {
+	cdev_del(&mcp2515_cdev);
+	device_destroy(my_class,mcp2515_dev);
+	class_destroy(my_class);
+    unregister_chrdev_region( mcp2515_dev, 1 );
     if(mcp2515_dev)
     {
         spi_unregister_device(mcp2515_dev);
     }
 	printk("Goodbye kernel!\n");
 }
-
-static const struct file_operations mcp2515_fops = {
-	.owner =	THIS_MODULE,
-	.read = 	mcp2515_read,
-	.write =	mcp2515_write,
-};
 
 module_init(ModuleInit);
 module_exit(ModuleExit);
