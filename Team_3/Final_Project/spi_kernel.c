@@ -89,8 +89,9 @@ static ssize_t mcp2515_read(struct file *File, char *user_buffer, size_t count, 
 	return 1;
 }
 
-static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count, loff_t *offs) {
+static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
 	int i;
+	int error;
 	struct can_frame CAN_FRAME;
 
 	CAN_FRAME.can_data[0] = 0;
@@ -103,16 +104,17 @@ static ssize_t mcp2515_write(struct file *File, char *user_buffer, size_t count,
 	CAN_FRAME.can_data[7] = 0;
 
 	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
-	CAN_FRAME.can_id = user_buffer[0];
-	CAN_FRAME.can_dlc = user_buffer[1];
+	CAN_FRAME.can_id = buffer[0];
+	CAN_FRAME.can_dlc = buffer[1];
 
 	//Copy 8 bytes of can_data to CAN_FRAME.
 	for(i = 0; i < 8; i++){
-		CAN_FRAME.can_data[i] = user_buffer[i+2];
+		CAN_FRAME.can_data[i] = buffer[i+2];
 	} 
 
 	printk("Sending CAN message");
-	sendMessage(mcp2515_dev, &CAN_FRAME);
+	error = sendMessage(mcp2515_dev_spi, &CAN_FRAME);
+	return error;
 }
 
 /*Init and Exit module*/
