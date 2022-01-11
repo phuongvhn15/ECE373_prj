@@ -49,7 +49,7 @@ void init()
   canMsg3.can_dlc = 4;
   canMsg3.data[0] = 0x03;
   canMsg3.data[1] = 0x22;
-  canMsg3.data[2] = 0xF1;
+  canMsg3.data[2] = 0xFE;
   canMsg3.data[3] = 0x00;
 
   canMsg4.can_id  = 0x58;
@@ -171,10 +171,10 @@ void displayMessageCAN(char *buffer){
 }
 void clearBuffer(char *can_frame, char *rx_frame)
 {
-    for (int i=0; i<sizeof(can_frame)+2;i++)
+    for (int i=0; i<sizeof(can_frame);i++)
     {
-        can_frame[i]  = 0x00;
-        rx_frame[i]  = 0x00;
+        can_frame[i]  = 0x0;
+        rx_frame[i]  = 0x0;
     }
 }
 int main(int argc, char **argv)
@@ -185,8 +185,8 @@ int main(int argc, char **argv)
     char c;
     int select = 0;
     char con;
-    char can_frame[11]={0};
-    char rx_frame[11] = {0};
+    char can_frame[10]={0};
+    char rx_frame[10] = {0};
     init();
 //     if ((fd = open(dev_name,O_RDWR)) < 0 )
 // {
@@ -227,16 +227,48 @@ int main(int argc, char **argv)
         }
         else if(select == 3)
         {
-           
+            can_frame[0] = canMsg3.can_id;
+            can_frame[1] = canMsg3.can_dlc;
+            can_frame[2] = canMsg3.data[0];
+            can_frame[3] = canMsg3.data[1];
+            can_frame[4] = canMsg3.data[2];
+            can_frame[5] = canMsg3.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         else if(select == 4 ){
-         
+            can_frame[0] = canMsg4.can_id;
+            can_frame[1] = canMsg4.can_dlc;
+            can_frame[2] = canMsg4.data[0];
+            can_frame[3] = canMsg4.data[1];
+            can_frame[4] = canMsg4.data[2];
+            can_frame[5] = canMsg4.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         else if(select == 5){
-         
+            can_frame[0] = canMsg5.can_id;
+            can_frame[1] = canMsg5.can_dlc;
+            can_frame[2] = canMsg5.data[0];
+            can_frame[3] = canMsg5.data[1];
+            can_frame[4] = canMsg5.data[2];
+            can_frame[5] = canMsg5.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         else if(select == 6){
-         
+            can_frame[0] = canMsg6.can_id;
+            can_frame[1] = canMsg6.can_dlc;
+            can_frame[2] = canMsg6.data[0];
+            can_frame[3] = canMsg6.data[1];
+            can_frame[4] = canMsg6.data[2];
+            can_frame[5] = canMsg6.data[3];
+
+            write(fd, can_frame, 10);
+            read(fd, rx_frame, 10);
         }
         else if(select == 7)
         {

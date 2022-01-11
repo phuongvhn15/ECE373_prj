@@ -20,25 +20,21 @@ void init()
   canMsg1.can_id  = 0x758;
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
-  canMsg1.data[1] = 0x10;
+  canMsg1.data[1] = 0xAA;
   canMsg1.data[2] = 0x01;
 }
 int main()
 {
-    char can_frame[11] = {0};
+    char can_frame[10] = {0};
     init();
-    uint32_t res = canMsg1.can_id & 0xFF0;
-    uint32_t mod = canMsg1.can_id - res;
-    res = res >> 4;
-    can_frame[0] = res;
-    can_frame[1] = mod; 
-    can_frame[2] = canMsg1.can_dlc;
-    can_frame[3] = canMsg1.data[0];
-    can_frame[4] = canMsg1.data[1];
-    can_frame[5] = canMsg1.data[2];
-    can_frame[6] = canMsg1.data[3];
-    printf("%d",strlen(can_frame));
-    printf("%d",sizeof(can_frame));
+    can_frame[0] = canMsg1.can_id;
+    can_frame[1] = canMsg1.can_dlc;
+    can_frame[2] = canMsg1.data[0];
+    can_frame[3] = canMsg1.data[1];
+    can_frame[4] = canMsg1.data[2];
+
+    printf("%d ",strlen(can_frame));
+    printf("%d\n",sizeof(can_frame));
     printf("CAN Transmission: ");
     for(int i = 0;i<sizeof(can_frame);i++)
     {
