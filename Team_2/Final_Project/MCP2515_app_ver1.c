@@ -126,7 +126,7 @@ void init()
 
   canMsg15.can_id  = 0x58;
   canMsg15.can_dlc = 7;
-  canMsg15.data[0] = 0x02;
+  canMsg15.data[0] = 0x06;
   canMsg15.data[1] = 0x27;
   canMsg15.data[2] = 0x02;
   canMsg15.data[3] = key[0];
