@@ -33,13 +33,13 @@ struct can_frame canMsg15;
 struct can_frame canMsg16;
 void init()
 {
-  canMsg1.can_id  = 0x58;
+  canMsg1.can_id  = 0x58; //checked
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
 
-  canMsg2.can_id  = 0x58;
+  canMsg2.can_id  = 0x58; //checked
   canMsg2.can_dlc = 3;
   canMsg2.data[0] = 0x02;
   canMsg2.data[1] = 0x10;
@@ -132,7 +132,7 @@ void init()
   canMsg15.data[4] = key[2];
   canMsg15.data[5] = key[3];
 
-  canMsg16.can_id  = 0x58;
+  canMsg16.can_id  = 0x58; //checked
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
   canMsg16.data[1] = 0x11;
