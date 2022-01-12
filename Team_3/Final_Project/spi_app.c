@@ -7,7 +7,6 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
 
 #define CAN_FRAME_MAX_DATA_LEN 8
 struct can_frame {
@@ -204,7 +203,6 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg1.data[2];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 2)
@@ -216,7 +214,6 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg2.data[2];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 3)
@@ -229,7 +226,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg3.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 4 ){
@@ -241,7 +237,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg4.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 5){
@@ -253,7 +248,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg5.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 6){
@@ -265,7 +259,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg6.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 7)
@@ -278,7 +271,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg7.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 8)
@@ -291,7 +283,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg8.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 9)
@@ -304,7 +295,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg9.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 10)
@@ -317,7 +307,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg10.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 11)
@@ -330,7 +319,6 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg11.data[3];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 12)
@@ -342,7 +330,6 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg12.data[2];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 13)
@@ -354,7 +341,6 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg13.data[2];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 14)
@@ -370,7 +356,6 @@ int main(int argc, char **argv)
             can_frame[8] = canMsg14.data[6];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         else if(select == 15)
@@ -386,7 +371,6 @@ int main(int argc, char **argv)
             can_frame[8] = canMsg15.data[6];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }   
         else if(select == 16)
@@ -398,7 +382,6 @@ int main(int argc, char **argv)
             can_frame[4] = canMsg16.data[2];
 
             write(fd, can_frame, 10);
-            delay(1);
             read(fd, rx_frame, 10);
         }
         printf("CAN Transmission: ");
