@@ -1,4 +1,4 @@
-obj-m := MCP2515_ver1.o
+obj-m := MCP2515_linux_module.o
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 
@@ -10,3 +10,4 @@ clean:
 
 install:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules_install
+
