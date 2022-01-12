@@ -87,7 +87,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 	
 	//
 	//Copy can_data to data buffer
-	char data_buffer[8];
+	u8 data_buffer[8];
 	for(i = 0; i < 8; i++){
 		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
 	}
