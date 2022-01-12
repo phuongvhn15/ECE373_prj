@@ -114,13 +114,15 @@ void init()
 
 
   canMsg12.can_id  = 0x60;
-  canMsg12.can_dlc = 2;
-  canMsg12.data[0] = 0x19;
-  canMsg12.data[1] = 0x00;
+  canMsg12.can_dlc = 3;
+  canMsg12.data[0] = 0x02;
+  canMsg12.data[1] = 0x19;
+  canMsg12.data[2] = 0x00;
 
   canMsg13.can_id  = 0x60;
-  canMsg13.can_dlc = 2;
-  canMsg13.data[0] = 0x14;
+  canMsg13.can_dlc = 3;
+  canMsg13.data[0] = 0x02;
+  canMsg13.data[1] = 0x14;
   canMsg13.data[1] = 0x00;
 
   canMsg14.can_id  = 0x60;
@@ -170,7 +172,7 @@ void menu()
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev_ver2d";
+    char *dev_name = "/dev/mcp2515_dev";
     int fd = -1;
     char c;
     int select = 0;
