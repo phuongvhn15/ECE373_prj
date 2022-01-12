@@ -33,7 +33,7 @@ static dev_t mcp2515_dev;
 struct cdev mcp2515_cdev;
 static struct class *my_class;
 
-static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count, loff_t *offs){
+static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, loff_t *offs) {
 	int i;
 	struct can_frame CAN_FRAME;
 
@@ -46,28 +46,31 @@ static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count
 	CAN_FRAME.can_data[6] = 0;
 	CAN_FRAME.can_data[7] = 0;
 
-	if(readMessage(mcp2515_dev,&CAN_FRAME)){
+	if(readMessage(mcp2515_dev_spi,&CAN_FRAME)){
 		printk("Read message successful");
 	}
-	else{
+	else
 		printk("Fail to read message ");
-	}
 
-	u32 can_id = CAN_FRAME.can_id;
-	u8 can_dlc = CAN_FRAME.can_dlc;
-
-	char id_dlc_buffer[2];
-	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
+	
+	u8 id_dlc_buffer[2];
+	
+	id_dlc_buffer[0] = CAN_FRAME.can_id;
+	id_dlc_buffer[1] = CAN_FRAME.can_dlc;
 	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
-
-	char data_buffer[8];
+	
+	//
+	//Copy can_data to data buffer
+	u8 data_buffer[8];
 	for(i = 0; i < 8; i++){
-		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
+		data_buffer[i] = CAN_FRAME.can_data[i];
 	}
-
+	//
 	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
 
-	char can_buffer[2 + 8];
+
+	//Concatenate id, dlc, data into 1 data array
+	u8 can_buffer[2 + 8];
 
 	//Copy id and dlc to can_buffer.
 	for(i = 0; i < 2; i++){
@@ -80,12 +83,13 @@ static ssize_t mcp2515_read(struct file *File, char __user* buffer, size_t count
 	}
 
 	printk("Copy to userbuffer");
-	copy_to_user(buffer, can_buffer, 10);
+	copy_to_user(buf, can_buffer, 10);
 	return 1;
 }
 
 static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
 	int i;
+	int count = 0;
 	int error;
 	struct can_frame CAN_FRAME;
 
@@ -107,7 +111,7 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 		CAN_FRAME.can_data[i] = buffer[i+2];
 	} 
 
-	printk("Sending CAN message");
+	//printk("Sending CAN message : %s", CAN_FRAME.can_data);
 	error = sendMessage(mcp2515_dev_spi, &CAN_FRAME);
 	return error;
 }
