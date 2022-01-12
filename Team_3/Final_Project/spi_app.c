@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 #define CAN_FRAME_MAX_DATA_LEN 8
+uint8_t key[4]={0};
 struct can_frame {
     uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
     uint8_t    can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
@@ -417,10 +418,13 @@ int main(int argc, char **argv)
         }
         else if(select == 12)
         {
+            uint8_t sub_func = 0;
+            printf("Choose sub function (00 -> 07): ");
+            scanf("%x", &sub_func);
             can_frame[0] = ECU_id;
             can_frame[1] = canMsg12.can_dlc;
             can_frame[2] = canMsg12.data[0];
-            can_frame[3] = canMsg12.data[1];
+            can_frame[3] = sub_func;
 
             write(fd, can_frame, 10);
             sleep(1);
