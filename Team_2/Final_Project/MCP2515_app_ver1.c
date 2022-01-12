@@ -123,7 +123,7 @@ void init()
   canMsg13.can_dlc = 3;
   canMsg13.data[0] = 0x02;
   canMsg13.data[1] = 0x14;
-  canMsg13.data[1] = 0x00;
+  canMsg13.data[2] = 0x00;
 
   canMsg14.can_id  = 0x60;
   canMsg14.can_dlc = 3;
