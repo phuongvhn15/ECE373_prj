@@ -108,39 +108,6 @@ void init_Engine()
   canMsg11.data[1] = 0x11;
   canMsg11.data[2] = 0x01;
 }
-void menuEngine()
-{
-    printf("===========MENU============\n");
-    printf("1.  Session control 01\n");
-    printf("2.  Session control 03\n");
-    printf("3.  Read ECU voltage engine\n");
-    printf("4.  Read temperature engine\n");
-    printf("5.  Read odometer engine\n");
-    printf("6.  Read velocity engine\n");
-    printf("7.  Read DTC\n");
-    printf("8.  Clear diagnostic\n");
-    printf("9.  Request seed\n");
-    printf("10. Send key\n");
-    printf("11. ECU reset\n");
-    printf("=======================\n");
-}
-void menuRadar()
-{
-    printf("===========MENU============\n");
-    printf("1.  Session control 01\n");
-    printf("2.  Session control 03\n");
-    printf("3.  Read ECU voltage radar\n");
-    printf("4.  Read angel azimuth radar\n");
-    printf("5.  Object detection radar\n");
-    printf("6.  Warning detection radar\n");
-    printf("7.  Write angel azimuth radar\n");
-    printf("8.  Read DTC\n");
-    printf("9.  Clear diagnostic\n");
-    printf("10. Request seed\n");
-    printf("11. Send key\n");
-    printf("12. ECU reset\n");
-    printf("=======================\n");
-}
 void init_Radar()
 {
   canMsg1.can_id  = RADAR; // SUB FUNCTION 01
@@ -288,6 +255,39 @@ void errorRequest()
         printf("Subfunction not supported\n");
     else
         printf("Cannot identify\n");
+}
+void menuEngine()
+{
+    printf("===========MENU============\n");
+    printf("1.  Session control 01\n");
+    printf("2.  Session control 03\n");
+    printf("3.  Read ECU voltage engine\n");
+    printf("4.  Read temperature engine\n");
+    printf("5.  Read odometer engine\n");
+    printf("6.  Read velocity engine\n");
+    printf("7.  Read DTC\n");
+    printf("8.  Clear diagnostic\n");
+    printf("9.  Request seed\n");
+    printf("10. Send key\n");
+    printf("11. ECU reset\n");
+    printf("=======================\n");
+}
+void menuRadar()
+{
+    printf("===========MENU============\n");
+    printf("1.  Session control 01\n");
+    printf("2.  Session control 03\n");
+    printf("3.  Read ECU voltage radar\n");
+    printf("4.  Read angel azimuth radar\n");
+    printf("5.  Object detection radar\n");
+    printf("6.  Warning detection radar\n");
+    printf("7.  Write angel azimuth radar\n");
+    printf("8.  Read DTC\n");
+    printf("9.  Clear diagnostic\n");
+    printf("10. Request seed\n");
+    printf("11. Send key\n");
+    printf("12. ECU reset\n");
+    printf("=======================\n");
 }
 int main(int argc, char **argv)
 {
@@ -541,7 +541,7 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
-                 if(rx_frame[3]==0x7F)
+                if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorRequest();
@@ -566,7 +566,7 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
-                if(rx_frame==0x7F)
+                if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDiagnostic();
@@ -591,6 +591,283 @@ int main(int argc, char **argv)
                 printf("Error! Enter your choice (1-->12): ");
                 scanf("%d",&choice);
             }
+            if(choice == 1)
+            { 
+                can_frame[0] = canMsg1.can_id;
+                can_frame[1] = canMsg1.can_dlc;
+                can_frame[2] = canMsg1.data[0];
+                can_frame[3] = canMsg1.data[1];
+                can_frame[4] = canMsg1.data[2];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x50)
+                {
+                    printf("Successfully changed session\n");
+                }
+                else if(rx_frame[3] == 0x7F)
+                {
+                    printf("Error! ");
+                    if(rx_frame[5] == 0x10)
+                        printf("Session Control\n");
+                    else if(rx_frame[5] == 0x12)
+                        printf("Sub Function Not Supported\n");
+                    else if(rx_frame[5] == 0x13)
+                        printf("Invalid Format\n");
+                    else
+                        printf("Cannot Identify\n");
+                }
+            }
+            else if(choice == 2)
+            {
+                can_frame[0] = canMsg2.can_id;
+                can_frame[1] = canMsg2.can_dlc;
+                can_frame[2] = canMsg2.data[0];
+                can_frame[3] = canMsg2.data[1];
+                can_frame[4] = canMsg2.data[2];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x50)
+                {
+                    printf("Successfully changed session\n");
+                }
+                else if(rx_frame[3] == 0x7F)
+                {
+                    printf("Error! ");
+                    if(rx_frame[5] == 0x10)
+                        printf("Session Control\n");
+                    else if(rx_frame[5] == 0x12)
+                        printf("Sub Function Not Supported\n");
+                    else if(rx_frame[5] == 0x13)
+                        printf("Invalid Format\n");
+                    else
+                        printf("Cannot Identify\n");
+                }
+            }
+            else if(choice == 3)
+            {
+                can_frame[0] = canMsg3.can_id;
+                can_frame[1] = canMsg3.can_dlc;
+                can_frame[2] = canMsg3.data[0];
+                can_frame[3] = canMsg3.data[1];
+                can_frame[4] = canMsg3.data[2];
+                can_frame[5] = canMsg3.data[3];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRead();
+                }
+                else{
+                    printf("The voltage of radar: %d",rx_frame[6]," V\n");
+                }
+            }
+            else if(choice == 4 ){
+                can_frame[0] = canMsg4.can_id;
+                can_frame[1] = canMsg4.can_dlc;
+                can_frame[2] = canMsg4.data[0];
+                can_frame[3] = canMsg4.data[1];
+                can_frame[4] = canMsg4.data[2];
+                can_frame[5] = canMsg4.data[3];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRead();
+                }
+                else{
+                    printf("The angel azimuth correction of radar: ");
+                }
+            }
+            else if(choice == 5){
+                can_frame[0] = canMsg5.can_id;
+                can_frame[1] = canMsg5.can_dlc;
+                can_frame[2] = canMsg5.data[0];
+                can_frame[3] = canMsg5.data[1];
+                can_frame[4] = canMsg5.data[2];
+                can_frame[5] = canMsg5.data[3];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRead();
+                }
+                else{
+                    printf("The object detection of radar: ");
+                    if(rx_frame[5]==0x01)
+                        printf("Yes\n");
+                    if(rx_frame[5]==0x00)
+                        printf("No\n");
+                }
+            }
+            else if(choice == 6){
+                can_frame[0] = canMsg6.can_id;
+                can_frame[1] = canMsg6.can_dlc;
+                can_frame[2] = canMsg6.data[0];
+                can_frame[3] = canMsg6.data[1];
+                can_frame[4] = canMsg6.data[2];
+                can_frame[5] = canMsg6.data[3];
+
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRead();
+                }
+                else{
+                    printf("The warning detection of engine: ");
+                    printf("The object detection of radar: ");
+                    if(rx_frame[5]==0x01)
+                        printf("Yes\n");
+                    if(rx_frame[5]==0x00)
+                        printf("No\n");
+                }
+            }
+            else if(choice == 7)
+            {
+                can_frame[0] = canMsg7.can_id; 
+                can_frame[1] = canMsg7.can_dlc;
+                can_frame[2] = canMsg7.data[0];
+                can_frame[3] = canMsg7.data[1];
+                can_frame[4] = canMsg7.data[2];
+                can_frame[5] = canMsg7.data[3];
+
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+            }
+            else if(choice == 8)
+            {
+                can_frame[0] = canMsg8.can_id;
+                can_frame[1] = canMsg8.can_dlc;
+                can_frame[2] = canMsg8.data[0];
+                can_frame[3] = canMsg8.data[1];
+                can_frame[4] = canMsg8.data[2];
+
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorDiagnostic();
+                }
+                else   
+                    printf("Successfully cleared diagonstic\n");
+            }
+            else if(choice == 9)
+            {
+                can_frame[0] = canMsg9.can_id;
+                can_frame[1] = canMsg9.can_dlc;
+                can_frame[2] = canMsg9.data[0];
+                can_frame[3] = canMsg9.data[1];
+                can_frame[4] = canMsg9.data[2];
+
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorDiagnostic();
+                }
+                else   
+                    printf("Successfully cleared diagonstic\n");
+            }
+            else if(choice == 10)
+            {
+                can_frame[0] = canMsg10.can_id;
+                can_frame[1] = canMsg10.can_dlc;
+                can_frame[2] = canMsg10.data[0];
+                can_frame[3] = canMsg10.data[1];
+                can_frame[4] = canMsg10.data[2];
+                can_frame[5] = key[0];
+                can_frame[6] = key[1];
+                can_frame[7] = key[2];
+                can_frame[8] = key[3];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRequest();
+                }
+                else
+                {
+                    printf("Key: %02X %02X %02X %02X\n",(unsigned char)rx_frame[5],(unsigned char)rx_frame[6],(unsigned char)rx_frame[7],(unsigned char)rx_frame[8]);
+                }
+                for(int i =0;i<5;i++)
+                {
+                    key[i] = rx_frame[5+i];
+                }
+            }
+            else if(choice == 11)
+            {
+                can_frame[0] = canMsg11.can_id;
+                can_frame[1] = canMsg11.can_dlc;
+                can_frame[2] = canMsg11.data[0];
+                can_frame[3] = canMsg11.data[1];
+                can_frame[4] = canMsg11.data[2];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRequest();
+                }
+                else
+                {
+                    printf("Successfully accessed");
+                }
+                for(int i =0;i<5;i++)
+                {
+                    key[i] = 0x00;
+                }
+            }
+            else if(choice==12)
+            {
+                can_frame[0] = canMsg12.can_id;
+                can_frame[1] = canMsg12.can_dlc;
+                can_frame[2] = canMsg12.data[0];
+                can_frame[3] = canMsg12.data[1];
+                can_frame[4] = canMsg12.data[2];
+                write(fd, can_frame, 10);
+                sleep(1);
+                read(fd, rx_frame, 10);
+                display();
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorDiagnostic();
+                }
+                else  
+                    printf("Successfully resetted ECU\n");
+            }
+            clear();
             printf("\nDo you want to continue? Y or N: ");
             scanf(" %c",&con);
         }while(con == 'Y' || con == 'y');
@@ -599,275 +876,5 @@ int main(int argc, char **argv)
     scanf("%d",&next);
     } while(next == 1);
     printf("===============OUT============");
-    return 0;
-    //     do{
-    //     menu();
-    //     printf("Enter your choice (1-->18): ");
-    //     scanf("%d",&select);
-    //     while(select<1 || select > 18)
-    //     {
-    //         printf("Error! Enter your choice (1-->18): ");
-    //         scanf("%d",&select);
-    //     }
-    //     if(select == 1)
-    //     { 
-    //         can_frame[0] = canMsg1.can_id;
-    //         can_frame[1] = canMsg1.can_dlc;
-    //         can_frame[2] = canMsg1.data[0];
-    //         can_frame[3] = canMsg1.data[1];
-    //         can_frame[4] = canMsg1.data[2];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 2)
-    //     {
-    //         can_frame[0] = canMsg2.can_id;
-    //         can_frame[1] = canMsg2.can_dlc;
-    //         can_frame[2] = canMsg2.data[0];
-    //         can_frame[3] = canMsg2.data[1];
-    //         can_frame[4] = canMsg2.data[2];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 3)
-    //     {
-    //         can_frame[0] = canMsg3.can_id;
-    //         can_frame[1] = canMsg3.can_dlc;
-    //         can_frame[2] = canMsg3.data[0];
-    //         can_frame[3] = canMsg3.data[1];
-    //         can_frame[4] = canMsg3.data[2];
-    //         can_frame[5] = canMsg3.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 4 ){
-    //         can_frame[0] = canMsg4.can_id;
-    //         can_frame[1] = canMsg4.can_dlc;
-    //         can_frame[2] = canMsg4.data[0];
-    //         can_frame[3] = canMsg4.data[1];
-    //         can_frame[4] = canMsg4.data[2];
-    //         can_frame[5] = canMsg4.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 5){
-    //         can_frame[0] = canMsg5.can_id;
-    //         can_frame[1] = canMsg5.can_dlc;
-    //         can_frame[2] = canMsg5.data[0];
-    //         can_frame[3] = canMsg5.data[1];
-    //         can_frame[4] = canMsg5.data[2];
-    //         can_frame[5] = canMsg5.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 6){
-    //         can_frame[0] = canMsg6.can_id;
-    //         can_frame[1] = canMsg6.can_dlc;
-    //         can_frame[2] = canMsg6.data[0];
-    //         can_frame[3] = canMsg6.data[1];
-    //         can_frame[4] = canMsg6.data[2];
-    //         can_frame[5] = canMsg6.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 7)
-    //     {
-    //         can_frame[0] = canMsg7.can_id; 
-    //         can_frame[1] = canMsg7.can_dlc;
-    //         can_frame[2] = canMsg7.data[0];
-    //         can_frame[3] = canMsg7.data[1];
-    //         can_frame[4] = canMsg7.data[2];
-    //         can_frame[5] = canMsg7.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 8)
-    //     {
-    //         can_frame[0] = canMsg8.can_id;
-    //         can_frame[1] = canMsg8.can_dlc;
-    //         can_frame[2] = canMsg8.data[0];
-    //         can_frame[3] = canMsg8.data[1];
-    //         can_frame[4] = canMsg8.data[2];
-    //         can_frame[5] = canMsg8.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 9)
-    //     {
-    //         can_frame[0] = canMsg9.can_id;
-    //         can_frame[1] = canMsg9.can_dlc;
-    //         can_frame[2] = canMsg9.data[0];
-    //         can_frame[3] = canMsg9.data[1];
-    //         can_frame[4] = canMsg9.data[2];
-    //         can_frame[5] = canMsg9.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 10)
-    //     {
-    //         can_frame[0] = canMsg10.can_id;
-    //         can_frame[1] = canMsg10.can_dlc;
-    //         can_frame[2] = canMsg10.data[0];
-    //         can_frame[3] = canMsg10.data[1];
-    //         can_frame[4] = canMsg10.data[2];
-    //         can_frame[5] = canMsg10.data[3];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 11)
-    //     {
-    //         can_frame[0] = canMsg11.can_id;
-    //         can_frame[1] = canMsg11.can_dlc;
-    //         can_frame[2] = canMsg11.data[0];
-    //         can_frame[3] = canMsg11.data[1];
-    //         can_frame[4] = canMsg11.data[2];
-    //         can_frame[5] = canMsg11.data[3];
-    //         can_frame[6] = canMsg11.data[4];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 12)
-    //     {
-    //         can_frame[0] = canMsg12.can_id;
-    //         can_frame[1] = canMsg12.can_dlc;
-    //         can_frame[2] = canMsg12.data[0];
-    //         can_frame[3] = canMsg12.data[1];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 13)
-    //     {
-    //         can_frame[0] = canMsg13.can_id; 
-    //         can_frame[1] = canMsg13.can_dlc;
-    //         can_frame[2] = canMsg13.data[0];
-    //         can_frame[3] = canMsg13.data[1];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 14)
-    //     {
-    //         can_frame[0] = canMsg14.can_id; 
-    //         can_frame[1] = canMsg14.can_dlc;
-    //         can_frame[2] = canMsg14.data[0];
-    //         can_frame[3] = canMsg14.data[1];
-    //         can_frame[4] = canMsg14.data[2];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-            
-    //         key[0] = rx_frame[3];
-    //         key[1] = rx_frame[4];
-    //         key[2] = rx_frame[5];
-    //         key[3] = rx_frame[6];
-    //         key[0] = key[0] ^ 0XFF;
-    //         key[1] = key[1] ^ 0XFF;
-    //         key[2] = key[2] ^ 0XFF;
-    //         key[3] = key[3] ^ 0XFF;
-
-    //     }
-    //     else if(select == 15)
-    //     {
-    //         can_frame[0] = canMsg15.can_id; 
-    //         can_frame[1] = canMsg15.can_dlc;
-    //         can_frame[2] = canMsg15.data[0];
-    //         can_frame[3] = canMsg15.data[1];
-    //         can_frame[4] = canMsg15.data[2];
-    //         can_frame[5] = 0xFE;
-    //         can_frame[6] = 0xFD;
-    //         can_frame[7] = 0xFC;
-    //         can_frame[8] = 0xFB;
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }   
-    //     else if(select == 16)
-    //     {
-    //         can_frame[0] = canMsg16.can_id; 
-    //         can_frame[1] = canMsg16.can_dlc;
-    //         can_frame[2] = canMsg16.data[0];
-    //         can_frame[3] = canMsg16.data[1];
-    //         can_frame[4] = canMsg16.data[2];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 17)
-    //     {
-    //         can_frame[0] = canMsg17.can_id; 
-    //         can_frame[1] = canMsg17.can_dlc;
-    //         can_frame[2] = canMsg17.data[0];
-    //         can_frame[3] = canMsg17.data[1];
-    //         can_frame[4] = canMsg17.data[2];
-    //         can_frame[5] = canMsg17.data[3];
-    //         can_frame[6] = canMsg17.data[4];
-    //         can_frame[7] = canMsg17.data[5];
-    //         can_frame[8] = canMsg17.data[6];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     else if(select == 18)
-    //     {
-    //         can_frame[0] = canMsg18.can_id; 
-    //         can_frame[1] = canMsg18.can_dlc;
-    //         can_frame[2] = canMsg18.data[0];
-    //         can_frame[3] = canMsg18.data[1];
-    //         can_frame[4] = canMsg18.data[2];
-
-    //         write(fd, can_frame, 10);
-    //         sleep(1);
-    //         read(fd, rx_frame, 10);
-    //     }
-    //     printf("CAN Transmission: ");
-    //     for(int i = 0;i<sizeof(can_frame);i++)
-    //     {
-    //         printf("%02X ",(unsigned char)can_frame[i]);
-    //     }
-    //     printf("\n");
-    //     printf("CAN Response: ");
-    //     for(int i = 0;i<sizeof(can_frame);i++)
-    //     {
-    //         printf("%02X ",(unsigned char)rx_frame[i]);
-    //     }
-    //     printf("\n");
-    //     for(int k = 0; k < 10; k++)
-    //     {
-    //         can_frame[k] = 0;
-    //         rx_frame[k] = 0;
-    //     }
-    //     printf("\nDo you want to continue? Y or N: ");
-    //     scanf(" %c",&con);
-    // } while ( con =='Y'|| con =='y' );
-    // printf("========OUT==========");
     return 0;
 }
