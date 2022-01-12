@@ -119,18 +119,20 @@ void init()
   canMsg13.data[1] = 0x00;
 
   canMsg14.can_id  = 0x58;
-  canMsg14.can_dlc = 2;
-  canMsg14.data[0] = 0x27;
-  canMsg14.data[1] = 0x01;
+  canMsg14.can_dlc = 3;
+  canMsg14.data[0] = 0x02;
+  canMsg14.data[1] = 0x27;
+  canMsg14.data[2] = 0x01;
 
-  canMsg15.can_id  = 0x50;
-  canMsg15.can_dlc = 6;
-  canMsg15.data[0] = 0x27;
-  canMsg15.data[1] = 0x02;
-  canMsg15.data[2] = key[0];
-  canMsg15.data[3] = key[1];
-  canMsg15.data[4] = key[2];
-  canMsg15.data[5] = key[3];
+  canMsg15.can_id  = 0x58;
+  canMsg15.can_dlc = 7;
+  canMsg15.data[0] = 0x06;
+  canMsg15.data[1] = 0x27;
+  canMsg15.data[2] = 0x02;
+  canMsg15.data[3] = key[0];
+  canMsg15.data[4] = key[1];
+  canMsg15.data[5] = key[2];
+  canMsg15.data[6] = key[3];
 
   canMsg16.can_id  = 0x58; //checked
   canMsg16.can_dlc = 3;
@@ -352,6 +354,7 @@ int main(int argc, char **argv)
             can_frame[1] = canMsg14.can_dlc;
             can_frame[2] = canMsg14.data[0];
             can_frame[3] = canMsg14.data[1];
+            can_frame[4] = canMsg14.data[2];
 
             write(fd, can_frame, 10);
             sleep(1);
@@ -377,6 +380,7 @@ int main(int argc, char **argv)
             can_frame[5] = canMsg15.data[3];
             can_frame[6] = canMsg15.data[4];
             can_frame[7] = canMsg15.data[5];
+            can_frame[8] = canMsg15.data[6];
 
             write(fd, can_frame, 10);
             sleep(1);
