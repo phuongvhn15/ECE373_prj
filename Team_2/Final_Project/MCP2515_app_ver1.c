@@ -118,7 +118,7 @@ void init()
   canMsg13.data[0] = 0x14;
   canMsg13.data[1] = 0x00;
 
-  canMsg14.can_id  = 0x58;
+  canMsg14.can_id  = 0x50;
   canMsg14.can_dlc = 2;
   canMsg14.data[0] = 0x27;
   canMsg14.data[1] = 0x01;
