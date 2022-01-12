@@ -136,31 +136,37 @@ static int __init ModuleInit(void)
 
 	//Access to SPI bus
 	master = spi_busnum_to_master(MY_BUS_NUM);
-	if(!master){
+	if(!master)
+	{
 		printk("There is no spi bus %d\n", MY_BUS_NUM);
 		return -1;
 	}
 	
 	//Create new SPI device
 	mcp2515_dev_spi = spi_new_device(master, &spi_device_info);
-	if(!mcp2515_dev_spi){
+	if(!mcp2515_dev_spi)
+	{
 		printk("Couldn't create device!\n");
 		return -1;
 	}
 	
 	mcp2515_dev_spi -> bits_per_word = 8;
 	
-	if(spi_setup(mcp2515_dev_spi) != 0){
+	if(spi_setup(mcp2515_dev_spi) != 0)
+	{
 		printk("Could not change bus set-up!\n");
 		spi_unregister_device(mcp2515_dev);
 		return -1;
 	}
 
-	if(setBitrate(mcp2515_dev_spi)){
+	if(setBitrate(mcp2515_dev_spi))
+	{
 		printk("Set bit rate success");
 	}
 	else
+	{
 		printk("Set bit rate fail");
+	}
 
 	printk("%s","Inside setMode function");
 	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
@@ -170,56 +176,27 @@ static int __init ModuleInit(void)
 	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
     printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
 
-	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL){
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL)
+	{
 		printk("Device class can not be created!\n");
 	}
-	else{
+	else
+	{
 		printk("Device class created!\n");
 	}
 
-	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL){
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL)
+	{
 		printk("Can not create device file!\n");
 	}
-	else{
+	else
+	{
 		printk("Create device file!\n");
 	}
 
 	cdev_init(&mcp2515_cdev, &mcp2515_fops);
     mcp2515_cdev.owner = THIS_MODULE;
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
-
-	int i;
-	struct can_frame CAN_FRAME;
-
-	CAN_FRAME.can_data[0] = 0;
-	CAN_FRAME.can_data[1] = 0;
-	CAN_FRAME.can_data[2] = 0;
-	CAN_FRAME.can_data[3] = 0;
-	CAN_FRAME.can_data[4] = 0;
-	CAN_FRAME.can_data[5] = 0;
-	CAN_FRAME.can_data[6] = 0;
-	CAN_FRAME.can_data[7] = 0;
-
-	if(readMessage(mcp2515_dev,&CAN_FRAME)){
-		printk("Read message successful");
-	}
-	else{
-		printk("Fail to read message ");
-	}
-
-	u32 can_id = CAN_FRAME.can_id;
-	u8 can_dlc = CAN_FRAME.can_dlc;
-
-	char id_dlc_buffer[2];
-	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
-	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
-
-	char data_buffer[8];
-	for(i = 0; i < 8; i++){
-		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
-	}
-
-	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
 	
 	return 0;
 }
@@ -227,9 +204,9 @@ static int __init ModuleInit(void)
 static void __exit ModuleExit(void)
 {
 	cdev_del(&mcp2515_cdev);
-	device_destroy(my_class,mcp2515_dev);
+	device_destroy(my_class, mcp2515_dev);
 	class_destroy(my_class);
-    unregister_chrdev_region( mcp2515_dev, 1 );
+    unregister_chrdev_region(mcp2515_dev, 1);
     if(mcp2515_dev_spi)
     {
         spi_unregister_device(mcp2515_dev_spi);

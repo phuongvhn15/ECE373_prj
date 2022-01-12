@@ -1,8 +1,3 @@
-/******************************************************************
-*This file is written by Nguyen Cao Minh, 18ES. 		  *
-*It is translated directly from Arduino MCP2515 driver to run on  *
-*Raspberry. 							  *
-******************************************************************/
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
@@ -460,14 +455,6 @@ static const uint8_t CANCTRL_CLKPRE = 0x03;
 static const int N_TXBUFFERS = 3;
 static const int N_RXBUFFERS = 2;
 
-
-
-
-
-
-
-
-
 //Following functions are used to manipulate MCP2515 registers.
 //
 //This function is used to read status of RXBn buffer.
@@ -558,24 +545,6 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val
 }
 /////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 {
     int modeMatch = 0;
@@ -596,7 +565,6 @@ int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
     }
     return modeMatch;
 }
-
 
 void prepareId(uint8_t *buffer, const int ext, const uint32_t id)
 {
@@ -626,8 +594,6 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulD
     if (res == 0) {
         return res;
     }
-
-   
 
     switch (num) {
         case RXF0: reg = MCP_RXF0SIDH; break;
@@ -668,7 +634,6 @@ int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const 
     return 1;
 }
 
-
 int setBitrate(struct spi_device *mcp2515_dev)
 {
     uint8_t set, cfg1, cfg2, cfg3;
@@ -694,11 +659,6 @@ int setBitrate(struct spi_device *mcp2515_dev)
         return 0;
     }
 }
-
-
-
-
-
 
 //These functions are used to Read CAN message from MCP2515.
 //
