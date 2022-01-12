@@ -406,8 +406,11 @@ int main(int argc, char **argv)
             printf("%02X ",(unsigned char)rx_frame[i]);
         }
         printf("\n");
-        can_frame = {0};
-        rx_frame = {0};
+        for(int k = 0; k < 10; k++)
+        {
+            can_frame[k] = 0;
+            rx_frame[k] = 0;
+        }
         printf("\nDo you want to continue? Y or N: ");
         scanf(" %c",&con);
     } while ( con =='Y'|| con =='y' );
