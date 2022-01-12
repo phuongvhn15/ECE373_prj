@@ -155,7 +155,7 @@ void init_Radar()
   canMsg7.data[0] = 0x07;
   canMsg7.data[1] = 0x2E;
   canMsg7.data[2] = 0xF1;
-  canMsg7.data[3] = 0x00;
+  canMsg7.data[3] = 0x90;
   canMsg7.data[4] = 0x00;
   canMsg7.data[5] = 0x00;
   canMsg7.data[6] = 0x00;
@@ -450,7 +450,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The odometer of engine: ");
-                    unsigned int res = (int)(rx_frame[6]&&0x11000000)+(int)(rx_frame[7]&&00110000)+(int)(rx_frame[8]&&00001100)+(int)(rx_frame[9]&&00000011);
+                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     printf("%d\n",res);
                 }
             }
@@ -713,7 +713,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    unsigned int res = (int)(rx_frame[6]&&0x11000000)+(int)(rx_frame[7]&&00110000)+(int)(rx_frame[8]&&00001100)+(int)(rx_frame[9]&&00000011);
+                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     res = res*0.01-180;
                     printf("%d\n",res);
                 }
@@ -773,16 +773,36 @@ int main(int argc, char **argv)
             }
             else if(choice == 7)
             {
+                int angel  = 0;
+                printf("Enter the value of angel for radar (-180-->180): ");
+                scanf("%d",angel);
+                while(angel<-180 || angel>180)
+                {
+                    printf("Error! Enter the value of angel for radar (-180-->180): ");
+                    scanf("%d",angel);
+                }
+                int raw_value = (angel+180)/0.01;
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = canMsg7.data[2];
                 can_frame[5] = canMsg7.data[3];
-
+                can_frame[6] = raw_value & 0xFF000000;
+                can_frame[7] = raw_value & 0x00FF0000;
+                can_frame[8] = raw_value & 0x0000FF00;
+                can_frame[9] = raw_value & 0x000000FF;
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorRequest();
+                }
+                else{
+                    printf("Successfully wrote the angle of radar\n");
+                }
             }
             else if(choice == 8)
             {

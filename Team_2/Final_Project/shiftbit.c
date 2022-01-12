@@ -28,7 +28,8 @@ int main()
 {
     char can_frame[10] = {0};
     init();
-    uint64_t hexnum  = 0x12345678;
+    uint64_t hexnum  = 0x0023992;
+    int angel = 5;
     printf("%02X\n",hexnum);
     can_frame[0] = canMsg1.can_id;
     can_frame[1] = canMsg1.can_dlc;
@@ -41,7 +42,11 @@ int main()
     {
         printf("%02X ",(unsigned char)can_frame[i]);
     }
-    unsigned int res = (int)0x12000000+(int)0x340000+(int)0x00005600+(int)0x00000078;
-    printf("%d",res);
+    unsigned int res = ((int)(hexnum & 0xFF000000)+(int)(hexnum & 0x00FF0000)+(int)(hexnum &0x0000FF00)+(int)(hexnum &0x000000FF));
+    res= res*0.01-180;
+    printf("%d\n",res);
+    int raw = (angel+180)/0.01;printf("%08x\n",raw);
+    uint8_t raw4 = raw & 0x000000FF;
+    printf("%x\n",raw4);
     printf("\n");
 }
