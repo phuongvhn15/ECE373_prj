@@ -163,7 +163,7 @@ void menu()
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev";
+    char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
