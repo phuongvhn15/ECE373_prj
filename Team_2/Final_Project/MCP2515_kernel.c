@@ -1,16 +1,13 @@
 /****************************************************
-* This driver is written by Group 2 for the ECE372  
-* course project. It is written based on Arduino  	
-* mcp2515 driver.									
-* 													
-* You are free to copy and modify as you like!!	Thanks you!!		
-*													
+* This driver is based on group 1 with modifications to 
+*   be competiable to our project												
 * Group 2.														
 * Instructor : Hồ Văn Nguyên Phương					
-* Contributor : Trương Phú Khánh Huy 
-                Nguyễn Văn Thìn 
-                Nguyễn Đức Minh		
+* Contributor : Truong Phu Khanh Huy
+*               Nguyen Van Thin
+*               Nguyen Duc Minh				
 * **************************************************/
+
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
@@ -35,10 +32,7 @@
 #include <linux/delay.h>
 #include "mcp2515_driver.c"
 
-/* Meta Information */
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Nhom4: Khang, Minhproviptk, Tu, Hoang");
-MODULE_DESCRIPTION("MCP2515 linux module");
+
 
 #define MY_BUS_NUM 0
 
@@ -48,7 +42,6 @@ struct cdev mcp2515_cdev;		 //defines structure to hold character device propert
 
 static struct class *my_class;
 
-static struct spi_device *mcp2515_dev_spi;
 static struct spi_device *mcp2515_dev_spi;
 /**
  * @brief This function is called, when the module is loaded into the kernel
@@ -64,6 +57,7 @@ static struct spi_device *mcp2515_dev_spi;
  * @param offs 
  * @return ssize_t 
  */
+
 static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, loff_t *offs) {
 	int i;
 	struct can_frame CAN_FRAME;
@@ -118,8 +112,9 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 	copy_to_user(buf, can_buffer, 10);
 	return 1;
 }
+
 static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
-int i;
+	int i;
 	int error;
 	struct can_frame CAN_FRAME;
 
@@ -152,10 +147,13 @@ static struct file_operations mcp2515_fops = {
 	.read = mcp2515_read,
 	.write = mcp2515_write,
 };
-static int __init ModuleInit(void){
+
+static int __init ModuleInit(void) {
 	struct can_frame can_frame_tx;
 	struct can_frame can_frame_rx;
 	struct spi_master *master;
+
+
 	//General SPI device set up
 	//
 	/* Parameters for SPI device */
@@ -284,13 +282,18 @@ static int __init ModuleInit(void){
  * @brief This function is called, when the module is removed from the kernel
  */
 static void __exit ModuleExit(void) {
-    cdev_del(&mcp2515_cdev);
+	cdev_del(&mcp2515_cdev);
 	device_destroy(my_class,mcp2515_dev);
 	class_destroy(my_class);
     unregister_chrdev_region( mcp2515_dev, 1 );
 	if(mcp2515_dev_spi)
 		spi_unregister_device(mcp2515_dev_spi);
+		
 	printk("Goodbye, Kernel\n");
 }
 module_init(ModuleInit);
 module_exit(ModuleExit);
+/* Meta Information */
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Team2: KhanhHuy,VanThin,DucMinh");
+MODULE_DESCRIPTION("MCP2515 KERNEL");
