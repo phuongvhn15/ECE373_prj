@@ -138,6 +138,7 @@ void init()
   canMsg16.data[1] = 0x11;
   canMsg16.data[2] = 0x01;
 }
+
 void menu()
 {
     printf("===========MENU============\n");
