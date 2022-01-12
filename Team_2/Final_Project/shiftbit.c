@@ -28,7 +28,7 @@ int main()
 {
     char can_frame[10] = {0};
     init();
-    uint64_t hexnum  = 0xAA152405;
+    uint64_t hexnum  = 0x12345678;
     printf("%02X\n",hexnum);
     can_frame[0] = canMsg1.can_id;
     can_frame[1] = canMsg1.can_dlc;
@@ -41,11 +41,7 @@ int main()
     {
         printf("%02X ",(unsigned char)can_frame[i]);
     }
-    int res = 0;
-    for(int i =0;i<3;i++)
-    {
-        res+=(int)canMsg1.data[i];
-    }
+    unsigned int res = (int)0x12000000+(int)0x340000+(int)0x00005600+(int)0x00000078;
     printf("%d",res);
     printf("\n");
 }

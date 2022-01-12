@@ -256,6 +256,17 @@ void errorRequest()
     else
         printf("Cannot identify\n");
 }
+void errorDTC()
+{
+    if(rx_frame[5]==0x7E)
+        printf("Service not Supported in Active Session\n");
+    else if(rx_frame[5]==0x12)
+        printf("Sub function not supported\n");
+    else if(rx_frame[5]==0x13)
+        printf("Invalid format\n");
+    else
+        printf("Cannot identify\n");
+}
 void menuEngine()
 {
     printf("===========MENU============\n");
@@ -439,7 +450,8 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The odometer of engine: ");
-
+                    unsigned int res = (int)(rx_frame[6]&&0x11000000)+(int)(rx_frame[7]&&00110000)+(int)(rx_frame[8]&&00001100)+(int)(rx_frame[9]&&00000011);
+                    printf("%d\n",res);
                 }
             }
             else if(choice == 6){
@@ -469,16 +481,31 @@ int main(int argc, char **argv)
             }
             else if(choice == 7)
             {
+                int subfunction = 0;
+                printf("Enter the subfunction from 00-->07: ");
+                scanf("%d",subfunction);
+                while(subfunction<0 || subfunction > 7)
+                {
+                    printf("Error! Enter subfunction from 0-->7: ");
+                    scanf("%d",subfunction);
+                }
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
-                can_frame[4] = canMsg7.data[2];
-                can_frame[5] = canMsg7.data[3];
+                can_frame[4] = subfunction;
 
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                if(rx_frame[3]==0x7F)
+                {
+                    printf("Error! ");
+                    errorDTC();
+                }
+                else{
+                    printf("The data recorded is: %d\n",rx_frame[5]);
+                }
             }
             else if(choice == 8)
             {
@@ -686,6 +713,9 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
+                    unsigned int res = (int)(rx_frame[6]&&0x11000000)+(int)(rx_frame[7]&&00110000)+(int)(rx_frame[8]&&00001100)+(int)(rx_frame[9]&&00000011);
+                    res = res*0.01-180;
+                    printf("%d\n",res);
                 }
             }
             else if(choice == 5){
@@ -756,23 +786,31 @@ int main(int argc, char **argv)
             }
             else if(choice == 8)
             {
-                can_frame[0] = canMsg8.can_id;
+                int subfunction = 0;
+                printf("Enter the subfunction from 00-->07: ");
+                scanf("%d",subfunction);
+                while(subfunction<0 || subfunction > 7)
+                {
+                    printf("Error! Enter subfunction from 0-->7: ");
+                    scanf("%d",subfunction);
+                }
+                can_frame[0] = canMsg8.can_id; 
                 can_frame[1] = canMsg8.can_dlc;
                 can_frame[2] = canMsg8.data[0];
                 can_frame[3] = canMsg8.data[1];
-                can_frame[4] = canMsg8.data[2];
+                can_frame[4] = subfunction;
 
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
-                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
-                    errorDiagnostic();
+                    errorDTC();
                 }
-                else   
-                    printf("Successfully cleared diagonstic\n");
+                else{
+                    printf("The data recorded is: %d\n",rx_frame[5]);
+                }
             }
             else if(choice == 9)
             {
