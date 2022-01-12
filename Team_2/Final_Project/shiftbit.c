@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define CAN_FRAME_MAX_DATA_LEN 8
 struct can_frame {
@@ -27,7 +28,7 @@ int main()
 {
     char can_frame[10] = {0};
     init();
-    uint32_t hexnum  = 0xAA;
+    uint64_t hexnum  = 0xAA152405;
     printf("%02X\n",hexnum);
     can_frame[0] = canMsg1.can_id;
     can_frame[1] = canMsg1.can_dlc;
@@ -40,5 +41,11 @@ int main()
     {
         printf("%02X ",(unsigned char)can_frame[i]);
     }
+    int res = 0;
+    for(int i =0;i<3;i++)
+    {
+        res+=(int)canMsg1.data[i];
+    }
+    printf("%d",res);
     printf("\n");
 }

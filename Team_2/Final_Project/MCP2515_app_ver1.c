@@ -31,135 +31,155 @@ struct can_frame canMsg13;
 struct can_frame canMsg14;
 struct can_frame canMsg15;
 struct can_frame canMsg16;
+struct can_frame canMsg17;
+struct can_frame canMsg18;
 void init()
 {
-  canMsg1.can_id  = 0x60; //checked
+  canMsg1.can_id  = 0x58; //Engine
   canMsg1.can_dlc = 3;
   canMsg1.data[0] = 0x02;
   canMsg1.data[1] = 0x10;
   canMsg1.data[2] = 0x01;
 
-  canMsg2.can_id  = 0x60; //checked
+  canMsg2.can_id  = 0x58; //Engine
   canMsg2.can_dlc = 3;
   canMsg2.data[0] = 0x02;
   canMsg2.data[1] = 0x10;
   canMsg2.data[2] = 0x03;
 
-  canMsg3.can_id  = 0x58;
-  canMsg3.can_dlc = 4;
-  canMsg3.data[0] = 0x03;
-  canMsg3.data[1] = 0x22;
-  canMsg3.data[2] = 0xF1;
-  canMsg3.data[3] = 0x00;
+  canMsg3.can_id  = 0x60; //RADAR
+  canMsg3.can_dlc = 3;
+  canMsg3.data[0] = 0x02;
+  canMsg3.data[1] = 0x10;
+  canMsg3.data[2] = 0x01;
 
-  canMsg4.can_id  = 0x58;
-  canMsg4.can_dlc = 4;
-  canMsg4.data[0] = 0x03;
-  canMsg4.data[1] = 0x22;
-  canMsg4.data[2] = 0xF1;
-  canMsg4.data[3] = 0x80;
+  canMsg4.can_id  = 0x60; //RADAR
+  canMsg4.can_dlc = 3;
+  canMsg4.data[0] = 0x02;
+  canMsg4.data[1] = 0x10;
+  canMsg4.data[2] = 0x03;
 
   canMsg5.can_id  = 0x58;
   canMsg5.can_dlc = 4;
   canMsg5.data[0] = 0x03;
   canMsg5.data[1] = 0x22;
   canMsg5.data[2] = 0xF1;
-  canMsg5.data[3] = 0x81;
+  canMsg5.data[3] = 0x00;
 
   canMsg6.can_id  = 0x58;
   canMsg6.can_dlc = 4;
   canMsg6.data[0] = 0x03;
   canMsg6.data[1] = 0x22;
   canMsg6.data[2] = 0xF1;
-  canMsg6.data[3] = 0x82;
+  canMsg6.data[3] = 0x80;
 
-  canMsg7.can_id  = 0x60;
+  canMsg7.can_id  = 0x58;
   canMsg7.can_dlc = 4;
   canMsg7.data[0] = 0x03;
   canMsg7.data[1] = 0x22;
   canMsg7.data[2] = 0xF1;
-  canMsg7.data[3] = 0x00;
+  canMsg7.data[3] = 0x81;
 
-  canMsg8.can_id  = 0x60;
+  canMsg8.can_id  = 0x58;
   canMsg8.can_dlc = 4;
   canMsg8.data[0] = 0x03;
   canMsg8.data[1] = 0x22;
   canMsg8.data[2] = 0xF1;
-  canMsg8.data[3] = 0x90;
+  canMsg8.data[3] = 0x82;
 
   canMsg9.can_id  = 0x60;
   canMsg9.can_dlc = 4;
   canMsg9.data[0] = 0x03;
   canMsg9.data[1] = 0x22;
   canMsg9.data[2] = 0xF1;
-  canMsg9.data[3] = 0x91;
+  canMsg9.data[3] = 0x00;
 
   canMsg10.can_id  = 0x60;
   canMsg10.can_dlc = 4;
   canMsg10.data[0] = 0x03;
   canMsg10.data[1] = 0x22;
   canMsg10.data[2] = 0xF1;
-  canMsg10.data[3] = 0x92;
+  canMsg10.data[3] = 0x90;
 
   canMsg11.can_id  = 0x60;
-  canMsg11.can_dlc = 5;
-  canMsg11.data[0] = 0x04;
-  canMsg11.data[1] = 0x2E;
+  canMsg11.can_dlc = 4;
+  canMsg11.data[0] = 0x03;
+  canMsg11.data[1] = 0x22;
   canMsg11.data[2] = 0xF1;
-  canMsg11.data[3] = 0x90;
-  canMsg11.data[4] = 0x90;
+  canMsg11.data[3] = 0x91;
 
   canMsg12.can_id  = 0x60;
-  canMsg12.can_dlc = 2;
-  canMsg12.data[0] = 0x19;
-  canMsg12.data[1] = 0x00;
+  canMsg12.can_dlc = 4;
+  canMsg12.data[0] = 0x03;
+  canMsg12.data[1] = 0x22;
+  canMsg12.data[2] = 0xF1;
+  canMsg12.data[3] = 0x92;
 
   canMsg13.can_id  = 0x60;
-  canMsg13.can_dlc = 2;
-  canMsg13.data[0] = 0x14;
-  canMsg13.data[1] = 0x00;
+  canMsg13.can_dlc = 8;
+  canMsg13.data[0] = 0x07;
+  canMsg13.data[1] = 0x2E;
+  canMsg13.data[2] = 0xF1;
+  canMsg13.data[3] = 0x00;
+  canMsg13.data[4] = 0x00;
+  canMsg13.data[5] = 0x00;
+  canMsg13.data[6] = 0x00;
+  canMsg13.data[6] = 0x00;
 
-  canMsg14.can_id  = 0x60;
-  canMsg14.can_dlc = 3;
+  canMsg14.can_id  = 0x00;
+  canMsg14.can_dlc = 2;
   canMsg14.data[0] = 0x02;
-  canMsg14.data[1] = 0x27;
-  canMsg14.data[2] = 0x01;
+  canMsg14.data[1] = 0x19;
+  canMsg14.data[0] = 0x00;
 
-  canMsg15.can_id  = 0x60;
-  canMsg15.can_dlc = 7;
-  canMsg15.data[0] = 0x06;
-  canMsg15.data[1] = 0x27;
-  canMsg15.data[2] = 0x02;
-  canMsg15.data[3] = key[0];
-  canMsg15.data[4] = key[1];
-  canMsg15.data[5] = key[2];
-  canMsg15.data[6] = key[3];
+  canMsg15.can_id  = 0x00;
+  canMsg15.can_dlc = 2;
+  canMsg15.data[0] = 0x14;
+  canMsg15.data[1] = 0x00;
 
-  canMsg16.can_id  = 0x60; //checked
+  canMsg16.can_id  = 0x00;
   canMsg16.can_dlc = 3;
   canMsg16.data[0] = 0x02;
-  canMsg16.data[1] = 0x11;
+  canMsg16.data[1] = 0x27;
   canMsg16.data[2] = 0x01;
+
+  canMsg17.can_id  = 0x58;
+  canMsg17.can_dlc = 7;
+  canMsg17.data[0] = 0x06;
+  canMsg17.data[1] = 0x27;
+  canMsg17.data[2] = 0x02;
+  canMsg17.data[3] = key[0];
+  canMsg17.data[4] = key[1];
+  canMsg17.data[5] = key[2];
+  canMsg17.data[6] = key[3];
+
+  canMsg18.can_id  = 0x00;
+  canMsg18.can_dlc = 3;
+  canMsg18.data[0] = 0x02;
+  canMsg18.data[1] = 0x11;
+  canMsg18.data[2] = 0x01;
 }
 void menu()
 {
     printf("===========MENU============\n");
-    printf("1.  Session control 01\n");
-    printf("2.  Session control 03\n");
-    printf("3.  Read ECU voltage engine\n");
-    printf("4.  Read temperature engine\n");
-    printf("5.  Read odometer engine\n");
-    printf("6.  Read velocity engine\n");
-    printf("7.  Read ECU voltage radar\n");
-    printf("8.  Read angel azimuth radar\n");
-    printf("9.  Object detection radar\n");
-    printf("10. Warning detection radar\n");
-    printf("11. Write angel azimuth radar\n");
-    printf("12. Read DTC\n");
-    printf("13. Clear diagnostic\n");
-    printf("14. Request seed\n");
-    printf("15. Send seed\n");
-    printf("16. ECU reset\n");
+    printf("1.  Session control 01 for Engine\n");
+    printf("2.  Session control 03 for Engine\n");
+    printf("3.  Session control 01 for Radar\n");
+    printf("4.  Session control 03 for Radar\n");
+    printf("5.  Read ECU voltage engine\n");
+    printf("6.  Read temperature engine\n");
+    printf("7.  Read odometer engine\n");
+    printf("8.  Read velocity engine\n");
+    printf("9.  Read ECU voltage radar\n");
+    printf("10.  Read angel azimuth radar\n");
+    printf("11.  Object detection radar\n");
+    printf("12. Warning detection radar\n");
+    printf("13. Write angel azimuth radar\n");
+    printf("14. Read DTC\n");
+    printf("15. Clear diagnostic\n");
+    printf("16. Request seed\n");
+    printf("17. Send key\n");
+    printf("18. ECU reset\n");
     printf("=======================\n");
 }
 
@@ -182,11 +202,11 @@ int main(int argc, char **argv)
 
     do{
         menu();
-        printf("Enter your choice (1-->16): ");
+        printf("Enter your choice (1-->18): ");
         scanf("%d",&select);
-        while(select<1 || select > 16)
+        while(select<1 || select > 18)
         {
-            printf("Error! Enter your choice (1-->16): ");
+            printf("Error! Enter your choice (1-->18): ");
             scanf("%d",&select);
         }
         if(select == 1)
@@ -395,6 +415,34 @@ int main(int argc, char **argv)
             can_frame[2] = canMsg16.data[0];
             can_frame[3] = canMsg16.data[1];
             can_frame[4] = canMsg16.data[2];
+
+            write(fd, can_frame, 10);
+            sleep(1);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 17)
+        {
+            can_frame[0] = canMsg17.can_id; 
+            can_frame[1] = canMsg17.can_dlc;
+            can_frame[2] = canMsg17.data[0];
+            can_frame[3] = canMsg17.data[1];
+            can_frame[4] = canMsg17.data[2];
+            can_frame[5] = canMsg17.data[3];
+            can_frame[6] = canMsg17.data[4];
+            can_frame[7] = canMsg17.data[5];
+            can_frame[8] = canMsg17.data[6];
+
+            write(fd, can_frame, 10);
+            sleep(1);
+            read(fd, rx_frame, 10);
+        }
+        else if(select == 18)
+        {
+            can_frame[0] = canMsg18.can_id; 
+            can_frame[1] = canMsg18.can_dlc;
+            can_frame[2] = canMsg18.data[0];
+            can_frame[3] = canMsg18.data[1];
+            can_frame[4] = canMsg18.data[2];
 
             write(fd, can_frame, 10);
             sleep(1);
