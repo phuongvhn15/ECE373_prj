@@ -377,10 +377,10 @@ int main(int argc, char **argv)
             can_frame[2] = canMsg15.data[0];
             can_frame[3] = canMsg15.data[1];
             can_frame[4] = canMsg15.data[2];
-            can_frame[5] = canMsg15.data[3];
-            can_frame[6] = canMsg15.data[4];
-            can_frame[7] = canMsg15.data[5];
-            can_frame[8] = canMsg15.data[6];
+            can_frame[5] = key[0];
+            can_frame[6] = key[1];
+            can_frame[7] = key[2];
+            can_frame[8] = key[3];
 
             write(fd, can_frame, 10);
             sleep(1);
