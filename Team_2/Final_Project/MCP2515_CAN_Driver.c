@@ -1,8 +1,6 @@
-/******************************************************************
-*This file is written by Nguyen Cao Minh, 18ES. 		  *
-*It is translated directly from Arduino MCP2515 driver to run on  *
-*Raspberry. 							  *
-******************************************************************/
+/*************************************************************************
+This is MCP2615 driver based on Group1 with modification to our project	 *
+**************************************************************************/
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
