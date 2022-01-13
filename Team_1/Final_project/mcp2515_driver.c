@@ -1,5 +1,5 @@
 /******************************************************************
-*This file is written by Nguyen Cao Minh, 18ES. 		  *
+*This file is written by Nguyen Cao Minh		  *
 *It is translated directly from Arduino MCP2515 driver to run on  *
 *Raspberry. 							  *
 ******************************************************************/
