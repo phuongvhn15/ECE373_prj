@@ -796,17 +796,17 @@ int main(int argc, char **argv)
             }
             else if(choice == 7)
             {
-                float angel  = 0;
+                int angel  = 0;
                 printf("Enter the value of angel for radar (-180-->180): ");
-                scanf("%.02f",&angel);
+                scanf("%d",&angel);
                 while(angel<-180 || angel>180)
                 {
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
-                    scanf("%.02f",&angel);
+                    scanf("%d",&angel);
                 }
                 int raw_value = (angel+180)*100;
-                printf("\n%.02f\n", angel);
-                printf("\n%d\n", raw_value);
+                printf("%d\n", angel);
+                printf("%d\n", raw_value);
                 char angle_msg1 = raw_value/10000;
                 char angle_msg2 = (raw_value/100) - ((raw_value/10000)*100);
                 char angle_msg3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
