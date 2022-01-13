@@ -490,20 +490,20 @@ int main(int argc, char **argv)
             }
             else if(choice == 7)
             {
-                int subfunction = 0;
+                uint8_t subfunction = 0;
                 printf("Enter the subfunction from 00-->07: ");
-                scanf("%d",subfunction);
-                while(subfunction<0 || subfunction > 7)
+                scanf("%d",&subfunction);
+                while(subfunction<0x00 || subfunction > 0x07)
                 {
                     printf("Error! Enter subfunction from 0-->7: ");
-                    scanf("%d",subfunction);
+                    scanf("%d",&subfunction);
                 }
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
-
+                display();
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
@@ -773,7 +773,6 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The warning detection of engine: ");
-                    printf("The object detection of radar: ");
                     if(rx_frame[5]==0x01)
                         printf("Yes\n");
                     if(rx_frame[5]==0x00)
@@ -784,11 +783,11 @@ int main(int argc, char **argv)
             {
                 int angel  = 0;
                 printf("Enter the value of angel for radar (-180-->180): ");
-                scanf("%d",angel);
+                scanf("%d",&angel);
                 while(angel<-180 || angel>180)
                 {
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
-                    scanf("%d",angel);
+                    scanf("%d",&angel);
                 }
                 int raw_value = (angel+180)/0.01;
                 can_frame[0] = canMsg7.can_id; 
@@ -804,6 +803,7 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -815,13 +815,13 @@ int main(int argc, char **argv)
             }
             else if(choice == 8)
             {
-                int subfunction = 0;
+                uint8_t subfunction = 0;
                 printf("Enter the subfunction from 00-->07: ");
-                scanf("%d",subfunction);
+                scanf("%d",&subfunction);
                 while(subfunction<0 || subfunction > 7)
                 {
                     printf("Error! Enter subfunction from 0-->7: ");
-                    scanf("%d",subfunction);
+                    scanf("%d",&subfunction);
                 }
                 can_frame[0] = canMsg8.can_id; 
                 can_frame[1] = canMsg8.can_dlc;
@@ -832,6 +832,7 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
