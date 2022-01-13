@@ -71,6 +71,7 @@ int main()
     //                 //(int)(can_frame[0] &0x0000FF00)+(int)(can_frame[0] &0x000000FF));
     ;
     unsigned int  res = 0;
+    int r = 0x03;
     res = (int)((unsigned char)(can_frame[2]))*100+(int)((unsigned char)(can_frame[3]))*10;
     printf("%d\n",res);
     res = -(res/100-180);

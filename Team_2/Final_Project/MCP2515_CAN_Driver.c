@@ -1,28 +1,3 @@
-/*************************************************************************
-This is MCP2615 driver based on Group1 with modification to our project	 *
-**************************************************************************/
-#include <linux/types.h>
-#include <linux/spi/spi.h>
-#include <linux/module.h>
-#include <linux/init.h>
-#include <linux/kernel.h>
- 
-#include <linux/kdev_t.h>
-#include <linux/fs.h>   
-#include <linux/cdev.h> 
-#include <asm/uaccess.h>
-
-#include <linux/gpio.h>
-
-#include <linux/interrupt.h>
-
-#include <linux/kobject.h> 
-#include <linux/sysfs.h>
-
-#include <linux/time.h>
-#include <linux/ktime.h>
-#include <asm/delay.h> 
-#include <linux/delay.h>
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>
@@ -480,14 +455,6 @@ static const uint8_t CANCTRL_CLKPRE = 0x03;
 static const int N_TXBUFFERS = 3;
 static const int N_RXBUFFERS = 2;
 
-
-
-
-
-
-
-
-
 //Following functions are used to manipulate MCP2515 registers.
 //
 //This function is used to read status of RXBn buffer.
@@ -578,24 +545,6 @@ void setRegisters(struct spi_device *mcp2515_dev, enum REGISTER reg, uint8_t val
 }
 /////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
 {
     int modeMatch = 0;
@@ -616,7 +565,6 @@ int setMode(struct spi_device *mcp2515_dev,enum CANCTRL_REQOP_MODE mode)
     }
     return modeMatch;
 }
-
 
 void prepareId(uint8_t *buffer, const int ext, const uint32_t id)
 {
@@ -646,8 +594,6 @@ int setFilter(struct spi_device *mcp2515_dev,enum RXF num, int ext, uint32_t ulD
     if (res == 0) {
         return res;
     }
-
-   
 
     switch (num) {
         case RXF0: reg = MCP_RXF0SIDH; break;
@@ -688,7 +634,6 @@ int setFilterMask(struct spi_device *mcp2515_dev,enum MASK mask, int ext, const 
     return 1;
 }
 
-
 int setBitrate(struct spi_device *mcp2515_dev)
 {
     uint8_t set, cfg1, cfg2, cfg3;
@@ -714,11 +659,6 @@ int setBitrate(struct spi_device *mcp2515_dev)
         return 0;
     }
 }
-
-
-
-
-
 
 //These functions are used to Read CAN message from MCP2515.
 //
@@ -883,7 +823,7 @@ int reset(struct spi_device *mcp2515_dev)
 
 int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const struct can_frame *frame)
 {
-    //printk("before if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
+    printk("before if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
     }
@@ -896,15 +836,15 @@ int sendMessageinHardware(struct spi_device *mcp2515_dev, enum TXBn txbn, const 
     int rtr = (frame->can_id & CAN_RTR_FLAG);
     uint32_t id = (frame->can_id & (ext ? CAN_EFF_MASK : CAN_SFF_MASK));
 
-    //printk("Inside prepare id %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
+    printk("Inside prepare id %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
     prepareId(data, ext, id);
 
     data[MCP_DLC] = rtr ? (frame->can_dlc | RTR_MASK) : frame->can_dlc;
 
-    //printk("before memcpy %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
-    //printk("before memcpy %x %x %x ", data[0],data[1],data[2]);
+    printk("before memcpy %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
+    printk("before memcpy %x %x %x ", data[0],data[1],data[2]);
     memcpy(&data[MCP_DATA], frame->can_data, frame->can_dlc);
-    //printk("after memcpy %x %x %x ", data[0],data[1],data[2]);
+    printk("after memcpy %x %x %x ", data[0],data[1],data[2]);
     setRegisters(mcp2515_dev,txbuf->SIDH, data, 13);
 
     modifyRegister(mcp2515_dev,txbuf->CTRL, TXB_TXREQ, TXB_TXREQ);
@@ -922,7 +862,7 @@ int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
     if (frame->can_dlc > CAN_MAX_DLEN) {
         return 0;
     }
-    //printk("Inside send message %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
+    printk("Inside send message %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
 
     enum TXBn txBuffers[3] = {TXB0, TXB1, TXB2};
 
@@ -931,7 +871,7 @@ int sendMessage(struct spi_device *mcp2515_dev, const struct can_frame *frame)
          
         uint8_t ctrlval = readRegister(mcp2515_dev, txbuf->CTRL);
         if ( (ctrlval & TXB_TXREQ) == 0 ) {
-            //printk("Inside if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
+            printk("Inside if %x %x %x ", frame->can_data[0],frame->can_data[1],frame->can_data[2]);
             return sendMessageinHardware(mcp2515_dev, txBuffers[i], frame);
         }
     }

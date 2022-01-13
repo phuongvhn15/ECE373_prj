@@ -36,31 +36,15 @@
 #include <linux/delay.h>
 #include "MCP2515_CAN_Driver.c"
 
-
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Team2: KhanhHuy,VanThin,DucMinh");
+MODULE_DESCRIPTION("MCP2515 KERNEL");
 
 #define MY_BUS_NUM 0
-
-static dev_t mcp2515_dev;		//defines structure to hold major and minor number of device//
-
-struct cdev mcp2515_cdev;		 //defines structure to hold character device properties//
-
-static struct class *my_class;
-
 static struct spi_device *mcp2515_dev_spi;
-/**
- * @brief This function is called, when the module is loaded into the kernel
- */
-
-
-/**
- * @brief 
- * 
- * @param File file handler được trả về từ hàm fopen
- * @param user_buffer buffer dùng để chứa giá trị
- * @param count số lượng byte của buffer
- * @param offs 
- * @return ssize_t 
- */
+static dev_t mcp2515_dev;
+struct cdev mcp2515_cdev;
+static struct class *my_class;
 
 static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, loff_t *offs) {
 	int i;
@@ -145,161 +129,107 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	return error;
 }
 
-static struct file_operations mcp2515_fops = {
-	.owner = THIS_MODULE,
-	//.open = mcp2515_open,
-	//.release = mcp2515_close,
-	.read = mcp2515_read,
-	.write = mcp2515_write,
+static const struct file_operations mcp2515_fops = {
+	.owner =	THIS_MODULE,
+	.read = 	mcp2515_read,
+	.write =	mcp2515_write,
 };
 
-static int __init ModuleInit(void) {
-	struct can_frame can_frame_tx;
-	struct can_frame can_frame_rx;
+/*Init and Exit module*/
+static int __init ModuleInit(void)
+{
 	struct spi_master *master;
 	
-	printk("Group 1: \n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang");
-	printk("ECE 372 final project");
-	//General SPI device set up
-	//
-	/* Parameters for SPI device */
+	//SPI device information
 	struct spi_board_info spi_device_info = {
 		.modalias = "mcp2515_dev_spi",
-		.max_speed_hz = 12000000, //High speed SPI Interface 12Mhz
+		.max_speed_hz = 12000000,
 		.bus_num = MY_BUS_NUM,
 		.chip_select = 0,
-		.mode = 4, // SPI mode 0,0 and 0,1
+		.mode = 4,
 	};
+	
+	printk("Hello kernel!\n");
 
-	printk("Inside busum_to_master function");
-	/* Get access to spi bus */
+	//Access to SPI bus
 	master = spi_busnum_to_master(MY_BUS_NUM);
-	/* Check if we could get the master */
-	if(!master) {
-		printk("There is no spi bus with Nr. %d\n", MY_BUS_NUM);
+	if(!master)
+	{
+		printk("There is no spi bus %d\n", MY_BUS_NUM);
 		return -1;
 	}
-
-	printk("Inside spi_new_device function");
-	/* Create new SPI device */
+	
+	//Create new SPI device
 	mcp2515_dev_spi = spi_new_device(master, &spi_device_info);
-	if(!mcp2515_dev_spi) {
-		printk("Could not create device!\n");
+	if(!mcp2515_dev_spi)
+	{
+		printk("Couldn't create device!\n");
 		return -1;
 	}
-
+	
 	mcp2515_dev_spi -> bits_per_word = 8;
-
-	printk("%s","Inside spi_setups function");
-	/* Setup the bus for device's parameters */
-	if(spi_setup(mcp2515_dev_spi) != 0){
-		printk("Could not change bus setup!\n");
-		spi_unregister_device(mcp2515_dev_spi);
+	
+	if(spi_setup(mcp2515_dev_spi) != 0)
+	{
+		printk("Could not change bus set-up!\n");
+		spi_unregister_device(mcp2515_dev);
 		return -1;
 	}
-	/////////////////////////////////////////////
 
-	//MCP2515 set up
-	//Setting bitrate of 500Kbs and MCP2515 clock of 12Mhz.
-	if(setBitrate(mcp2515_dev_spi)){
+	if(setBitrate(mcp2515_dev_spi))
+	{
 		printk("Set bit rate success");
 	}
 	else
+	{
 		printk("Set bit rate fail");
+	}
+
 	printk("%s","Inside setMode function");
+	setMode(mcp2515_dev_spi, CANCTRL_REQOP_NORMAL);
 
 	char buffer[64];
-    int	ret = 0;
 
-    printk(KERN_INFO "Loading mcp2515_module\n");
-	///////////////////////////////////////////////////////
-
-	//
-	//
-	// VFS set up
-    alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev_ver2d");
+	alloc_chrdev_region(&mcp2515_dev, 0, 1, "mcp2515_dev");
     printk(KERN_INFO "%s\n", format_dev_t(buffer, mcp2515_dev));
 
-    /* Create device class */
-
-	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL) {
-
-		printk("Device class can not e created!\n");
-
+	if((my_class = class_create(THIS_MODULE, "ModuleClass")) == NULL)
+	{
+		printk("Device class can not be created!\n");
 	}
-	/* create device file */
+	else
+	{
+		printk("Device class created!\n");
+	}
 
-	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev_ver2d") == NULL) {
-
+	if(device_create(my_class, NULL, mcp2515_dev, NULL, "mcp2515_dev") == NULL)
+	{
 		printk("Can not create device file!\n");
-
+	}
+	else
+	{
+		printk("Create device file!\n");
 	}
 
-    cdev_init(&mcp2515_cdev, &mcp2515_fops);
+	cdev_init(&mcp2515_cdev, &mcp2515_fops);
     mcp2515_cdev.owner = THIS_MODULE;
     cdev_add(&mcp2515_cdev, mcp2515_dev, 1);
-	/////////////////////////////////////
-
-	//Config MCP2515 into normal mode.
-	setMode(mcp2515_dev_spi,CANCTRL_REQOP_NORMAL);
-
-	//HARDWARE TESTING CODE.
-	//Test Sending and Receiving.
-	u8 rx_val[] = {0,0,0};
-	readRegisters(mcp2515_dev_spi, 40, rx_val, 3);
-	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
-
-	// can_frame_tx.can_id  = 0x58;
-	// can_frame_tx.can_dlc = 3;
-	// can_frame_tx.can_data[0] = 0x02;
-	// can_frame_tx.can_data[1] = 0x10;
-	// can_frame_tx.can_data[2] = 0x01;
-	// can_frame_tx.can_data[3] = 0;
-	// can_frame_tx.can_data[4] = 0;
-	// can_frame_tx.can_data[5] = 0;
-	// can_frame_tx.can_data[6] = 0;
-	// can_frame_tx.can_data[7] = 0;
-	// printk("Sending CAN message ");
-	// sendMessage(mcp2515_dev_spi, &can_frame_tx);
-
-	// readMessage(mcp2515_dev_spi, &can_frame_rx);
-	// printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
-
-	can_frame_tx.can_id = 0x58;
-	can_frame_tx.can_dlc = 3;
-	can_frame_tx.can_data[0] = 0x02;
-	can_frame_tx.can_data[1] = 0x10;
-	can_frame_tx.can_data[2] = 0x01;
-	can_frame_tx.can_data[3] = 0x00;
-	can_frame_tx.can_data[4] = 0x00;
-	can_frame_tx.can_data[5] = 0x00;
-	can_frame_tx.can_data[6] = 0x00;
-	can_frame_tx.can_data[7] = 0x00;
-	printk("Sending CAN message ");
-	sendMessage(mcp2515_dev_spi, &can_frame_tx);
-
-	readMessage(mcp2515_dev_spi, &can_frame_rx);
-	printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
 	
 	return 0;
 }
 
-/**
- * @brief This function is called, when the module is removed from the kernel
- */
-static void __exit ModuleExit(void) {
+static void __exit ModuleExit(void)
+{
 	cdev_del(&mcp2515_cdev);
-	device_destroy(my_class,mcp2515_dev);
+	device_destroy(my_class, mcp2515_dev);
 	class_destroy(my_class);
-    unregister_chrdev_region( mcp2515_dev, 1 );
-	if(mcp2515_dev_spi)
-		spi_unregister_device(mcp2515_dev_spi);
-		
-	printk("Goodbye, Kernel\n");
+    unregister_chrdev_region(mcp2515_dev, 1);
+    if(mcp2515_dev_spi)
+    {
+        spi_unregister_device(mcp2515_dev_spi);
+    }
+	printk("Goodbye kernel!\n");
 }
+
 module_init(ModuleInit);
 module_exit(ModuleExit);
-/* Meta Information */
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Team2: KhanhHuy,VanThin,DucMinh");
-MODULE_DESCRIPTION("MCP2515 KERNEL");
