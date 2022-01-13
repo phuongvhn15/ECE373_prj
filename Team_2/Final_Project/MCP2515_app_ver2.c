@@ -217,6 +217,7 @@ void display()
     {
         printf("%02X ",(unsigned char)rx_frame[i]);
     }
+    printf("\n");
 }
 void clear()
 {
@@ -312,19 +313,22 @@ void menuRadar()
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev_ver2d";
+    //char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
     int choice = 0;
     int next = 0;
     char con;
-    if ((fd = open(dev_name,O_RDWR)) < 0 )
-    {
-        fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-        return( 1 );
-    }
+    // if ((fd = open(dev_name,O_RDWR)) < 0 )
+    // {
+    //     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    //     return( 1 );
+    // }
     do{
+        read(fd, rx_frame, 10);
+        clear();
+        printf("========DIAGNOSTIC DEVIEC TEAM 3: KHANH HUY+VAN THIN+DUC MINH=========\n");
         printf("Enter(1 or 2) parts to work: 1. Engine  2. Radar: ");
         scanf("%d",&select);
         while(select<1 || select > 2)
@@ -439,7 +443,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The temperature of engine: %d",rx_frame[6]," V\n");
+                    printf("The temperature of engine: %dC",rx_frame[6]);
                 }
             }
             else if(choice == 5){
@@ -460,8 +464,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The odometer of engine: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    printf("%d\n",res);
+                    printf("%d%d Km",rx_frame[6],rx_frame[7]);
                 }
             }
             else if(choice == 6){
@@ -482,8 +485,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The velocity of engine: %d",rx_frame[6],"\n");
-                    
+                    printf("The velocity of engine: %d km/h",rx_frame[6],"\n");
                 }
             }
             else if(choice == 7)
@@ -724,9 +726,12 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF00)+(int)(rx_frame[7]&0x00FF)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    res = res*0.01-180;
-                    printf("%d\n",res);
+                    int angel1 = (int)rx_frame[6];
+                    int angel2 = (int)rx_frame[7];
+                    int angel3 = (int)rx_frame[8];
+                    int angel_raw = angel1*10000 + angel2*100 + angel3;
+                    float angel_phy = ((float)angel_raw/100.00) - 180.00;
+                    printf("%.2f degree",angel_phy);
                 }
             }
             else if(choice == 5){
@@ -747,9 +752,9 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The object detection of radar: ");
-                    if(rx_frame[5]==0x01)
+                    if(rx_frame[6]==0x01)
                         printf("Yes\n");
-                    if(rx_frame[5]==0x00)
+                    if(rx_frame[6]==0x00)
                         printf("No\n");
                 }
             }
@@ -775,9 +780,9 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The warning detection of engine: ");
-                    if(rx_frame[5]==0x01)
+                    if(rx_frame[6]==0x01)
                         printf("Yes\n");
-                    if(rx_frame[5]==0x00)
+                    if(rx_frame[6]==0x00)
                         printf("No\n");
                 }
             }
@@ -791,17 +796,17 @@ int main(int argc, char **argv)
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
                     scanf("%d",&angel);
                 }
-                int raw_value = (angel+180)/0.01;
+                int raw_value = (angel+180)/0.01 +1 ;
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = canMsg7.data[2];
                 can_frame[5] = canMsg7.data[3];
-                can_frame[6] = raw_value & 0xFF000000;
-                can_frame[7] = raw_value & 0x00FF0000;
-                can_frame[8] = raw_value & 0x0000FF00;
-                can_frame[9] = raw_value & 0x000000FF;
+                can_frame[6] = 0x00; 
+                can_frame[7] = 0x00; 
+                can_frame[8] = (raw_value >> 8) & 0xFF;
+                can_frame[9] = raw_value & 0xFF;
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
