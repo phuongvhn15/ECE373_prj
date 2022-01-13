@@ -559,7 +559,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    printf("Key: %02X %02X %02X %02X\n",(unsigned char)rx_frame[5],(unsigned char)rx_frame[6],(unsigned char)rx_frame[7],(unsigned char)rx_frame[8]);
+                    printf("Key: %02X %02X %02X %02X",(unsigned char)rx_frame[5],(unsigned char)rx_frame[6],(unsigned char)rx_frame[7],(unsigned char)rx_frame[8]);
                 }
                 for(int i =0;i<5;i++)
                 {
