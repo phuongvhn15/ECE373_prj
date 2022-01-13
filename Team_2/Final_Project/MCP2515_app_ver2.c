@@ -726,8 +726,8 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    int sub1 = (int)rx_frame[8];
-                    int sub2 = (int)rx_frame[9];
+                    int sub1 = (int)rx_frame[6];
+                    int sub2 = (int)rx_frame[7];
                     int raw = sub1*10000+sub2*100;
                     float angel = ((float)raw/100.00) - 180.00;
                     printf("%.2f degree",angel);
@@ -802,10 +802,10 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = canMsg7.data[2];
                 can_frame[5] = canMsg7.data[3];
-                can_frame[6] = 0x00; 
-                can_frame[7] = 0x00; 
-                can_frame[8] = (raw_value >> 8) & 0xFF;
-                can_frame[9] = raw_value & 0xFF;
+                can_frame[6] = (raw_value >> 8) & 0xFF; 
+                can_frame[7] = raw_value & 0xFF; 
+                can_frame[8] = 0x00;
+                can_frame[9] = 0x00;
                 write(fd, can_frame, 10);
                 sleep(2);
                 read(fd, rx_frame, 10);
