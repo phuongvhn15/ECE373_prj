@@ -562,9 +562,9 @@ int main(int argc, char **argv)
                     key[i] = rx_frame[5+i];
                 }
                 key[0] = key[0] ^ 0xFF;
-                key[1] = key[0] ^ 0xFF;
-                key[2] = key[0] ^ 0xFF;
-                key[3] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 10)
             {
@@ -895,9 +895,9 @@ int main(int argc, char **argv)
                     key[i] = rx_frame[5+i];
                 }
                 key[0] = key[0] ^ 0xFF;
-                key[1] = key[0] ^ 0xFF;
-                key[2] = key[0] ^ 0xFF;
-                key[3] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 11)
             {
