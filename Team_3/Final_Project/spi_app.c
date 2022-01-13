@@ -1,3 +1,12 @@
+/****************************************************
+* This application is developed by KhanhHuy											
+* Group 2.														
+* Instructor : Hồ Văn Nguyên Phương					
+* Contributor : Truong Phu Khanh Huy
+*               Nguyen Van Thin
+*               Nguyen Duc Minh				
+* **************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -197,17 +206,13 @@ void init_Radar()
 }
 void display()
 {
+    printf("CAN Transmission: ");
     for(int i = 0;i<sizeof(can_frame);i++)
     {
         printf("%02X ",(unsigned char)can_frame[i]);
     }
     printf("\n");
     printf("CAN Response: ");
-    for(int i = 0;i<sizeof(can_frame);i++)
-    {
-        printf("%02X ",(unsigned char)rx_frame[i]);
-    }
-    printf("\n");
 }
 void clear()
 {
@@ -346,6 +351,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
                     printf("Successfully changed session\n");
@@ -374,6 +384,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
                     printf("Successfully changed session\n");
@@ -403,6 +418,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -423,6 +443,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -443,6 +467,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -465,9 +493,10 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
-                write(fd, can_frame, 10);
-                sleep(1);
-                read(fd, rx_frame, 10);
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 display();
                 if(rx_frame[3]==0x7F)
                 {
@@ -481,20 +510,24 @@ int main(int argc, char **argv)
             }
             else if(choice == 7)
             {
-                int subfunction = 0;
+                uint8_t subfunction = 0;
                 printf("Enter the subfunction from 00-->07: ");
-                scanf("%d",subfunction);
-                while(subfunction<0 || subfunction > 7)
+                scanf("%d",&subfunction);
+                while(subfunction<0x00 || subfunction > 0x07)
                 {
                     printf("Error! Enter subfunction from 0-->7: ");
-                    scanf("%d",subfunction);
+                    scanf("%d",&subfunction);
                 }
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
-
+                display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
@@ -519,6 +552,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -539,6 +576,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -552,6 +593,10 @@ int main(int argc, char **argv)
                 {
                     key[i] = rx_frame[5+i];
                 }
+                key[0] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 10)
             {
@@ -568,6 +613,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -593,6 +642,7 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -713,7 +763,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
+                    unsigned int res = (int)(rx_frame[6]&0xFF00)+(int)(rx_frame[7]&0x00FF)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     res = res*0.01-180;
                     printf("%d\n",res);
                 }
@@ -764,7 +814,6 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The warning detection of engine: ");
-                    printf("The object detection of radar: ");
                     if(rx_frame[5]==0x01)
                         printf("Yes\n");
                     if(rx_frame[5]==0x00)
@@ -775,11 +824,11 @@ int main(int argc, char **argv)
             {
                 int angel  = 0;
                 printf("Enter the value of angel for radar (-180-->180): ");
-                scanf("%d",angel);
+                scanf("%d",&angel);
                 while(angel<-180 || angel>180)
                 {
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
-                    scanf("%d",angel);
+                    scanf("%d",&angel);
                 }
                 int raw_value = (angel+180)/0.01;
                 can_frame[0] = canMsg7.can_id; 
@@ -795,6 +844,7 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -806,13 +856,13 @@ int main(int argc, char **argv)
             }
             else if(choice == 8)
             {
-                int subfunction = 0;
+                uint8_t subfunction = 0;
                 printf("Enter the subfunction from 00-->07: ");
-                scanf("%d",subfunction);
+                scanf("%d",&subfunction);
                 while(subfunction<0 || subfunction > 7)
                 {
                     printf("Error! Enter subfunction from 0-->7: ");
-                    scanf("%d",subfunction);
+                    scanf("%d",&subfunction);
                 }
                 can_frame[0] = canMsg8.can_id; 
                 can_frame[1] = canMsg8.can_dlc;
@@ -823,6 +873,7 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
