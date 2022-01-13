@@ -29,7 +29,6 @@ int main()
     char can_frame[4] = {0};
     // init();
     // uint64_t hexnum  = 0x0023992;
-     int angel = 180;
     // printf("%02X\n",hexnum);
     // can_frame[0] = canMsg1.can_id;
     // can_frame[1] = canMsg1.can_dlc;
@@ -58,10 +57,10 @@ int main()
     //                 scanf("%x",&subfunction);
     //             }
     // printf("%02X",subfunction);
-    can_frame[0] = 0x00;
-    can_frame[1] = 0x00;
-    can_frame[2] = 0x8C;
-    can_frame[3] = 0xA0;
+    // can_frame[0] = 0x00;
+    // can_frame[1] = 0x00;
+    // can_frame[2] = 0x8C;
+    // can_frame[3] = 0xA0;
     // for(int i =0;i<4;i++)
     // {
     //     printf("%d ",(unsigned char)can_frame[i]);
@@ -69,12 +68,19 @@ int main()
     // printf("\n");
     // unsigned int res = ((int)(can_frame[0] & 0xFF000000)//+(int)(can_frame[0] & 0x00FF0000)+
     //                 //(int)(can_frame[0] &0x0000FF00)+(int)(can_frame[0] &0x000000FF));
-    ;
-    unsigned int  res = 0;
-    int r = 0x03;
-    res = (int)((unsigned char)(can_frame[2]))*100+(int)((unsigned char)(can_frame[3]))*10;
-    printf("%d\n",res);
-    res = -(res/100-180);
-    printf("%d\n",res);
+     int angel = 147;
+     int res = (angel+180)/0.01+1;
+     printf("%d\n",res);
+    char ang_p1 = res/10000;
+    char ang_p2 = (res-ang_p1*10000)/1000;
+    char ang_p3 = (res-ang_p1*10000-ang_p2*1000)/100;
+    char ang_p4 = (res-ang_p1*10000-ang_p2*1000-ang_p3*100)/10;
+    printf("%02X %02X %02X %02X\n",ang_p1,ang_p2,ang_p3,ang_p4);
+    can_frame[0] = ang_p1;
+    can_frame[1] = ang_p2;
+    can_frame[2] = ang_p3;
+    can_frame[3] = ang_p4;
+    int val = (int)(can_frame[0])*10000+(int)(can_frame[1])*1000+(int)(can_frame[2])*100+(int)(can_frame[3])*10;
+    printf("%d\n",val);
     return 0;
 }
