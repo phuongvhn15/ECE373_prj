@@ -74,6 +74,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 	CAN_FRAME.can_data[5] = 0;
 	CAN_FRAME.can_data[6] = 0;
 	CAN_FRAME.can_data[7] = 0;
+
 	if(readMessage(mcp2515_dev_spi,&CAN_FRAME)){
 		printk("Read message successful");
 	}
@@ -81,18 +82,17 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 		printk("Fail to read message ");
 
 	
-	u32 can_id = CAN_FRAME.can_id;
-	u8 can_dlc = CAN_FRAME.can_dlc;
+	u8 id_dlc_buffer[2];
 	
-	char id_dlc_buffer[2];
-	sprintf(id_dlc_buffer,"%x%x", can_id, can_dlc);
+	id_dlc_buffer[0] = CAN_FRAME.can_id;
+	id_dlc_buffer[1] = CAN_FRAME.can_dlc;
 	printk("id_dlc_buffer: %x %x :", id_dlc_buffer[0], id_dlc_buffer[1]);
 	
 	//
 	//Copy can_data to data buffer
 	u8 data_buffer[8];
 	for(i = 0; i < 8; i++){
-		sprintf(&data_buffer[i], "%x", CAN_FRAME.can_data[i]);
+		data_buffer[i] = CAN_FRAME.can_data[i];
 	}
 	//
 	printk("data_buffer: %x %x %x %x %x %x %x %x:", data_buffer[0], id_dlc_buffer[1], data_buffer[2], data_buffer[3], data_buffer[4], data_buffer[5], data_buffer[6], data_buffer[7]);
@@ -118,6 +118,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 
 static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t length, loff_t * offset) {
 	int i;
+	int count = 0;
 	int error;
 	struct can_frame CAN_FRAME;
 
@@ -129,6 +130,7 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	CAN_FRAME.can_data[5] = 0;
 	CAN_FRAME.can_data[6] = 0;
 	CAN_FRAME.can_data[7] = 0;
+
 	//Copy 2 bytes of can_id and can_dlc to CAN_FRAME.
 	CAN_FRAME.can_id = buffer[0];
 	CAN_FRAME.can_dlc = buffer[1];
@@ -142,6 +144,7 @@ static ssize_t mcp2515_write(struct file *filp, const char *buffer, size_t lengt
 	error = sendMessage(mcp2515_dev_spi, &CAN_FRAME);
 	return error;
 }
+
 static struct file_operations mcp2515_fops = {
 	.owner = THIS_MODULE,
 	//.open = mcp2515_open,
@@ -154,8 +157,9 @@ static int __init ModuleInit(void) {
 	struct can_frame can_frame_tx;
 	struct can_frame can_frame_rx;
 	struct spi_master *master;
-
-
+	
+	printk("Group 1: \n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang");
+	printk("ECE 372 final project");
 	//General SPI device set up
 	//
 	/* Parameters for SPI device */
@@ -245,6 +249,32 @@ static int __init ModuleInit(void) {
 	readRegisters(mcp2515_dev_spi, 40, rx_val, 3);
 	printk("bitrate config registers: %x %x %x", rx_val[0], rx_val[1], rx_val[2]);
 
+	// can_frame_tx.can_id  = 0x58;
+	// can_frame_tx.can_dlc = 3;
+	// can_frame_tx.can_data[0] = 0x02;
+	// can_frame_tx.can_data[1] = 0x10;
+	// can_frame_tx.can_data[2] = 0x01;
+	// can_frame_tx.can_data[3] = 0;
+	// can_frame_tx.can_data[4] = 0;
+	// can_frame_tx.can_data[5] = 0;
+	// can_frame_tx.can_data[6] = 0;
+	// can_frame_tx.can_data[7] = 0;
+	// printk("Sending CAN message ");
+	// sendMessage(mcp2515_dev_spi, &can_frame_tx);
+
+	// readMessage(mcp2515_dev_spi, &can_frame_rx);
+	// printk("can_dlc: %x, can_id: %x, can_data: %02x %02x %02x %02x ", can_frame_rx.can_dlc, can_frame_rx.can_id, can_frame_rx.can_data[0],can_frame_rx.can_data[1],can_frame_rx.can_data[2],can_frame_rx.can_data[3]);
+
+	can_frame_tx.can_id = 0x58;
+	can_frame_tx.can_dlc = 3;
+	can_frame_tx.can_data[0] = 0x02;
+	can_frame_tx.can_data[1] = 0x10;
+	can_frame_tx.can_data[2] = 0x01;
+	can_frame_tx.can_data[3] = 0x00;
+	can_frame_tx.can_data[4] = 0x00;
+	can_frame_tx.can_data[5] = 0x00;
+	can_frame_tx.can_data[6] = 0x00;
+	can_frame_tx.can_data[7] = 0x00;
 	printk("Sending CAN message ");
 	sendMessage(mcp2515_dev_spi, &can_frame_tx);
 
