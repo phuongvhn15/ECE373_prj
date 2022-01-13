@@ -732,12 +732,12 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    char angle[2] = {0};
-                    angle[0] = rx_frame[6];
-                    angle[1] = rx_frame[7];
-                    int angle_raw = (int)angle;
-                    angle_raw = (angle_raw/100) - 180;
-                    printf("%d degree",angle_raw);
+                    int angel1 = (int)rx_frame[6];
+                    int angel2 = (int)rx_frame[7];
+                    int angel3 = (int)rx_frame[8];
+                    int angel_raw = angel1*10000 + angel2*100 + angel3;
+                    float angel_phy = ((float)angel_raw/100.00) - 180.00;
+                    printf("%.2f degree",angel_phy);
                 }
             }
             else if(choice == 5){
@@ -805,7 +805,7 @@ int main(int argc, char **argv)
                     scanf("%f",&angel);
                 }
                 int raw_value = (angel+180)*100;
-                printf("%d\n", angel);
+                printf("%.2f\n", angel);
                 printf("%d\n", raw_value);
                 char angle_msg1 = raw_value/10000;
                 char angle_msg2 = (raw_value/100) - ((raw_value/10000)*100);
