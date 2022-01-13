@@ -623,6 +623,7 @@ int main(int argc, char **argv)
             clear();
             printf("\nDo you want to continue? Y or N: ");
             scanf(" %c",&con);
+            printf("\n");
         }while(con == 'Y' || con == 'y');
     }
     else if(select == 2)
