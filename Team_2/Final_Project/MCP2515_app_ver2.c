@@ -213,11 +213,6 @@ void display()
     }
     printf("\n");
     printf("CAN Response: ");
-    for(int i = 0;i<sizeof(rx_frame);i++)
-    {
-        printf("%02X ",(unsigned char)rx_frame[i]);
-    }
-    printf("\n");
 }
 void clear()
 {
@@ -356,6 +351,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
                     printf("Successfully changed session\n");
@@ -384,6 +384,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
                     printf("Successfully changed session\n");
@@ -413,6 +418,11 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -433,6 +443,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -453,6 +467,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -475,9 +493,10 @@ int main(int argc, char **argv)
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
-                write(fd, can_frame, 10);
-                sleep(1);
-                read(fd, rx_frame, 10);
+                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 display();
                 if(rx_frame[3]==0x7F)
                 {
@@ -505,6 +524,10 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
@@ -529,6 +552,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -549,6 +576,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -578,6 +609,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -603,6 +638,10 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
+                                                for(int i = 0;i<sizeof(rx_frame);i++)
+                {
+                    printf("%02X ",(unsigned char)rx_frame[i]);
+                }
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
