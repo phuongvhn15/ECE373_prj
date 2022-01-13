@@ -206,13 +206,14 @@ void init_Radar()
 }
 void display()
 {
+    printf("CAN Transmission: ");
     for(int i = 0;i<sizeof(can_frame);i++)
     {
         printf("%02X ",(unsigned char)can_frame[i]);
     }
     printf("\n");
     printf("CAN Response: ");
-    for(int i = 0;i<sizeof(can_frame);i++)
+    for(int i = 0;i<sizeof(rx_frame);i++)
     {
         printf("%02X ",(unsigned char)rx_frame[i]);
     }
