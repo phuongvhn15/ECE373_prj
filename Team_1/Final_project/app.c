@@ -313,7 +313,7 @@ void menuRadar()
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev";
+    char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
@@ -325,7 +325,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
         return( 1 );
     }
-    printf("Group 1:\n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang. \n\n")
+    printf("Group 1:\n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang. \n\n");
     do{
         read(fd, rx_frame, 10);
         clear();
