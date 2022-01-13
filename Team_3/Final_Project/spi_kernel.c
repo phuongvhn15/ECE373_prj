@@ -82,7 +82,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 		can_buffer[i] = data_buffer[i-2];
 	}
 
-	printk("Copy to userbuffer");s
+	printk("Copy to userbuffer");
 	copy_to_user(buf, can_buffer, 10);
 	return 1;
 }
