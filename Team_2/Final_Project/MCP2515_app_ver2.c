@@ -593,6 +593,10 @@ int main(int argc, char **argv)
                 {
                     key[i] = rx_frame[5+i];
                 }
+                key[0] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 10)
             {
@@ -638,10 +642,7 @@ int main(int argc, char **argv)
                 sleep(1);
                 read(fd, rx_frame, 10);
                 display();
-                                                for(int i = 0;i<sizeof(rx_frame);i++)
-                {
-                    printf("%02X ",(unsigned char)rx_frame[i]);
-                }
+                
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
