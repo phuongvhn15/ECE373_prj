@@ -966,7 +966,7 @@ int main(int argc, char **argv)
     }
     printf("Do you want to change parts(Enter 1 or 2)? 1. Yes 2. No? ");
     scanf("%d",&next);
-    prinf("\n")
+    prinf("\n");
     } while(next == 1);
     printf("===============OUT============");
     return 0;
