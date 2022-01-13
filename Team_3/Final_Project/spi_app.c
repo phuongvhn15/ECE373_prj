@@ -807,7 +807,7 @@ int main(int argc, char **argv)
                 int raw_value = (angel+180)*100;
                 char angle_msg1 = raw_value/10000;
                 char angle_msg2 = (raw_value/100) - ((raw_value/10000)*100);
-                char angle_msg2 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
+                char angle_msg3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
