@@ -503,10 +503,10 @@ int main(int argc, char **argv)
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
-                display();
                 write(fd, can_frame, 10);
                 sleep(2);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
