@@ -792,9 +792,7 @@ int main(int argc, char **argv)
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
                     scanf("%d",&angel);
                 }
-                int raw_angle = (angel+180)/0.01;
-                char raw_value = "0000";
-                sprintf(raw_value, "%04X", raw_angle);
+                int raw_value = (angel+180)/0.01;
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
