@@ -1,3 +1,12 @@
+/****************************************************
+* This application is base on Team 3 with several modify								
+* Instructor : Ho Van Nguyen Phuong					
+* Contributor : Nguyen Van Thanh Huy
+                Tran Quoc Kien
+                Tran Van Y
+                Ho Quang Dai Viet
+* **************************************************/
+
 #include <linux/types.h>
 #include <linux/spi/spi.h>
 #include <linux/module.h>

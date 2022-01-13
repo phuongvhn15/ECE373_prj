@@ -1,10 +1,10 @@
 /****************************************************
-* This application is developed by KhanhHuy											
-* Group 2.														
-* Instructor : Hồ Văn Nguyên Phương					
-* Contributor : Truong Phu Khanh Huy
-*               Nguyen Van Thin
-*               Nguyen Duc Minh				
+* This application is base on Team 3 with several modify								
+* Instructor : Ho Van Nguyen Phuong					
+* Contributor : Nguyen Van Thanh Huy
+                Tran Quoc Kien
+                Tran Van Y
+                Ho Quang Dai Viet
 * **************************************************/
 
 #include <stdio.h>
