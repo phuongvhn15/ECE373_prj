@@ -729,7 +729,9 @@ int main(int argc, char **argv)
                     int ang_1 = (int)rx_frame[6];
                     int ang_2 = (int)rx_frame[7];
                     int ang_3 = (int)rx_frame[8];
-                    int raw_value= ang_1*10000 + ang_2*100 + ang_3;
+                    int ang_4 = (int)rx_frame[9];
+                    //int raw_value= ang_1*10000 + ang_2*100 + ang_3*10;
+                    int raw_value = ang_1*1000+ang_2*1000+ang_3*100+ang_4*10;
                     float angle = ((float)raw_value/100.00) - 180.00;
                     printf("%.2f degree",angle);
                 }
@@ -797,9 +799,15 @@ int main(int argc, char **argv)
                     scanf("%d",&angel);
                 }
                 int raw_value = (angel+180)/0.01;
+                // char ang_p1 = raw_value/10000;
+                // char ang_p2 = (raw_value/100) - ((raw_value/10000)*100);
+                // char ang_p3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
+
                 char ang_p1 = raw_value/10000;
-                char ang_p2 = (raw_value/100) - ((raw_value/10000)*100);
-                char ang_p3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
+                char ang_p2 = (raw_value-ang_p1*10000)/1000;
+                char ang_p3 = (raw_value-ang_p1*10000-ang_p2*1000)/100;
+                 char ang_p4 = (raw_value-ang_p1*10000-ang_p2*1000-ang_p3*100)/10;
+                
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
@@ -809,7 +817,7 @@ int main(int argc, char **argv)
                 can_frame[6] = ang_p1;
                 can_frame[7] = ang_p2;
                 can_frame[8] = ang_p3;
-                can_frame[9] = 0x00;
+                can_frame[9] = ang_p4;
                 write(fd, can_frame, 10);
                 sleep(2);
                 read(fd, rx_frame, 10);
