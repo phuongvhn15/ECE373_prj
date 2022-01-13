@@ -10,4 +10,3 @@ clean:
 
 install:
 	$(MAKE) -C $(KDIR) M=$(PWD) modules_install
-

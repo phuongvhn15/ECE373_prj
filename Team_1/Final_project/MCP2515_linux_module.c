@@ -161,8 +161,9 @@ static int __init ModuleInit(void) {
 	struct can_frame can_frame_tx;
 	struct can_frame can_frame_rx;
 	struct spi_master *master;
-
-
+	
+	printk("Group 1: \n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang");
+	printk("ECE 372 final project");
 	//General SPI device set up
 	//
 	/* Parameters for SPI device */
