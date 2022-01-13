@@ -1,3 +1,12 @@
+/****************************************************
+* This application is developed by KhanhHuy											
+* Group 2.														
+* Instructor : Hồ Văn Nguyên Phương					
+* Contributor : Truong Phu Khanh Huy
+*               Nguyen Van Thin
+*               Nguyen Duc Minh				
+* **************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -303,18 +312,18 @@ void menuRadar()
 int main(int argc, char **argv)
 {
     char *app_name = argv[0];
-    char *dev_name = "/dev/mcp2515_dev_ver2d";
+    //char *dev_name = "/dev/mcp2515_dev_ver2d";
     int fd = -1;
     char c;
     int select = 0;
     int choice = 0;
     int next = 0;
     char con;
-    if ((fd = open(dev_name,O_RDWR)) < 0 )
-    {
-        fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
-        return( 1 );
-    }
+    // if ((fd = open(dev_name,O_RDWR)) < 0 )
+    // {
+    //     fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
+    //     return( 1 );
+    // }
     do{
         printf("Enter(1 or 2) parts to work: 1. Engine  2. Radar: ");
         scanf("%d",&select);
