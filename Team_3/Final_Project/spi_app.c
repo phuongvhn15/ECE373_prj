@@ -798,11 +798,11 @@ int main(int argc, char **argv)
             {
                 float angel  = 0;
                 printf("Enter the value of angel for radar (-180-->180): ");
-                scanf("%.2f",&angel);
+                scanf("%f",&angel);
                 while(angel<-180 || angel>180)
                 {
                     printf("Error! Enter the value of angel for radar (-180-->180): ");
-                    scanf("%.2f",&angel);
+                    scanf("%f",&angel);
                 }
                 int raw_value = (angel+180)*100;
                 printf("%d\n", angel);
