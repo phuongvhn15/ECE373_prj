@@ -461,8 +461,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The odometer of engine: ");
-                    char res = (rx_frame[6]&0xFF000000)+(rx_frame[7]&0x00FF0000)+(rx_frame[8]&0x0000FF00)+(rx_frame[9]&0x000000FF);
-                    printf("%dKm",res);
+                    printf("%d%dKm", rx_frame[6], rx_frame[7]);
                 }
             }
             else if(choice == 6){
