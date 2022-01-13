@@ -805,7 +805,8 @@ int main(int argc, char **argv)
                     scanf("%.02f",&angel);
                 }
                 int raw_value = (angel+180)*100;
-                printf("\n%d\n", &raw_value);
+                printf("\n%.02f\n", angle);
+                printf("\n%d\n", raw_value);
                 char angle_msg1 = raw_value/10000;
                 char angle_msg2 = (raw_value/100) - ((raw_value/10000)*100);
                 char angle_msg3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
