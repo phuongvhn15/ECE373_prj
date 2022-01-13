@@ -2,7 +2,7 @@
 * This driver is based on group 1 with modifications to 
 *   be competiable to our project												
 * Group 2.														
-* Instructor : Hồ Văn Nguyên Phương					
+* Instructor : Ho Van Nguyen Phuong					
 * Contributor : Truong Phu Khanh Huy
 *               Nguyen Van Thin
 *               Nguyen Duc Minh				
