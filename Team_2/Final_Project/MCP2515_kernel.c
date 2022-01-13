@@ -99,7 +99,7 @@ static ssize_t mcp2515_read(struct file *File, char __user *buf, size_t count, l
 
 
 	//Concatenate id, dlc, data into 1 data array
-	char can_buffer[2 + 8];
+	u8 can_buffer[2 + 8];
 
 	//Copy id and dlc to can_buffer.
 	for(i = 0; i < 2; i++){
