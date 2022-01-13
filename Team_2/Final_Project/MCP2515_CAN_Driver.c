@@ -23,6 +23,28 @@ This is MCP2615 driver based on Group1 with modification to our project	 *
 #include <linux/ktime.h>
 #include <asm/delay.h> 
 #include <linux/delay.h>
+#include <linux/types.h>
+#include <linux/spi/spi.h>
+#include <linux/module.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+ 
+#include <linux/kdev_t.h>
+#include <linux/fs.h>   
+#include <linux/cdev.h> 
+#include <asm/uaccess.h>
+
+#include <linux/gpio.h>
+
+#include <linux/interrupt.h>
+
+#include <linux/kobject.h> 
+#include <linux/sysfs.h>
+
+#include <linux/time.h>
+#include <linux/ktime.h>
+#include <asm/delay.h> 
+#include <linux/delay.h>
 /*
  *  Speed 8M
  */

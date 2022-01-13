@@ -26,10 +26,10 @@ void init()
 }
 int main()
 {
-    // char can_frame[10] = {0};
+    char can_frame[4] = {0};
     // init();
     // uint64_t hexnum  = 0x0023992;
-    // int angel = 5;
+     int angel = 180;
     // printf("%02X\n",hexnum);
     // can_frame[0] = canMsg1.can_id;
     // can_frame[1] = canMsg1.can_dlc;
@@ -45,18 +45,35 @@ int main()
     // unsigned int res = ((int)(hexnum & 0xFF000000)+(int)(hexnum & 0x00FF0000)+(int)(hexnum &0x0000FF00)+(int)(hexnum &0x000000FF));
     // res= res*0.01-180;
     // printf("%d\n",res);
-    // int raw = (angel+180)/0.01;printf("%08x\n",raw);
-    // uint8_t raw4 = raw & 0x000000FF;
+    // int raw = (angel+180)/0.01;printf("%d\n",raw);
+    // unsigned int raw4 = raw & 0x0000FF00;
     // printf("%x\n",raw4);
     // printf("\n");
-     uint8_t subfunction = 0;
-                printf("Enter the subfunction from 00-->07: ");
-                scanf("%x",&subfunction);
-                while(subfunction<0x00 || subfunction > 0x07)
-                {
-                    printf("Error! Enter subfunction from 0-->7: ");
-                    scanf("%x",&subfunction);
-                }
-    printf("%02X",subfunction);
+    //  uint8_t subfunction = 0;
+    //             printf("Enter the subfunction from 00-->07: ");
+    //             scanf("%x",&subfunction);
+    //             while(subfunction<0x00 || subfunction > 0x07)
+    //             {
+    //                 printf("Error! Enter subfunction from 0-->7: ");
+    //                 scanf("%x",&subfunction);
+    //             }
+    // printf("%02X",subfunction);
+    can_frame[0] = 0x00;
+    can_frame[1] = 0x00;
+    can_frame[2] = 0x8C;
+    can_frame[3] = 0xA0;
+    // for(int i =0;i<4;i++)
+    // {
+    //     printf("%d ",(unsigned char)can_frame[i]);
+    // }
+    // printf("\n");
+    // unsigned int res = ((int)(can_frame[0] & 0xFF000000)//+(int)(can_frame[0] & 0x00FF0000)+
+    //                 //(int)(can_frame[0] &0x0000FF00)+(int)(can_frame[0] &0x000000FF));
+    ;
+    unsigned int  res = 0;
+    res = (int)((unsigned char)(can_frame[2]))*100+(int)((unsigned char)(can_frame[3]))*10;
+    printf("%d\n",res);
+    res = -(res/100-180);
+    printf("%d\n",res);
     return 0;
 }

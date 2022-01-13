@@ -1,4 +1,4 @@
-obj-m := MCP2515_linux_module.o
+obj-m := MCP2515_kernel.o
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 

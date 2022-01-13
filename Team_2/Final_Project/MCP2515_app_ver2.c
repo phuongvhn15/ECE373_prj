@@ -202,7 +202,7 @@ void init_Radar()
   canMsg12.can_dlc = 3;
   canMsg12.data[0] = 0x02;
   canMsg12.data[1] = 0x11;
-  canMsg12.data[1] = 0x01;
+  canMsg12.data[2] = 0x01;
 }
 void display()
 {
@@ -217,6 +217,7 @@ void display()
     {
         printf("%02X ",(unsigned char)rx_frame[i]);
     }
+    printf("\n");
 }
 void clear()
 {
@@ -325,6 +326,9 @@ int main(int argc, char **argv)
         return( 1 );
     }
     do{
+        read(fd, rx_frame, 10);
+        clear();
+        printf("========DIAGNOSTIC DEVIEC TEAM 3: KHANH HUY+VAN THIN+DUC MINH=========\n");
         printf("Enter(1 or 2) parts to work: 1. Engine  2. Radar: ");
         scanf("%d",&select);
         while(select<1 || select > 2)
@@ -352,7 +356,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg1.data[1];
                 can_frame[4] = canMsg1.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -380,7 +384,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg2.data[1];
                 can_frame[4] = canMsg2.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -409,7 +413,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg3.data[2];
                 can_frame[5] = canMsg3.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 printf("\n");
@@ -430,7 +434,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg4.data[2];
                 can_frame[5] = canMsg4.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -439,7 +443,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The temperature of engine: %d",rx_frame[6]," V\n");
+                    printf("The temperature of engine: %dC",rx_frame[6]);
                 }
             }
             else if(choice == 5){
@@ -450,7 +454,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg5.data[2];
                 can_frame[5] = canMsg5.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -460,8 +464,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The odometer of engine: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    printf("%d\n",res);
+                    printf("%d%d Km",rx_frame[6],rx_frame[7]);
                 }
             }
             else if(choice == 6){
@@ -473,7 +476,7 @@ int main(int argc, char **argv)
                 can_frame[5] = canMsg6.data[3];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -482,8 +485,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The velocity of engine: %d",rx_frame[6],"\n");
-                    
+                    printf("The velocity of engine: %d km/h",rx_frame[6],"\n");
                 }
             }
             else if(choice == 7)
@@ -501,10 +503,10 @@ int main(int argc, char **argv)
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
-                display();
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
+                display();
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -523,7 +525,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg8.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -543,7 +545,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg9.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -560,9 +562,9 @@ int main(int argc, char **argv)
                     key[i] = rx_frame[5+i];
                 }
                 key[0] = key[0] ^ 0xFF;
-                key[1] = key[0] ^ 0xFF;
-                key[2] = key[0] ^ 0xFF;
-                key[3] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 10)
             {
@@ -576,7 +578,7 @@ int main(int argc, char **argv)
                 can_frame[7] = key[2];
                 can_frame[8] = key[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -601,7 +603,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg11.data[1];
                 can_frame[4] = canMsg11.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -637,7 +639,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg1.data[1];
                 can_frame[4] = canMsg1.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -665,7 +667,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg2.data[1];
                 can_frame[4] = canMsg2.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -694,7 +696,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg3.data[2];
                 can_frame[5] = canMsg3.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -714,7 +716,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg4.data[2];
                 can_frame[5] = canMsg4.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -724,9 +726,12 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF00)+(int)(rx_frame[7]&0x00FF)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    res = res*0.01-180;
-                    printf("%d\n",res);
+                    int angel1 = (int)rx_frame[6];
+                    int angel2 = (int)rx_frame[7];
+                    int angel3 = (int)rx_frame[8];
+                    int angel_raw = angel1*10000 + angel2*100 + angel3;
+                    float angel_phy = ((float)angel_raw/100.00) - 180.00;
+                    printf("%.2f degree",angel_phy);
                 }
             }
             else if(choice == 5){
@@ -737,7 +742,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg5.data[2];
                 can_frame[5] = canMsg5.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -747,9 +752,9 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The object detection of radar: ");
-                    if(rx_frame[5]==0x01)
+                    if(rx_frame[6]==0x01)
                         printf("Yes\n");
-                    if(rx_frame[5]==0x00)
+                    if(rx_frame[6]==0x00)
                         printf("No\n");
                 }
             }
@@ -762,10 +767,10 @@ int main(int argc, char **argv)
                 can_frame[5] = canMsg6.data[3];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -775,9 +780,9 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The warning detection of engine: ");
-                    if(rx_frame[5]==0x01)
+                    if(rx_frame[6]==0x01)
                         printf("Yes\n");
-                    if(rx_frame[5]==0x00)
+                    if(rx_frame[6]==0x00)
                         printf("No\n");
                 }
             }
@@ -792,18 +797,21 @@ int main(int argc, char **argv)
                     scanf("%d",&angel);
                 }
                 int raw_value = (angel+180)/0.01;
+                char angle_msg1 = raw_value/10000;
+                char angle_msg2 = (raw_value/100) - ((raw_value/10000)*100);
+                char angle_msg3 = raw_value - ((raw_value/10000)*10000) - ((raw_value/100) - ((raw_value/10000)*100))*100;
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = canMsg7.data[2];
                 can_frame[5] = canMsg7.data[3];
-                can_frame[6] = raw_value & 0xFF000000;
-                can_frame[7] = raw_value & 0x00FF0000;
-                can_frame[8] = raw_value & 0x0000FF00;
-                can_frame[9] = raw_value & 0x000000FF;
+                can_frame[6] = angle_msg1;
+                can_frame[7] = angle_msg2;
+                can_frame[8] = angle_msg3;
+                can_frame[9] = 0x00;
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -832,7 +840,7 @@ int main(int argc, char **argv)
                 can_frame[4] = subfunction;
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -853,7 +861,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg9.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -873,7 +881,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg10.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -890,9 +898,9 @@ int main(int argc, char **argv)
                     key[i] = rx_frame[5+i];
                 }
                 key[0] = key[0] ^ 0xFF;
-                key[1] = key[0] ^ 0xFF;
-                key[2] = key[0] ^ 0xFF;
-                key[3] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 11)
             {
@@ -906,7 +914,7 @@ int main(int argc, char **argv)
                 can_frame[7] = key[2];
                 can_frame[8] = key[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -931,7 +939,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg12.data[1];
                 can_frame[4] = canMsg12.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
