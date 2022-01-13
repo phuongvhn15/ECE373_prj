@@ -356,7 +356,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg1.data[1];
                 can_frame[4] = canMsg1.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -384,7 +384,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg2.data[1];
                 can_frame[4] = canMsg2.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -413,7 +413,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg3.data[2];
                 can_frame[5] = canMsg3.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 printf("\n");
@@ -434,7 +434,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg4.data[2];
                 can_frame[5] = canMsg4.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -454,7 +454,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg5.data[2];
                 can_frame[5] = canMsg5.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -476,7 +476,7 @@ int main(int argc, char **argv)
                 can_frame[5] = canMsg6.data[3];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -505,7 +505,7 @@ int main(int argc, char **argv)
                 can_frame[4] = subfunction;
                 display();
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 if(rx_frame[3]==0x7F)
                 {
@@ -525,7 +525,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg8.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -545,7 +545,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg9.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -578,7 +578,7 @@ int main(int argc, char **argv)
                 can_frame[7] = key[2];
                 can_frame[8] = key[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -603,7 +603,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg11.data[1];
                 can_frame[4] = canMsg11.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -639,7 +639,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg1.data[1];
                 can_frame[4] = canMsg1.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -667,7 +667,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg2.data[1];
                 can_frame[4] = canMsg2.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x50)
@@ -696,7 +696,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg3.data[2];
                 can_frame[5] = canMsg3.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -716,7 +716,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg4.data[2];
                 can_frame[5] = canMsg4.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -742,7 +742,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg5.data[2];
                 can_frame[5] = canMsg5.data[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -767,10 +767,10 @@ int main(int argc, char **argv)
                 can_frame[5] = canMsg6.data[3];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -808,7 +808,7 @@ int main(int argc, char **argv)
                 can_frame[8] = (raw_value >> 8) & 0xFF;
                 can_frame[9] = raw_value & 0xFF;
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -837,7 +837,7 @@ int main(int argc, char **argv)
                 can_frame[4] = subfunction;
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -858,7 +858,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg9.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -878,7 +878,7 @@ int main(int argc, char **argv)
                 can_frame[4] = canMsg10.data[2];
 
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -911,7 +911,7 @@ int main(int argc, char **argv)
                 can_frame[7] = key[2];
                 can_frame[8] = key[3];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
@@ -936,7 +936,7 @@ int main(int argc, char **argv)
                 can_frame[3] = canMsg12.data[1];
                 can_frame[4] = canMsg12.data[2];
                 write(fd, can_frame, 10);
-                sleep(1);
+                sleep(2);
                 read(fd, rx_frame, 10);
                 display();
                 if(rx_frame[3]==0x7F)
