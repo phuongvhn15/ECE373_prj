@@ -360,19 +360,17 @@ int main(int argc, char **argv)
                 display();
                 if(rx_frame[3]==0x50)
                 {
-                    printf("Successfully changed session\n");
+                    printf("\nSuccessfully changed session");
                 }
                 else if(rx_frame[3] == 0x7F)
                 {
                     printf("Error! ");
-                    if(rx_frame[5] == 0x10)
-                        printf("Session Control\n");
-                    else if(rx_frame[5] == 0x12)
-                        printf("Sub Function Not Supported\n");
+                    if(rx_frame[5] == 0x12)
+                        printf("\nSub Function Not Supported");
                     else if(rx_frame[5] == 0x13)
-                        printf("Invalid Format\n");
+                        printf("\nInvalid Format");
                     else
-                        printf("Cannot Identify\n");
+                        printf("\nCannot Identify");
                 }
             }
             else if(choice == 2)
@@ -388,19 +386,17 @@ int main(int argc, char **argv)
                 display();
                 if(rx_frame[3]==0x50)
                 {
-                    printf("Successfully changed session\n");
+                    printf("\nSuccessfully changed session");
                 }
                 else if(rx_frame[3] == 0x7F)
                 {
                     printf("Error! ");
-                    if(rx_frame[5] == 0x10)
-                        printf("Session Control\n");
-                    else if(rx_frame[5] == 0x12)
-                        printf("Sub Function Not Supported\n");
+                    if(rx_frame[5] == 0x12)
+                        printf("\nSub Function Not Supported");
                     else if(rx_frame[5] == 0x13)
-                        printf("Invalid Format\n");
+                        printf("\nInvalid Format");
                     else
-                        printf("Cannot Identify\n");
+                        printf("\nCannot Identify");
                 }
             }
             else if(choice == 3)
@@ -422,7 +418,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The voltage of engine: %dV\n",rx_frame[6]);
+                    printf("The voltage of engine: %dV",rx_frame[6]);
                 }
             }
             else if(choice == 4 ){
@@ -436,13 +432,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorRead();
                 }
                 else{
-                    printf("The temperature of engine: %doC\n",rx_frame[6]);
+                    printf("The temperature of engine: %doC",rx_frame[6]);
                 }
             }
             else if(choice == 5){
@@ -456,6 +453,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -464,7 +462,7 @@ int main(int argc, char **argv)
                 else{
                     printf("The odometer of engine: ");
                     unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    printf("%dKm\n",res);
+                    printf("%dKm",res);
                 }
             }
             else if(choice == 6){
@@ -479,13 +477,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorRead();
                 }
                 else{
-                    printf("The velocity of engine: %dKm/h\n",rx_frame[6]);
+                    printf("The velocity of engine: %dKm/h",rx_frame[6]);
                     
                 }
             }
@@ -504,17 +503,19 @@ int main(int argc, char **argv)
                 can_frame[2] = canMsg7.data[0];
                 can_frame[3] = canMsg7.data[1];
                 can_frame[4] = subfunction;
-                display();
+
                 write(fd, can_frame, 10);
                 sleep(2);
                 read(fd, rx_frame, 10);
+                display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDTC();
                 }
                 else{
-                    printf("The data recorded is: %d\n",rx_frame[5]);
+                    printf("The data recorded is: %d",rx_frame[5]);
                 }
             }
             else if(choice == 8)
@@ -529,13 +530,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDiagnostic();
                 }
                 else   
-                    printf("Successfully cleared diagonstic\n");
+                    printf("Successfully cleared diagonstic!");
             }
             else if(choice == 9)
             {
@@ -549,6 +551,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -582,6 +585,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -607,13 +611,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDiagnostic();
                 }
                 else  
-                    printf("Successfully resetted ECU\n");
+                    printf("Successfully resetted ECU");
             }
             clear();
             printf("\nDo you want to continue? Y or N: ");
@@ -643,21 +648,20 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
-                    printf("Successfully changed session\n");
+                    printf("Successfully changed session");
                 }
                 else if(rx_frame[3] == 0x7F)
                 {
                     printf("Error! ");
-                    if(rx_frame[5] == 0x10)
-                        printf("Session Control\n");
-                    else if(rx_frame[5] == 0x12)
-                        printf("Sub Function Not Supported\n");
+                    if(rx_frame[5] == 0x12)
+                        printf("Sub Function Not Supported");
                     else if(rx_frame[5] == 0x13)
-                        printf("Invalid Format\n");
+                        printf("Invalid Format");
                     else
-                        printf("Cannot Identify\n");
+                        printf("Cannot Identify");
                 }
             }
             else if(choice == 2)
@@ -671,21 +675,20 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x50)
                 {
-                    printf("Successfully changed session\n");
+                    printf("Successfully changed session");
                 }
                 else if(rx_frame[3] == 0x7F)
                 {
                     printf("Error! ");
-                    if(rx_frame[5] == 0x10)
-                        printf("Session Control\n");
-                    else if(rx_frame[5] == 0x12)
-                        printf("Sub Function Not Supported\n");
+                    if(rx_frame[5] == 0x12)
+                        printf("Sub Function Not Supported");
                     else if(rx_frame[5] == 0x13)
-                        printf("Invalid Format\n");
+                        printf("Invalid Format");
                     else
-                        printf("Cannot Identify\n");
+                        printf("Cannot Identify");
                 }
             }
             else if(choice == 3)
@@ -700,13 +703,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorRead();
                 }
                 else{
-                    printf("The voltage of radar: %dV\n",rx_frame[6]);
+                    printf("The voltage of radar: %dV",rx_frame[6]);
                 }
             }
             else if(choice == 4 ){
@@ -720,6 +724,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -729,7 +734,7 @@ int main(int argc, char **argv)
                     printf("The angel azimuth correction of radar: ");
                     unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     res = res*0.01-180;
-                    printf("%d degree\n",res);
+                    printf("%d degree",res);
                 }
             }
             else if(choice == 5){
@@ -743,6 +748,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -751,9 +757,9 @@ int main(int argc, char **argv)
                 else{
                     printf("The object detection of radar: ");
                     if(rx_frame[6]==0x01)
-                        printf("Yes\n");
+                        printf("Yes");
                     if(rx_frame[6]==0x00)
-                        printf("No\n");
+                        printf("No");
                 }
             }
             else if(choice == 6){
@@ -771,6 +777,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -779,9 +786,9 @@ int main(int argc, char **argv)
                 else{
                     printf("The warning detection of engine: ");
                     if(rx_frame[6]==0x01)
-                        printf("Yes\n");
+                        printf("Yes");
                     if(rx_frame[6]==0x00)
-                        printf("No\n");
+                        printf("No");
                 }
             }
             else if(choice == 7)
@@ -809,13 +816,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorRequest();
                 }
                 else{
-                    printf("Successfully wrote the angle of radar\n");
+                    printf("Successfully wrote the angle of radar");
                 }
             }
             else if(choice == 8)
@@ -838,13 +846,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDTC();
                 }
                 else{
-                    printf("The data recorded is: %d\n",rx_frame[5]);
+                    printf("The data recorded is: %d",rx_frame[5]);
                 }
             }
             else if(choice == 9)
@@ -859,13 +868,14 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDiagnostic();
                 }
                 else   
-                    printf("Successfully cleared diagonstic\n");
+                    printf("Successfully cleared diagonstic");
             }
             else if(choice == 10)
             {
@@ -879,6 +889,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -886,16 +897,16 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    printf("Key: %02X %02X %02X %02X\n",(unsigned char)rx_frame[5],(unsigned char)rx_frame[6],(unsigned char)rx_frame[7],(unsigned char)rx_frame[8]);
+                    printf("Key: %02X %02X %02X %02X",(unsigned char)rx_frame[5],(unsigned char)rx_frame[6],(unsigned char)rx_frame[7],(unsigned char)rx_frame[8]);
                 }
                 for(int i =0;i<5;i++)
                 {
                     key[i] = rx_frame[5+i];
                 }
                 key[0] = key[0] ^ 0xFF;
-                key[1] = key[0] ^ 0xFF;
-                key[2] = key[0] ^ 0xFF;
-                key[3] = key[0] ^ 0xFF;
+                key[1] = key[1] ^ 0xFF;
+                key[2] = key[2] ^ 0xFF;
+                key[3] = key[3] ^ 0xFF;
             }
             else if(choice == 11)
             {
@@ -912,6 +923,7 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
@@ -937,21 +949,24 @@ int main(int argc, char **argv)
                 sleep(2);
                 read(fd, rx_frame, 10);
                 display();
+                printf("\n");
                 if(rx_frame[3]==0x7F)
                 {
                     printf("Error! ");
                     errorDiagnostic();
                 }
                 else  
-                    printf("Successfully resetted ECU\n");
+                    printf("Successfully resetted ECU");
             }
             clear();
             printf("\nDo you want to continue? Y or N: ");
             scanf(" %c",&con);
+            printf("\n");
         }while(con == 'Y' || con == 'y');
     }
     printf("Do you want to change parts(Enter 1 or 2)? 1. Yes 2. No? ");
     scanf("%d",&next);
+    prinf("\n")
     } while(next == 1);
     printf("===============OUT============");
     return 0;
