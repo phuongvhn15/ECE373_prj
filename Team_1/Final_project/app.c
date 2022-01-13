@@ -325,6 +325,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "%s: unable to open %s: %s\n", app_name, dev_name, strerror(errno));		
         return( 1 );
     }
+    printf("Group 1:\n Nguyen Cao Minh \n Luu Anh Khang \n Phan Anh Tu \n Vu Viet Hoang. \n\n")
     do{
         read(fd, rx_frame, 10);
         clear();
