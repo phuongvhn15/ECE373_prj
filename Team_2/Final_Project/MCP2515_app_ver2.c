@@ -202,7 +202,7 @@ void init_Radar()
   canMsg12.can_dlc = 3;
   canMsg12.data[0] = 0x02;
   canMsg12.data[1] = 0x11;
-  canMsg12.data[1] = 0x01;
+  canMsg12.data[2] = 0x01;
 }
 void display()
 {
