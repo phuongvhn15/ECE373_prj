@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 #define CAN_FRAME_MAX_DATA_LEN 8
+uint8_t key[4]={0};
 struct can_frame {
     uint32_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
     uint8_t    can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
