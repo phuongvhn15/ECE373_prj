@@ -723,7 +723,7 @@ int main(int argc, char **argv)
                 }
                 else{
                     printf("The angel azimuth correction of radar: ");
-                    unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
+                    unsigned int res = (int)(rx_frame[6]&0xFF00)+(int)(rx_frame[7]&0x00FF)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     res = res*0.01-180;
                     printf("%d\n",res);
                 }
