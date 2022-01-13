@@ -422,7 +422,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The voltage of engine: %d",rx_frame[6]," V\n");
+                    printf("The voltage of engine: %dV\n",rx_frame[6]);
                 }
             }
             else if(choice == 4 ){
@@ -442,7 +442,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The temperature of engine: %d",rx_frame[6]," oC\n");
+                    printf("The temperature of engine: %doC\n",rx_frame[6]);
                 }
             }
             else if(choice == 5){
@@ -464,7 +464,7 @@ int main(int argc, char **argv)
                 else{
                     printf("The odometer of engine: ");
                     unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
-                    printf("%d\n",res);
+                    printf("%dKm\n",res);
                 }
             }
             else if(choice == 6){
@@ -485,7 +485,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The velocity of engine: %d",rx_frame[6]," Km/h\n");
+                    printf("The velocity of engine: %dKm/h\n",rx_frame[6]);
                     
                 }
             }
@@ -706,7 +706,7 @@ int main(int argc, char **argv)
                     errorRead();
                 }
                 else{
-                    printf("The voltage of radar: %d",rx_frame[6]," V\n");
+                    printf("The voltage of radar: %dV\n",rx_frame[6]);
                 }
             }
             else if(choice == 4 ){
@@ -729,7 +729,7 @@ int main(int argc, char **argv)
                     printf("The angel azimuth correction of radar: ");
                     unsigned int res = (int)(rx_frame[6]&0xFF000000)+(int)(rx_frame[7]&0x00FF0000)+(int)(rx_frame[8]&0x0000FF00)+(int)(rx_frame[9]&0x000000FF);
                     res = res*0.01-180;
-                    printf("%d\n",res);
+                    printf("%d degree\n",res);
                 }
             }
             else if(choice == 5){
