@@ -8,9 +8,9 @@
 * Group 1.														
 * Instructor : Hồ Văn Nguyên Phương					
 * Contributor : Nguyễn Cao Minh						
-*		Phan Anh Tú							
-*		Lưu Anh Khang					
-*		Vũ Việt Hoàng						
+*				Phan Anh Tú							
+*				Lưu Anh Khang					
+*				Vũ Việt Hoàng						
 * **************************************************/
 
 #include <linux/types.h>
@@ -39,7 +39,7 @@
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Nhom4: Khang, Minhproviptk, Tu, Hoang");
+MODULE_AUTHOR("Nhom1: AnhKhang, CaoMinh, AnhTu, VietHoang");
 MODULE_DESCRIPTION("MCP2515 linux module");
 
 #define MY_BUS_NUM 0
