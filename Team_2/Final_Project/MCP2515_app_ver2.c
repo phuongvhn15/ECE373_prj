@@ -186,7 +186,7 @@ void init_Radar()
   canMsg10.can_dlc = 3;
   canMsg10.data[0] = 0x02;
   canMsg10.data[1] = 0x27;
-  canMsg10.data[2] = 0x10;
+  canMsg10.data[2] = 0x01;
 
   canMsg11.can_id  = RADAR; // SEND KEY
   canMsg11.can_dlc = 7;
