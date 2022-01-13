@@ -278,7 +278,7 @@ void errorDTC()
 }
 void menuEngine()
 {
-    printf("===========MENU============\n");
+    printf("===========MENU TEAM 2============\n");
     printf("1.  Session control 01\n");
     printf("2.  Session control 03\n");
     printf("3.  Read ECU voltage engine\n");
@@ -294,7 +294,7 @@ void menuEngine()
 }
 void menuRadar()
 {
-    printf("===========MENU============\n");
+    printf("===========MENU TEAM 2============\n");
     printf("1.  Session control 01\n");
     printf("2.  Session control 03\n");
     printf("3.  Read ECU voltage radar\n");
@@ -871,10 +871,7 @@ int main(int argc, char **argv)
                 can_frame[2] = canMsg10.data[0];
                 can_frame[3] = canMsg10.data[1];
                 can_frame[4] = canMsg10.data[2];
-                can_frame[5] = key[0];
-                can_frame[6] = key[1];
-                can_frame[7] = key[2];
-                can_frame[8] = key[3];
+
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
@@ -892,14 +889,22 @@ int main(int argc, char **argv)
                 {
                     key[i] = rx_frame[5+i];
                 }
+                key[0] = key[0] ^ 0xFF;
+                key[1] = key[0] ^ 0xFF;
+                key[2] = key[0] ^ 0xFF;
+                key[3] = key[0] ^ 0xFF;
             }
             else if(choice == 11)
             {
-                can_frame[0] = canMsg11.can_id;
+               can_frame[0] = canMsg11.can_id;
                 can_frame[1] = canMsg11.can_dlc;
                 can_frame[2] = canMsg11.data[0];
                 can_frame[3] = canMsg11.data[1];
                 can_frame[4] = canMsg11.data[2];
+                can_frame[5] = key[0];
+                can_frame[6] = key[1];
+                can_frame[7] = key[2];
+                can_frame[8] = key[3];
                 write(fd, can_frame, 10);
                 sleep(1);
                 read(fd, rx_frame, 10);
