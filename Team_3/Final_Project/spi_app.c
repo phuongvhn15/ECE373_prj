@@ -269,7 +269,7 @@ int main(int argc, char **argv)
         menu();
         printf("Enter your choice (1-->16): ");
         scanf("%d",&select);
-        while(select<1 || select > 16)
+        while(select<1 || select > 17)
         {
             printf("Error! Enter your choice (1-->16): ");
             scanf("%d",&select);
