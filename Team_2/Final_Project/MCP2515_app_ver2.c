@@ -806,7 +806,7 @@ int main(int argc, char **argv)
                 char ang_p1 = raw_value/10000;
                 char ang_p2 = (raw_value-ang_p1*10000)/1000;
                 char ang_p3 = (raw_value-ang_p1*10000-ang_p2*1000)/100;
-                 char ang_p4 = (raw_value-ang_p1*10000-ang_p2*1000-ang_p3*100)/10;
+                char ang_p4 = (raw_value-ang_p1*10000-ang_p2*1000-ang_p3*100)/10;
                 
                 can_frame[0] = canMsg7.can_id; 
                 can_frame[1] = canMsg7.can_dlc;
